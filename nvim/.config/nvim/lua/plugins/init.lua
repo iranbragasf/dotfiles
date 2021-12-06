@@ -93,6 +93,11 @@ return require('packer').startup({function(use)
     }
 
     use {
+        "akinsho/nvim-toggleterm.lua",
+        config = require("plugins.toggleterm").config
+    }
+
+    use {
         "lukas-reineke/indent-blankline.nvim",
         config = require("plugins.indent-blankline").config
     }
