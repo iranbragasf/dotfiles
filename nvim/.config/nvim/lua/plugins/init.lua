@@ -64,6 +64,14 @@ return require('packer').startup({function(use)
         }
     }
 
+    use {
+        'monsonjeremy/onedark.nvim',
+        config = function()
+            require('onedark').setup({ functionStyle = "italic" })
+            vim.cmd([[colorscheme onedark]])
+        end
+    }
+
     -- Automatically set up your configuration after cloning packer.nvim
     -- Must be put at the end after all plugins
     if packer_bootstrap then
