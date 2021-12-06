@@ -1,0 +1,4 @@
+nvim/.config/nvim/*
+
+!nvim/.config/nvim/init.lua
+!nvim/.config/nvim/lua
