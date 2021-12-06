@@ -53,6 +53,17 @@ return require('packer').startup({function(use)
 
     use { "editorconfig/editorconfig-vim" }
 
+
+    use {
+        'nvim-telescope/telescope.nvim',
+        config = require("plugins.telescope").config,
+        requires = {
+            'nvim-lua/plenary.nvim',
+            { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
+            'kyazdani42/nvim-web-devicons'
+        }
+    }
+
     -- Automatically set up your configuration after cloning packer.nvim
     -- Must be put at the end after all plugins
     if packer_bootstrap then
