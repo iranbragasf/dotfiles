@@ -86,6 +86,11 @@ return require('packer').startup({function(use)
     }
 
     use {
+        "lukas-reineke/indent-blankline.nvim",
+        config = require("plugins.indent-blankline").config
+    }
+
+    use {
         'monsonjeremy/onedark.nvim',
         config = function()
             require('onedark').setup({ functionStyle = "italic" })
