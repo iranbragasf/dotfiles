@@ -16,6 +16,15 @@ return require('packer').startup({function(use)
         'williamboman/nvim-lsp-installer',
         config = require('plugins.nvim-lsp-installer').config
     }
+
+    use {
+        'kyazdani42/nvim-tree.lua',
+        cmd = 'NvimTreeToggle',
+        setup = require('plugins.nvim-tree').setup,
+        config = require('plugins.nvim-tree').config,
+        requires = { 'kyazdani42/nvim-web-devicons' }
+    }
+
     -- Automatically set up your configuration after cloning packer.nvim
     -- Must be put at the end after all plugins
     if packer_bootstrap then
