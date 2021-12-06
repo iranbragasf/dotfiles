@@ -48,6 +48,12 @@ return require('packer').startup({function(use)
         config = require('plugins.Comment').config
     }
 
+    use {
+        'kristijanhusak/vim-dadbod-ui',
+        cmd = { "DBUIToggle", "DBUIAddConnection" },
+        setup = require('plugins.vim-dadbod-ui').setup,
+        requires = { 'tpope/vim-dadbod' },
+    }
 
     use {
         'kyazdani42/nvim-tree.lua',
@@ -85,6 +91,7 @@ return require('packer').startup({function(use)
             'JoosepAlviste/nvim-ts-context-commentstring'
         }
     }
+
 
     use {
         'lewis6991/gitsigns.nvim',
