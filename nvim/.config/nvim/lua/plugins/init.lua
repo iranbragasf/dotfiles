@@ -53,6 +53,12 @@ return require('packer').startup({function(use)
 
     use { "editorconfig/editorconfig-vim" }
 
+    use {
+        'mbbill/undotree',
+        cmd = 'UndotreeToggle',
+        setup = require("plugins.undotree").setup,
+        config = require("plugins.undotree").config
+    }
 
     use {
         'nvim-telescope/telescope.nvim',
