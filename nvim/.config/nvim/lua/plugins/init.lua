@@ -71,6 +71,15 @@ return require('packer').startup({function(use)
     }
 
     use {
+        'nvim-treesitter/nvim-treesitter',
+        run = ':TSUpdate',
+        config = require("plugins.treesitter").config,
+        requires = {
+            'nvim-treesitter/playground',
+        }
+    }
+
+    use {
         'monsonjeremy/onedark.nvim',
         config = function()
             require('onedark').setup({ functionStyle = "italic" })
