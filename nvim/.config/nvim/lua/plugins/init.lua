@@ -51,6 +51,8 @@ return require('packer').startup({function(use)
         requires = { 'kyazdani42/nvim-web-devicons' }
     }
 
+    use { "editorconfig/editorconfig-vim" }
+
     -- Automatically set up your configuration after cloning packer.nvim
     -- Must be put at the end after all plugins
     if packer_bootstrap then
