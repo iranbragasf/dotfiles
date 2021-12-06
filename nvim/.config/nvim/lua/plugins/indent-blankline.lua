@@ -8,7 +8,9 @@ M.config = function ()
             'conf',
             'markdown',
             'packer',
-            'dbout'
+            'dbout',
+            'gitrebase',
+            'gitcommit'
         },
         buftype_exclude = { 'terminal', 'nofile' }
     }
