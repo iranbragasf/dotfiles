@@ -44,6 +44,11 @@ return require('packer').startup({function(use)
     }
 
     use {
+        'numToStr/Comment.nvim',
+        config = require('plugins.Comment').config
+    }
+
+    use {
         'kyazdani42/nvim-tree.lua',
         cmd = 'NvimTreeToggle',
         setup = require('plugins.nvim-tree').setup,
@@ -76,6 +81,7 @@ return require('packer').startup({function(use)
         config = require("plugins.treesitter").config,
         requires = {
             'nvim-treesitter/playground',
+            'JoosepAlviste/nvim-ts-context-commentstring'
         }
     }
 

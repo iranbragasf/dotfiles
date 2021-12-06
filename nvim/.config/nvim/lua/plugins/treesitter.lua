@@ -32,6 +32,10 @@ M.config = function()
             use_virtual_text = true,
             lint_events = { "BufWrite", "CursorHold" }
         },
+        context_commentstring = {
+            enable = true,
+            enable_autocmd = false -- Necessary for integration with Comment.nvim
+        }
     }
 
     vim.api.nvim_set_keymap("n", "<Leader>ts", ":TSHighlightCapturesUnderCursor<CR>", {noremap = true, silent = true})
