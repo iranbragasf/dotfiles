@@ -3,9 +3,20 @@ local M = {}
 M.setup = function()
     vim.g.nvim_tree_git_hl = 1
     vim.g.nvim_tree_group_empty = 1
+    vim.g.nvim_tree_root_folder_modifier = ':t'
     vim.g.nvim_tree_window_picker_exclude = {
         filetype = { 'packer', 'qf' },
         buftype = { 'terminal' }
+    }
+    vim.g.nvim_tree_icons = {
+        git = {
+            unstaged  = "M",
+            staged    = "M",
+            unmerged  = "M",
+            renamed   = "R",
+            untracked = "U",
+            deleted   = "D"
+        }
     }
 
     vim.api.nvim_set_keymap("n", "<C-b>", ":NvimTreeToggle<CR>", { noremap = true, silent = true })
@@ -17,6 +28,7 @@ M.config = function()
     require('nvim-tree').setup({
         auto_close = true,
         update_focused_file = { enable = true },
+        update_cwd = true,
         git = {
             ignore = false,
             timeout = 500
