@@ -39,6 +39,11 @@ return require('packer').startup({function(use)
     }
 
     use {
+        "ray-x/lsp_signature.nvim",
+        config = require('plugins.lsp_signature').config
+    }
+
+    use {
         'kyazdani42/nvim-tree.lua',
         cmd = 'NvimTreeToggle',
         setup = require('plugins.nvim-tree').setup,
