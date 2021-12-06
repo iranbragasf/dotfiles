@@ -48,6 +48,7 @@ return require('packer').startup({function(use)
         config = require('plugins.Comment').config
     }
 
+
     use {
         'kyazdani42/nvim-tree.lua',
         cmd = 'NvimTreeToggle',
@@ -83,6 +84,12 @@ return require('packer').startup({function(use)
             'nvim-treesitter/playground',
             'JoosepAlviste/nvim-ts-context-commentstring'
         }
+    }
+
+    use {
+        'lewis6991/gitsigns.nvim',
+        config = require("plugins.gitsigns").config,
+        requires = { 'nvim-lua/plenary.nvim' }
     }
 
     use {
