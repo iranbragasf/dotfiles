@@ -9,13 +9,16 @@ M.setup = function()
         buftype = { 'terminal' }
     }
     vim.g.nvim_tree_icons = {
+        default = "",
+        symlink = "",
         git = {
             unstaged  = "M",
             staged    = "M",
             unmerged  = "M",
             renamed   = "R",
             untracked = "U",
-            deleted   = "D"
+            deleted   = "D",
+            ignored   = ""
         }
     }
 
@@ -29,10 +32,6 @@ M.config = function()
         auto_close = true,
         update_focused_file = { enable = true },
         update_cwd = true,
-        git = {
-            ignore = false,
-            timeout = 500
-        },
         view = {
             mappings = {
                 list = {
@@ -47,6 +46,10 @@ M.config = function()
             }
         }
     })
+
+    -- Workaround to highlight items that are ignored by git since it isn't
+    -- possible with `git.ignore` set to `false`
+    require('nvim-tree.lib').toggle_ignored()
 end
 
 return M
