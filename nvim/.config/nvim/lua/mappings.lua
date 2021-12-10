@@ -31,6 +31,11 @@ vim.api.nvim_set_keymap("n", "<C-h>", ":tabprev<CR>", {noremap = true, silent = 
 vim.api.nvim_set_keymap("n", "<C-PageUp>", ":tabmove -1<CR>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "<C-PageDown>", ":tabmove +1<CR>", {noremap = true, silent = true})
 
+-- <Left> and <Right> to move the cursor instead of selecting a different match
+-- in command-line completion
+vim.api.nvim_set_keymap("c", "<Left>", "<Space><BS><Left>", {noremap = true})
+vim.api.nvim_set_keymap("c", "<Right>", "<Space><BS><Right>", {noremap = true})
+
 -- Replace word below the cursor in the file
 vim.api.nvim_set_keymap("n", "<Leader>rw", ":%s/<C-r><C-w>//g<Left><Left>", {noremap = true})
 -- Replace highlighted words in the file

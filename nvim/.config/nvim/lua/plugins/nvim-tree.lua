@@ -8,6 +8,7 @@ M.setup = function()
         filetype = { 'packer', 'qf' },
         buftype = { 'terminal' }
     }
+    vim.g.nvim_tree_special_files = {}
     vim.g.nvim_tree_icons = {
         default = "",
         symlink = "",

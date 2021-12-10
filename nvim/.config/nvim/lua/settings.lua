@@ -6,6 +6,7 @@ vim.opt.wildignore:append({
     "**/__pycache__/**",
     "*.o"
 })
+vim.opt.wildignorecase = true
 vim.opt.hidden = true
 vim.opt.updatetime = 250
 vim.opt.mouse = "a"
@@ -57,7 +58,7 @@ vim.cmd([[
 ]])
 
 vim.cmd([[
-    augroup filetypedetect
+    augroup filetype_detect
         autocmd!
         autocmd BufNewFile,BufRead tsconfig.json setlocal ft=jsonc
         autocmd BufNewFile,BufRead .env.* setlocal ft=sh

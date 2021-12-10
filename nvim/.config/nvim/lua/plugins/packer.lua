@@ -1,6 +1,8 @@
 local M = {}
 
 M.config = function()
+    -- TODO: reload plugins without quiting
+
     -- Add `:PackerLog` command to open `packer.nvim.log` in new tab
     vim.cmd([[command! -nargs=0 PackerLog execute 'lua vim.cmd("tabnew " .. vim.fn.stdpath("cache") .. "/packer.nvim.log")']])
 

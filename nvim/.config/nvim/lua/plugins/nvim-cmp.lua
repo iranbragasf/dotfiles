@@ -58,7 +58,16 @@ M.config = function()
         formatting = {
             format = lspkind.cmp_format({
                 with_text = true,
-                maxwidth = 50
+                maxwidth = 50,
+                menu = ({
+                    nvim_lsp = "[LSP]",
+                    luasnip = "[LuaSnip]",
+                    nvim_lua = "[Lua]",
+                    emoji = "[Emoji]",
+                    buffer = "[Buffer]",
+                    path = "[Path]",
+                    ["vim-dadbod-completion"] = "[DB]"
+                })
             })
         },
         sources = {

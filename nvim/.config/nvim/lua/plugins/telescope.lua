@@ -81,7 +81,7 @@ M.config = function()
     vim.api.nvim_set_keymap("n", "<C-f>", "<Cmd>lua require('telescope.builtin').live_grep()<CR>", {noremap = true})
     vim.api.nvim_set_keymap("n", '<Leader>fb', "<Cmd>lua require('telescope.builtin').buffers()<CR>", {noremap = true})
     vim.api.nvim_set_keymap("n", "<Leader>fh", "<Cmd>lua require('telescope.builtin').help_tags()<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>fg", "<Cmd>lua require('telescope.builtin').grep_string({ search = vim.fn.input('Grep String: ') })<CR>", {noremap = true})
+    vim.api.nvim_set_keymap("n", "<Leader>fg", "<Cmd>lua require('telescope.builtin').grep_string({ search = vim.fn.input('Find word: ') })<CR>", {noremap = true})
     -- Find word below the cursor accross project files
     vim.api.nvim_set_keymap("n", "<Leader>fw", "<Cmd>lua require('telescope.builtin').grep_string({ search = vim.fn.expand('<cword>') })<CR>", {noremap = true})
     -- Find highlighted words accross project files
