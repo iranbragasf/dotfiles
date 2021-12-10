@@ -9,7 +9,8 @@ return require('packer').startup({function(use)
 
     use {
         'neovim/nvim-lspconfig',
-        config = require('plugins.lspconfig').config
+        config = require('plugins.lspconfig').config,
+        requires = { "b0o/schemastore.nvim" }
     }
 
     use {

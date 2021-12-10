@@ -143,6 +143,11 @@ M.config = function()
             end,
             ["jsonls"] = function()
                 default_opts.filetypes = { "json", "jsonc" }
+                default_opts.settings = {
+                    json = {
+                        schemas = require('schemastore').json.schemas()
+                    }
+                }
 
                 return default_opts
             end
