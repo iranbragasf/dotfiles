@@ -89,6 +89,13 @@ M.config = function()
         }
     })
 
+    cmp.setup.cmdline('?', {
+        formatting = { format = format },
+        sources = {
+            { name = 'buffer' }
+        }
+    })
+
     vim.cmd([[
         augroup dadbod_completion
             autocmd!

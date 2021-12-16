@@ -80,7 +80,10 @@ M.config = function()
         "sumneko_lua",
         "jsonls",
         "tsserver",
-        "yamlls"
+        "yamlls",
+        "bashls",
+        "pyright",
+        "clangd"
     }
 
     -- Automatically install LSP servers
