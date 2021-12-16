@@ -43,10 +43,10 @@ M.config = function()
                 }
             },
             file_ignore_patterns = {
-                "^%.git/",
-                "^node_modules/",
-                "^coverage/",
-                "^__pycache__/",
+                "%.git/",
+                "node_modules/",
+                "coverage/",
+                "__pycache__/",
                 "%.o"
             }
         },
@@ -94,8 +94,8 @@ M.config = function()
     vim.api.nvim_set_keymap("n", "<Leader>s", "<Cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", {noremap = true})
     vim.api.nvim_set_keymap("n", "<Leader>S", "<Cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>", {noremap = true})
     vim.api.nvim_set_keymap("n", "<Leader>ac", "<Cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>g", "<Cmd>lua require('telescope.builtin').lsp_document_diagnostics({ previewer = false })<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>G", "<Cmd>lua require('telescope.builtin').lsp_workspace_diagnostics({ previewer = false })<CR>", {noremap = true})
+    vim.api.nvim_set_keymap("n", "<Leader>g", "<Cmd>Telescope diagnostics bufnr=0 previewer=false<CR>", {noremap = true})
+    vim.api.nvim_set_keymap("n", "<Leader>G", "<Cmd>Telescope diagnostics previewer=false<CR>", {noremap = true})
     vim.api.nvim_set_keymap("n", "<Leader>rc", "<Cmd>lua require('plugins.telescope').search_dotfiles()<CR>", {noremap = true})
 end
 
