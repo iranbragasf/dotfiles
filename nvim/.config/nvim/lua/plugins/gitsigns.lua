@@ -7,7 +7,7 @@ M.config = function()
             change       = { text = "▋" },
             delete       = { text = "▋" },
             topdelete    = { text = "▋" },
-            changedelete = { text = "▋" },
+            changedelete = { text = "▋" }
         },
         keymaps = {
             noremap = true,
@@ -18,9 +18,13 @@ M.config = function()
             ['n <Leader>hs'] = '<Cmd>Gitsigns stage_hunk<CR>',
             ['v <Leader>hs'] = ':Gitsigns stage_hunk<CR>',
             ['n <Leader>hu'] = '<Cmd>Gitsigns undo_stage_hunk<CR>',
-            ['n <Leader>hS'] = '<Cmd>Gitsigns stage_buffer<CR>',
+            ['n <Leader>hr'] = '<Cmd>Gitsigns reset_hunk<CR>',
+            ['v <Leader>hr'] = ':Gitsigns reset_hunk<CR>',
+            ['n <Leader>hR'] = '<Cmd>Gitsigns reset_buffer<CR>',
             ['n <Leader>hp'] = '<Cmd>Gitsigns preview_hunk<CR>',
-            ['n <Leader>hb'] = '<Cmd>lua require("gitsigns").blame_line({ full = true })<CR>',
+            ['n <Leader>hb'] = '<Cmd>lua require"gitsigns".blame_line({ full=true })<CR>',
+            ['n <Leader>hS'] = '<Cmd>Gitsigns stage_buffer<CR>',
+            ['n <Leader>hU'] = '<Cmd>Gitsigns reset_buffer_index<CR>',
         },
         current_line_blame = true,
         current_line_blame_opts = {
