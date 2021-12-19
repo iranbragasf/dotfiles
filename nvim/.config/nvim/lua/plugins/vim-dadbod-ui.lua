@@ -1,6 +1,5 @@
 local M = {}
 
--- TODO: remove colorcolumn from `dbout` filetype
 M.setup = function()
     vim.g.db_ui_execute_on_save = 0
     vim.g.db_ui_show_database_icon = 1

@@ -50,27 +50,24 @@ M.config = function()
         { border = vim.g.border }
     )
 
-    -- NOTE: only available for Neovim 0.6.0 (see :help vim.diagnostic.config)
-    -- vim.diagnostic.config({
-    --     virtual_text = {
-    --         source = "if_many",
-    --     }
-    --     signs = true,
-    --     underline = true,
-    --     update_in_insert = false,
-    --     severity_sort = true,
-    -- })
+    vim.diagnostic.config({
+        virtual_text = {
+            source = "if_many",
+        },
+        signs = true,
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
+    })
 
-    -- NOTE: only available for Neovim 0.6.0
     -- Change diagnostic symbols in the sign column
     -- local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-    -- local_signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-    -- for type, icon in pairs(signs) do
-    --     local hl = "DiagnosticSign" .. type
-    --     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-    -- end
+    local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+    for type, icon in pairs(signs) do
+        local hl = "DiagnosticSign" .. type
+        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+    end
 
-    -- NOTE: only available for Neovim 0.6.0
     -- Show line diagnostics for specific cursor position
     -- vim.cmd([[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, { focusable=false, scope="cursor" })]])
 
@@ -161,7 +158,7 @@ M.config = function()
         -- We check to see if any custom server_opts exist for the LSP server,
         -- if so, load them, if not, use our default_opts
         server:setup(server_opts[server.name] and server_opts[server.name]() or default_opts)
-        vim.cmd([[ do User LspAttachBuffers ]])
+        vim.cmd([[do User LspAttachBuffers]])
     end)
 end
 

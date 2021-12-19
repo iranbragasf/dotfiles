@@ -28,6 +28,8 @@ M.config = function()
                 c = cmp.mapping.close(),
             }),
             ['<CR>'] = cmp.mapping.confirm({ select = true }),
+            ['<Up>'] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }), { 'i' }),
+            ['<Down>'] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }), { 'i' }),
             ["<Tab>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()
