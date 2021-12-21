@@ -64,6 +64,8 @@ return require('packer').startup({function(use)
         requires = { 'kyazdani42/nvim-web-devicons' }
     }
 
+    -- TODO: create a `EditorConfigGenerate` commannd to generate a
+    -- `.editorconfig` file with base settings in project root
     use { "editorconfig/editorconfig-vim" }
 
     use {
@@ -112,7 +114,10 @@ return require('packer').startup({function(use)
     use {
         'monsonjeremy/onedark.nvim',
         config = function()
-            require('onedark').setup({ functionStyle = "italic" })
+            require('onedark').setup({
+                functionStyle = "italic",
+                sidebars = {"undotree", "dbui"}
+            })
             vim.cmd([[colorscheme onedark]])
         end
     }

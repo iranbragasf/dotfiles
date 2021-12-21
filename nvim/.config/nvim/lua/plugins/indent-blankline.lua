@@ -10,7 +10,8 @@ M.config = function ()
             'packer',
             'dbout',
             'gitrebase',
-            'gitcommit'
+            'gitcommit',
+            'undotree'
         },
         buftype_exclude = { 'terminal', 'nofile' }
     }
