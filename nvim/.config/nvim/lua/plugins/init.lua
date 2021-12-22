@@ -34,6 +34,7 @@ return require('packer').startup({function(use)
             },
             {
                 'saadparwaiz1/cmp_luasnip',
+                -- TODO: configure snipets
                 requires = { 'L3MON4D3/LuaSnip' }
             }
         }

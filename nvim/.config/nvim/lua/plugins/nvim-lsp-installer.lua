@@ -22,10 +22,10 @@ M.config = function()
         buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
         buf_set_keymap('n', 'gs', '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
         buf_set_keymap('n', '<Leader>rn', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
-        buf_set_keymap('n', 'gl', '<Cmd>lua vim.lsp.diagnostic.show_line_diagnostics({border = vim.g.border, focusable = false})<CR>', opts)
-        buf_set_keymap('n', '[g', '<Cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = vim.g.border, focusable = false}})<CR>', opts)
-        buf_set_keymap('n', ']g', '<Cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = vim.g.border, focusable = false}})<CR>', opts)
-        buf_set_keymap('n', '<Leader>q', '<Cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+        buf_set_keymap('n', 'gl', '<Cmd>lua vim.diagnostic.open_float()<CR>', opts)
+        buf_set_keymap('n', '[g', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+        buf_set_keymap('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+        buf_set_keymap('n', '<Leader>q', '<Cmd>lua vim.diagnostic.setloclist()<CR>', opts)
         buf_set_keymap('n', '<Leader>f', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
         -- Highlight the symbol and its references when holding the cursor
@@ -40,15 +40,13 @@ M.config = function()
         end
     end
 
-    -- Floating windows with borders
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-        vim.lsp.handlers.hover,
-        { border = vim.g.border }
-    )
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-        vim.lsp.handlers.signature_help,
-        { border = vim.g.border }
-    )
+    -- Globally enable floating windows with borders
+    local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+    function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+        opts = opts or {}
+        opts.border = opts.border or vim.g.border
+        return orig_util_open_floating_preview(contents, syntax, opts, ...)
+    end
 
     vim.diagnostic.config({
         virtual_text = {
@@ -57,7 +55,7 @@ M.config = function()
         signs = true,
         underline = true,
         update_in_insert = false,
-        severity_sort = true,
+        severity_sort = true
     })
 
     -- Change diagnostic symbols in the sign column
