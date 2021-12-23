@@ -18,6 +18,12 @@ return require('packer').startup({function(use)
         config = require('plugins.nvim-lsp-installer').config
     }
 
+    use({
+        "jose-elias-alvarez/null-ls.nvim",
+        config = require('plugins.null-ls').config,
+        requires = { "nvim-lua/plenary.nvim" }
+    })
+
     use {
         'hrsh7th/nvim-cmp',
         config = require('plugins.nvim-cmp').config,
