@@ -5,8 +5,8 @@ M.config = function()
     -- Add `:PackerLog` command to open `packer.nvim.log` in new tab
     vim.cmd([[command! -nargs=0 PackerLog execute 'lua vim.cmd("tabnew " .. vim.fn.stdpath("cache") .. "/packer.nvim.log")']])
 
-    -- Add `:PackerCompiledDelete` command to delete `packer_compiled.lua`
-    vim.cmd([[command! -nargs=0 PackerCompiledDelete execute 'lua vim.fn.delete(require("packer").config.compile_path)']])
+    -- Add `:PackerDeleteCompiled` command to delete `packer_compiled.lua`
+    vim.cmd([[command! -nargs=0 PackerDeleteCompiled execute 'lua vim.fn.delete(require("packer").config.compile_path)']])
 end
 
 local function is_packer_installed(install_path)
@@ -26,18 +26,14 @@ M.download_packer = function()
 
     local answer = vim.fn.input(':: Download packer.nvim? [Y/n] ')
 
-    vim.notify('\n')
-
     -- TODO: match answer with regex
     if answer == 'y' or answer == 'yes' or answer == 'Y' or answer == 'YES' or answer == '' then
         vim.notify(':: Downloading packer.nvim...')
 
-        vim.fn.delete(install_path, 'rf') -- Remove the directory before cloning
+        -- Remove the directory before cloning
+        vim.fn.delete(install_path, 'rf')
 
-        local packer_bootstrap = vim.fn.system({
-            'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim',
-            install_path
-        })
+        local packer_bootstrap = vim.fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
 
         vim.notify(packer_bootstrap)
 

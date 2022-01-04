@@ -3,19 +3,15 @@ local M = {}
 M.config = function()
     local null_ls = require("null-ls")
 
-    local diagnostics = null_ls.builtins.diagnostics   -- Diagnostic sources
-    local formatting = null_ls.builtins.formatting     -- Formatting sources
-    local code_actions = null_ls.builtins.code_actions -- Code action sources
-    local hover = null_ls.builtins.hover               -- Hover sources
-    local completion = null_ls.builtins.completion     -- Completion sources
+    local diagnostics = null_ls.builtins.diagnostics
+    local formatting = null_ls.builtins.formatting
 
-    -- TODO: separate this into formatters and linters tables
-    local sources = {
+    local formatters = {
         formatting.prettier.with({
             filetypes = {
-                "javascript",
                 "javascriptreact",
                 "typescript",
+                "javascript",
                 "typescriptreact",
                 "vue",
                 "css",
@@ -35,57 +31,59 @@ M.config = function()
             },
             prefer_local = "node_modules/.bin"
         }),
-        -- formatting.shfmt.with({
-        --     filetypes = { "sh", "zsh" }
-        -- }),
-        -- formatting.stylua,
-        -- formatting.black,
+        formatting.black,
+        formatting.stylua,
+        formatting.shfmt,
+        formatting.prismaFmt
+    }
+
+    local linters = {
         diagnostics.eslint.with({
             prefer_local = "node_modules/.bin"
         }),
-        -- diagnostics.shellcheck.with({
-        --     filetypes = { "sh", "zsh" }
-        -- }),
-        -- diagnostics.flake8
+        diagnostics.flake8,
+        diagnostics.luacheck,
+        diagnostics.shellcheck
     }
 
-    -- TODO: set format on save only for these filetypes
-    -- local format_on_save_filetypes = {
-    --     "html",
-    --     "css",
-    --     "javascript",
-    --     "typescript",
-    --     "json",
-    --     "sh",
-    --     "zsh",
-    --     "lua",
-    --     "python"
-    -- }
+    local sources = {}
 
-    -- local function on_attach(client, bufnr)
-    --     if client.resolved_capabilities.document_formatting then
-    --         local filetype = vim.api.nvim_get_option(bufnr, "filetype")
-    --
-    --         if vim.tbl_contains(format_on_save_filetypes, filetype) then
-    --             vim.cmd([[
-    --                 augroup format_on_save
-    --                     autocmd! * <buffer>
-    --                     autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync(nil, 1000)
-    --                 augroup END
-    --             ]])
-    --         end
-    --
-    --         -- Add `:Format` command to format current buffer
-    --         vim.cmd([[command! -nargs=0 Format execute "lua vim.lsp.buf.formatting_sync(nil, 1000)"]])
-    --
-    --         -- require("plugins.nvim-lsp-installer").on_attach(client, bufnr)
-    --     end
-    -- end
+    table.foreach(formatters, function(k, v) table.insert(sources, v) end)
+    table.foreach(linters, function(k, v) table.insert(sources, v) end)
 
-    require("null-ls").setup({
+    local function on_attach(client, bufnr)
+        local format_on_save_filetypes = {
+            "json",
+            "jsonc",
+            "yaml",
+            "javascript",
+            "typescript",
+            "prisma"
+        }
+
+        if client.resolved_capabilities.document_formatting then
+            local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+
+            if vim.tbl_contains(format_on_save_filetypes, filetype) then
+                vim.cmd([[
+                    augroup format_on_save
+                        autocmd! * <buffer>
+                        autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+                    augroup END
+                ]])
+            end
+
+            -- Add `:Format` command to format current buffer
+            vim.cmd([[command! -nargs=0 Format execute "lua vim.lsp.buf.formatting_sync()"]])
+        end
+    end
+
+    null_ls.setup({
         sources = sources,
-        -- on_attach = on_attach
+        on_attach = on_attach
     })
+
+    vim.cmd([[autocmd! FileType null-ls-info nnoremap <buffer> q <Cmd>close<CR>]])
 end
 
 return M

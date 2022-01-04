@@ -5,7 +5,7 @@ M.setup = function()
     vim.g.nvim_tree_group_empty = 1
     vim.g.nvim_tree_root_folder_modifier = ':t'
     vim.g.nvim_tree_window_picker_exclude = {
-        filetype = { 'packer', 'qf' },
+        filetype = { 'packer', 'qf', 'dbui', 'undotree' },
         buftype = { 'terminal' }
     }
     vim.g.nvim_tree_special_files = {}

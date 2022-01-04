@@ -10,7 +10,7 @@ M.config = function()
         -- Enable completion triggered by <C-x><C-o>
         buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-        -- Mappings.
+        -- Mappings
         local opts = { noremap = true, silent = true }
 
         -- See `:help vim.lsp.*` for documentation on any of the below functions
@@ -26,7 +26,14 @@ M.config = function()
         buf_set_keymap('n', '[g', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
         buf_set_keymap('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
         buf_set_keymap('n', '<Leader>q', '<Cmd>lua vim.diagnostic.setloclist()<CR>', opts)
-        buf_set_keymap('n', '<Leader>f', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+        -- These are turned off in favor of `null-ls`
+        if client.resolved_capabilities.document_formatting then
+            client.resolved_capabilities.document_formatting = false
+        end
+        if client.resolved_capabilities.document_range_formatting then
+            client.resolved_capabilities.document_range_formatting = false
+        end
 
         -- Highlight the symbol and its references when holding the cursor
         if client.resolved_capabilities.document_highlight then
@@ -40,17 +47,18 @@ M.config = function()
         end
     end
 
-    -- Globally enable floating windows with borders
+    -- Enale options for floating windows globally
     local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
     function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
         opts = opts or {}
         opts.border = opts.border or vim.g.border
+        opts.focusable = false
         return orig_util_open_floating_preview(contents, syntax, opts, ...)
     end
 
     vim.diagnostic.config({
         virtual_text = {
-            source = "if_many",
+            source = "if_many"
         },
         signs = true,
         underline = true,
@@ -66,22 +74,19 @@ M.config = function()
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
     end
 
-    -- Show line diagnostics for specific cursor position
-    -- vim.cmd([[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, { focusable=false, scope="cursor" })]])
-
     local lsp_installer = require("nvim-lsp-installer")
 
     local servers = {
         "sumneko_lua",
         "jsonls",
-        "tsserver",
         "yamlls",
+        "tsserver",
         "bashls",
         "pyright",
         "clangd"
     }
 
-    -- Automatically install LSP servers
+    -- Automatically install Language Servers
     for _, name in pairs(servers) do
         local ok, server = lsp_installer.get_server(name)
 
@@ -99,8 +104,7 @@ M.config = function()
     capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
     -- Register a handler that will be called for all installed servers.
-    -- Alternatively, you may also register handlers on specific server
-    -- instances instead (see example below).
+    -- Alternatively, handlers on specific servers can be registered instead
     lsp_installer.on_server_ready(function(server)
         local default_opts = {
             on_attach = on_attach,
@@ -146,16 +150,6 @@ M.config = function()
                         schemas = require('schemastore').json.schemas()
                     }
                 }
-
-                return default_opts
-            end,
-            ["tsserver"] = function()
-                default_opts.on_attach = function(client, bufnr)
-                    client.resolved_capabilities.document_formatting = false
-                    client.resolved_capabilities.document_range_formatting = false
-
-                    on_attach(client, bufnr)
-                end
 
                 return default_opts
             end
