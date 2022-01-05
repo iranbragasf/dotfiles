@@ -10,20 +10,20 @@ vim.api.nvim_set_keymap("n", "N", "Nzz", {noremap = true})
 vim.api.nvim_set_keymap("n", "*", "*zz", {noremap = true})
 vim.api.nvim_set_keymap("n", "#", "#zz", {noremap = true})
 
-vim.api.nvim_set_keymap("n", "Y", "y$", {noremap = true})
-
 vim.api.nvim_set_keymap("n", "<Esc>", ":nohlsearch<CR>", {noremap = true, silent = true})
 
--- Move lines up and down
+vim.api.nvim_set_keymap("v", "p", '"_dP', {noremap = true})
+
+-- Move text up and down
 vim.api.nvim_set_keymap("n", "<A-j>", ":m .+1<CR>==", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "<A-k>", ":m .-2<CR>==", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("v", "<A-k>", ":m '<-2<CR>gv=gv", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("v", "<A-j>", ":m '>+1<CR>gv=gv", {noremap = true, silent = true})
 
-vim.api.nvim_set_keymap("n", "<C-Left>", ":vertical resize +5<CR>", {noremap = true, silent = true})
-vim.api.nvim_set_keymap("n", "<C-Right>", ":vertical resize -5<CR>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "<C-Up>", ":resize +5<CR>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "<C-Down>", ":resize -5<CR>", {noremap = true, silent = true})
+vim.api.nvim_set_keymap("n", "<C-Left>", ":vertical resize +5<CR>", {noremap = true, silent = true})
+vim.api.nvim_set_keymap("n", "<C-Right>", ":vertical resize -5<CR>", {noremap = true, silent = true})
 
 vim.api.nvim_set_keymap("n", "<C-t>", ":tabnew<CR>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "<C-l>", ":tabnext<CR>", {noremap = true, silent = true})
