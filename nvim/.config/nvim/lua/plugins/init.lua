@@ -1,6 +1,12 @@
 local packer_bootstrap = require("plugins.packer").download_packer()
 
-return require('packer').startup({function(use)
+local ok, packer = pcall(require, "packer")
+
+if not ok then
+    return
+end
+
+return packer.startup({function(use)
     -- Packer can manage itself
     use {
         'wbthomason/packer.nvim',
@@ -125,6 +131,7 @@ return require('packer').startup({function(use)
                 functionStyle = "italic",
                 sidebars = {"undotree", "dbui"}
             })
+
             vim.cmd([[colorscheme onedark]])
         end
     }
@@ -132,7 +139,7 @@ return require('packer').startup({function(use)
     -- Automatically set up your configuration after cloning packer.nvim
     -- Must be put at the end after all plugins
     if packer_bootstrap then
-        require('packer').sync()
+        packer.sync()
     end
 end,
 config = {

@@ -25,6 +25,7 @@ M.download_packer = function()
     end
 
     local answer = vim.fn.input(':: Download packer.nvim? [Y/n] ')
+    vim.notify('\n')
 
     -- TODO: match answer with regex
     if answer == 'y' or answer == 'yes' or answer == 'Y' or answer == 'YES' or answer == '' then
@@ -37,11 +38,13 @@ M.download_packer = function()
 
         vim.notify(packer_bootstrap)
 
-        local packer, _ = pcall(require, 'packer')
+        -- Add packer to the current neovim session so no restarting is needed
+        vim.cmd([[packadd packer.nvim]])
 
-        if not packer then
-            error('Error downloading packer.nvim!\npacker.nvim path: ' .. install_path)
-            return
+        local ok, _ = pcall(require, 'packer')
+
+        if not ok then
+            error('Error downloading packer.nvim')
         end
 
         vim.notify(':: packer.nvim successfully downloaded')
