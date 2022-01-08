@@ -66,12 +66,11 @@ return packer.startup({function(use)
         'kristijanhusak/vim-dadbod-ui',
         cmd = { "DBUIToggle", "DBUIAddConnection" },
         setup = require('plugins.vim-dadbod-ui').setup,
-        requires = { 'tpope/vim-dadbod' },
+        requires = { 'tpope/vim-dadbod' }
     }
 
     use {
         'kyazdani42/nvim-tree.lua',
-        cmd = 'NvimTreeToggle',
         setup = require('plugins.nvim-tree').setup,
         config = require('plugins.nvim-tree').config,
         requires = { 'kyazdani42/nvim-web-devicons' }
@@ -129,8 +128,8 @@ return packer.startup({function(use)
         config = function()
             require('onedark').setup({
                 functionStyle = "italic",
-                sidebars = {"qf", "undotree", "dbui"},
-                colors = {bg_highlight = "#31353f"}
+                sidebars = { "qf", "undotree", "dbui" },
+                colors = { bg_highlight = "#31353f" }
             })
 
             vim.cmd([[colorscheme onedark]])

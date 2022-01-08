@@ -4,6 +4,7 @@ M.setup = function()
     vim.g.nvim_tree_git_hl = 1
     vim.g.nvim_tree_group_empty = 1
     vim.g.nvim_tree_root_folder_modifier = ':t'
+    vim.g.nvim_tree_create_in_closed_folder = 1
     vim.g.nvim_tree_window_picker_exclude = {
         filetype = { 'packer', 'qf', 'dbui', 'undotree' },
         buftype = { 'terminal' }
@@ -33,7 +34,17 @@ M.config = function()
         auto_close = true,
         update_focused_file = { enable = true },
         update_cwd = true,
+        diagnostics = {
+            enable = true,
+            icons = {
+                hint = "",
+                info = "",
+                warning = "",
+                error = "",
+            }
+        },
         view = {
+            auto_resize = true,
             mappings = {
                 list = {
                     { key = "l",     cb = tree_cb("edit") },
