@@ -129,7 +129,8 @@ return packer.startup({function(use)
         config = function()
             require('onedark').setup({
                 functionStyle = "italic",
-                sidebars = {"undotree", "dbui"}
+                sidebars = {"qf", "undotree", "dbui"},
+                colors = {bg_highlight = "#31353f"}
             })
 
             vim.cmd([[colorscheme onedark]])
