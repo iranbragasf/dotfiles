@@ -9,20 +9,12 @@ M.config = function()
         end
     end
 
-    local function float_handler(term)
-        if vim.fn.mapcheck('<Esc>', 't') ~= '' then
-            vim.api.nvim_buf_del_keymap(term.bufnr, 't', '<Esc>')
-        end
-    end
-
     require("toggleterm").setup({
         size = size,
         open_mapping = "<F12>",
         shade_filetypes = { "none" }, -- Setting "none" will allow normal terminal buffers to be highlighted.
-        float_opts = {
-            border = vim.g.border,
-            height = 30
-        }
+        direction = "horizontal", -- 'vertical' | 'horizontal' | 'window' | 'float'
+        float_opts = { border = vim.g.border }
     })
 
     -- Mappings to make moving in and out of a terminal easier once toggled,
@@ -40,36 +32,42 @@ M.config = function()
     -- should be used instead
     vim.cmd([[autocmd! TermOpen term://* lua set_terminal_keymaps()]])
 
-    -- Custom terminals
     local Terminal  = require("toggleterm.terminal").Terminal
 
-    local lazygit = Terminal:new({
+    local function float_handler(term)
+        if vim.fn.mapcheck('<Esc>', 't') ~= '' then
+            vim.api.nvim_buf_del_keymap(term.bufnr, 't', '<Esc>')
+        end
+    end
+
+    local function get_float_opts(opts)
+        local default_opts = {
+            direction = "float",
+            float_opts = {
+                width = 130,
+                height = 30
+            },
+            hidden = true,
+            on_open = float_handler
+        }
+
+        return vim.tbl_extend("force" , default_opts, opts)
+    end
+
+    local lazygit = Terminal:new(get_float_opts({
         cmd = "lazygit",
-        direction = "float",
-        dir = "git_dir",
-        hidden = true,
-        on_open = float_handler
-    })
+        dir = "git_dir"
+    }))
     function lazygit_toggle()
         lazygit:toggle()
     end
 
-    local lazydocker = Terminal:new({
-        cmd = "lazydocker",
-        direction = "float",
-        hidden = true,
-        on_open = float_handler
-    })
+    local lazydocker = Terminal:new(get_float_opts({ cmd = "lazydocker" }))
     function lazydocker_toggle()
         lazydocker:toggle()
     end
 
-    local htop = Terminal:new({
-        cmd = "htop",
-        direction = "float",
-        hidden = true,
-        on_open = float_handler
-    })
+    local htop = Terminal:new(get_float_opts({ cmd = "htop" }))
     function htop_toggle()
         htop:toggle()
     end
@@ -80,6 +78,8 @@ M.config = function()
 
     vim.api.nvim_set_keymap("n", "<Leader>lg", "<Cmd>Lazygit<CR>", {noremap = true})
     vim.api.nvim_set_keymap("n", "<Leader>ld", "<Cmd>Lazydocker<CR>", {noremap = true})
+
+    vim.cmd([[autocmd FileType toggleterm setlocal signcolumn=no]])
 end
 
 return M

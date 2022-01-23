@@ -31,25 +31,17 @@ M.config = function()
             },
             prefer_local = "node_modules/.bin"
         }),
-        formatting.black,
-        formatting.stylua,
-        formatting.shfmt,
         formatting.prismaFmt
     }
 
     local linters = {
-        diagnostics.eslint.with({
-            prefer_local = "node_modules/.bin"
-        }),
-        diagnostics.flake8,
-        diagnostics.luacheck,
-        diagnostics.shellcheck
+        diagnostics.eslint_d
     }
 
     local sources = {}
 
-    table.foreach(formatters, function(k, v) table.insert(sources, v) end)
-    table.foreach(linters, function(k, v) table.insert(sources, v) end)
+    vim.list_extend(sources, formatters)
+    vim.list_extend(sources, linters)
 
     local function on_attach(client, bufnr)
         local format_on_save_filetypes = {

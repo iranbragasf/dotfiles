@@ -1,7 +1,6 @@
 local M = {}
 
 M.config = function()
-    -- Treesitter based folding. It overrides folding settings in `settings.lua`
     vim.opt.foldmethod = "expr"
     vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
@@ -9,6 +8,7 @@ M.config = function()
         ensure_installed = "maintained",
         sync_install = false,
         highlight = { enable = true },
+        indent = { enable = true },
         playground = {
             enable = true,
             disable = {},

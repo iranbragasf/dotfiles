@@ -8,9 +8,7 @@ M.config = function()
         "jsonls",
         "yamlls",
         "tsserver",
-        "bashls",
-        "pyright",
-        "clangd"
+        "prismals"
     }
 
     -- Automatically install Language Servers

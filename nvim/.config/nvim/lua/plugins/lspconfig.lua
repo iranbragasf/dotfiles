@@ -11,7 +11,8 @@ M.config = function()
     end
 
     vim.diagnostic.config({
-        virtual_text = { source = "if_many" },
+        virtual_text = { source = "always" },
+        float = { source = "always" },
         signs = true,
         underline = true,
         update_in_insert = false,
@@ -19,29 +20,28 @@ M.config = function()
     })
 
     -- Change diagnostic symbols in the sign column
-    -- local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-    local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+    local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+    -- local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
     for type, icon in pairs(signs) do
         local hl = "DiagnosticSign" .. type
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
     end
 
-    vim.cmd([[autocmd! FileType lspinfo nnoremap <buffer> q <Cmd>close<CR>]])
-
     -- Add `:LspLog` command to open `lsp.log` file in new tab
     vim.cmd([[command! -nargs=0 LspLog execute 'lua vim.cmd("tabnew " .. vim.lsp.get_log_path())']])
+
+    vim.cmd([[autocmd! FileType lspinfo nnoremap <buffer> q <Cmd>close<CR>]])
 end
 
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-M.on_attach = function(client, bufnr)
+-- This hook is used to only activate the bindings after the language server
+-- attaches to the current buffer.
+local function on_attach(client, bufnr)
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
     local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
     -- Enable completion triggered by <C-x><C-o>
     buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-    -- Mappings
     local opts = { noremap = true, silent = true }
 
     -- See `:help vim.lsp.*` for documentation on any of the below functions
@@ -58,15 +58,16 @@ M.on_attach = function(client, bufnr)
     buf_set_keymap('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
     buf_set_keymap('n', '<Leader>q', '<Cmd>lua vim.diagnostic.setloclist()<CR>', opts)
 
-    -- These are turned off in favor of `null-ls`
+    -- No formatting capabilities by default
     if client.resolved_capabilities.document_formatting then
         client.resolved_capabilities.document_formatting = false
     end
+
     if client.resolved_capabilities.document_range_formatting then
         client.resolved_capabilities.document_range_formatting = false
     end
 
-    -- Highlight the symbol and its references when holding the cursor
+    -- Highlight symbol under cursor and its references
     if client.resolved_capabilities.document_highlight then
         vim.cmd([[
             augroup lsp_document_highlight
@@ -78,7 +79,7 @@ M.on_attach = function(client, bufnr)
     end
 end
 
-M.get_client_capabilities = function()
+local function get_client_capabilities()
     -- Add additional capabilities supported by `nvim-cmp`
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
@@ -87,8 +88,8 @@ M.get_client_capabilities = function()
 end
 
 M.default_opts = {
-    on_attach = M.on_attach,
-    capabilities = M.get_client_capabilities(),
+    on_attach = on_attach,
+    capabilities = get_client_capabilities(),
     flags = { debounce_text_changes = 150 }
 }
 
@@ -101,9 +102,8 @@ M.server_opts = {
         default_opts.settings = {
             Lua = {
                 runtime = {
-                    -- Tell the language server which version of Lua
-                    -- you're using (most likely LuaJIT in the case of
-                    -- Neovim)
+                    -- Tell the language server which version of Lua you're
+                    -- using (most likely LuaJIT in the case of Neovim)
                     version = 'LuaJIT',
                     -- Setup your lua path
                     path = runtime_path
@@ -116,7 +116,8 @@ M.server_opts = {
                     -- Make the server aware of Neovim runtime files
                     library = vim.api.nvim_get_runtime_file("", true)
                 },
-                -- Do not send telemetry data containing a randomized but unique identifier
+                -- Do not send telemetry data containing a randomized but
+                -- unique identifier
                 telemetry = { enable = false }
             }
         }
@@ -128,7 +129,7 @@ M.server_opts = {
                 schemas = require('schemastore').json.schemas()
             }
         }
-    end
+    end,
 }
 
 return M

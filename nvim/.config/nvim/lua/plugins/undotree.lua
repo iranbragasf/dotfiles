@@ -11,8 +11,12 @@ M.setup = function()
 end
 
 M.config = function()
+    vim.cmd([[autocmd FileType undotree nmap <buffer> l <Plug>UndotreeEnter]])
+
     -- Exit if Undotree is the only window left
     vim.cmd([[autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && &filetype == 'undotree' | quit | endif]])
+
+    vim.cmd([[autocmd FileType undotree,diff setlocal signcolumn=no]])
 end
 
 return M

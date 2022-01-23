@@ -37,10 +37,10 @@ M.config = function()
         diagnostics = {
             enable = true,
             icons = {
-                hint = "",
-                info = "",
-                warning = "",
-                error = "",
+              error = "",
+              warning = "",
+              hint = "",
+              info = ""
             }
         },
         view = {

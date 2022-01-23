@@ -27,13 +27,8 @@ M.config = function()
             ['n <Leader>hU'] = '<Cmd>Gitsigns reset_buffer_index<CR>',
         },
         current_line_blame = true,
-        current_line_blame_opts = {
-            delay = 250,
-            ignore_whitespace = false
-        },
-        current_line_blame_formatter_opts = {
-            relative_time = true
-        },
+        current_line_blame_opts = { delay = 250 },
+        current_line_blame_formatter_opts = { relative_time = true },
         preview_config = { border = vim.g.border }
     }
 end

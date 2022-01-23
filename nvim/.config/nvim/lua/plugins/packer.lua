@@ -1,12 +1,19 @@
 local M = {}
 
--- TODO: reload plugins without quiting
 M.config = function()
     -- Add `:PackerLog` command to open `packer.nvim.log` in new tab
     vim.cmd([[command! -nargs=0 PackerLog execute 'lua vim.cmd("tabnew " .. vim.fn.stdpath("cache") .. "/packer.nvim.log")']])
 
     -- Add `:PackerDeleteCompiled` command to delete `packer_compiled.lua`
     vim.cmd([[command! -nargs=0 PackerDeleteCompiled execute 'lua vim.fn.delete(require("packer").config.compile_path)']])
+
+    -- Automatically run `:PackerCompile` whenever plugins/init.lua is updated
+    vim.cmd([[
+        augroup packer_user_config
+            autocmd!
+            autocmd BufWritePost */plugins/init.lua source <afile> | PackerCompile
+        augroup end
+    ]])
 end
 
 local function is_packer_installed(install_path)

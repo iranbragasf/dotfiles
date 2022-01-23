@@ -74,6 +74,7 @@ return packer.startup({function(use)
         'kristijanhusak/vim-dadbod-ui',
         cmd = { "DBUIToggle", "DBUIAddConnection" },
         setup = exec_setup('vim-dadbod-ui'),
+        config = exec_config('vim-dadbod-ui'),
         requires = { 'tpope/vim-dadbod' }
     }
 
