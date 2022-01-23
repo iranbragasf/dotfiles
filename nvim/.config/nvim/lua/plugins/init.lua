@@ -133,15 +133,7 @@ return packer.startup({function(use)
 
     use {
         'monsonjeremy/onedark.nvim',
-        config = function()
-            require('onedark').setup({
-                functionStyle = "italic",
-                sidebars = { "qf", "undotree", "dbui" },
-                colors = { bg_highlight = "#31353f" }
-            })
-
-            vim.cmd([[colorscheme onedark]])
-        end
+        config = exec_config('onedark')
     }
 
     -- Automatically set up your configuration after cloning packer.nvim
