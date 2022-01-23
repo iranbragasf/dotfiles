@@ -12,7 +12,10 @@ vim.api.nvim_set_keymap("n", "#", "#zz", {noremap = true})
 
 vim.api.nvim_set_keymap("n", "<Esc>", ":nohlsearch<CR>", {noremap = true, silent = true})
 
-vim.api.nvim_set_keymap("v", "p", '"_dP', {noremap = true})
+-- TODO: make this work in Visual Block, then remap it to `p`
+-- Replace the selected text with the yanked text while keeping the yanked
+-- content intact
+vim.api.nvim_set_keymap("v", "<Leader>p", '"_dP', {noremap = true})
 
 -- Move text up and down
 vim.api.nvim_set_keymap("n", "<A-j>", ":m .+1<CR>==", {noremap = true, silent = true})

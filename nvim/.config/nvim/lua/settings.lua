@@ -32,7 +32,6 @@ vim.opt.writebackup = false
 vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
-vim.opt.foldmethod = "indent"
 vim.opt.foldlevelstart = 99
 vim.opt.signcolumn = "yes"
 vim.opt.wrap = false

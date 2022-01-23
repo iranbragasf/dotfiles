@@ -6,33 +6,41 @@ if not ok then
     return
 end
 
+local function exec_setup(plugin_name)
+    require("plugins." .. plugin_name).setup()
+end
+
+local function exec_config(plugin_name)
+    require("plugins." .. plugin_name).config()
+end
+
 return packer.startup({function(use)
     -- Packer can manage itself
     use {
         'wbthomason/packer.nvim',
-        config = require('plugins.packer').config
+        config = exec_config("packer")
     }
 
     use {
         'neovim/nvim-lspconfig',
-        config = require('plugins.lspconfig').config,
+        config = exec_config('lspconfig'),
         requires = { "b0o/schemastore.nvim" }
     }
 
     use {
         'williamboman/nvim-lsp-installer',
-        config = require('plugins.nvim-lsp-installer').config
+        config = exec_config('nvim-lsp-installer')
     }
 
     use({
         "jose-elias-alvarez/null-ls.nvim",
-        config = require('plugins.null-ls').config,
+        config = exec_config('null-ls'),
         requires = { "nvim-lua/plenary.nvim" }
     })
 
     use {
         'hrsh7th/nvim-cmp',
-        config = require('plugins.nvim-cmp').config,
+        config = exec_config('nvim-cmp'),
         requires = {
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-nvim-lua',
@@ -54,25 +62,25 @@ return packer.startup({function(use)
 
     use {
         "ray-x/lsp_signature.nvim",
-        config = require('plugins.lsp_signature').config
+        config = exec_config('lsp_signature')
     }
 
     use {
         'numToStr/Comment.nvim',
-        config = require('plugins.Comment').config
+        config = exec_config('Comment')
     }
 
     use {
         'kristijanhusak/vim-dadbod-ui',
         cmd = { "DBUIToggle", "DBUIAddConnection" },
-        setup = require('plugins.vim-dadbod-ui').setup,
+        setup = exec_setup('vim-dadbod-ui'),
         requires = { 'tpope/vim-dadbod' }
     }
 
     use {
         'kyazdani42/nvim-tree.lua',
-        setup = require('plugins.nvim-tree').setup,
-        config = require('plugins.nvim-tree').config,
+        setup = exec_setup('nvim-tree'),
+        config = exec_config('nvim-tree'),
         requires = { 'kyazdani42/nvim-web-devicons' }
     }
 
@@ -83,13 +91,13 @@ return packer.startup({function(use)
     use {
         'mbbill/undotree',
         cmd = 'UndotreeToggle',
-        setup = require("plugins.undotree").setup,
-        config = require("plugins.undotree").config
+        setup = exec_setup("undotree"),
+        config = exec_config("undotree")
     }
 
     use {
         'nvim-telescope/telescope.nvim',
-        config = require("plugins.telescope").config,
+        config = exec_config("telescope"),
         requires = {
             'nvim-lua/plenary.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
@@ -100,7 +108,7 @@ return packer.startup({function(use)
     use {
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate',
-        config = require("plugins.treesitter").config,
+        config = exec_config("treesitter"),
         requires = {
             'nvim-treesitter/playground',
             'JoosepAlviste/nvim-ts-context-commentstring'
@@ -109,18 +117,18 @@ return packer.startup({function(use)
 
     use {
         'lewis6991/gitsigns.nvim',
-        config = require("plugins.gitsigns").config,
+        config = exec_config("gitsigns"),
         requires = { 'nvim-lua/plenary.nvim' }
     }
 
     use {
         "akinsho/nvim-toggleterm.lua",
-        config = require("plugins.toggleterm").config
+        config = exec_config("toggleterm")
     }
 
     use {
         "lukas-reineke/indent-blankline.nvim",
-        config = require("plugins.indent-blankline").config
+        config = exec_config("indent-blankline")
     }
 
     use {
