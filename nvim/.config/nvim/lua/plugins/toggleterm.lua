@@ -1,6 +1,12 @@
 local M = {}
 
 M.config = function()
+    local ok, toggleterm = pcall(require, "toggleterm")
+    if not ok then
+        vim.notify("ERROR: toggleterm not loaded", vim.log.levels.ERROR)
+        return
+    end
+
     local function size(term)
         if term.direction == "horizontal" then
             return 12
@@ -9,7 +15,7 @@ M.config = function()
         end
     end
 
-    require("toggleterm").setup({
+    toggleterm.setup({
         size = size,
         open_mapping = "<F12>",
         shade_filetypes = { "none" }, -- Setting "none" will allow normal terminal buffers to be highlighted.

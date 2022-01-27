@@ -28,9 +28,14 @@ M.setup = function()
 end
 
 M.config = function()
+    local ok, nvim_tree = pcall(require, "nvim-tree")
+    if not ok then
+        return
+    end
+
     local tree_cb = require('nvim-tree.config').nvim_tree_callback
 
-    require('nvim-tree').setup({
+    nvim_tree.setup({
         auto_close = true,
         update_focused_file = { enable = true },
         update_cwd = true,

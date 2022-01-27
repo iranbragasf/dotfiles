@@ -1,6 +1,12 @@
 local M = {}
 
 M.config = function()
+    local ok, Comment = pcall(require, "Comment")
+    if not ok then
+        vim.notify("ERROR: Comment not loaded", vim.log.levels.ERROR)
+        return
+    end
+
     local function pre_hook(ctx)
         local U = require('Comment.utils')
 
@@ -17,7 +23,7 @@ M.config = function()
         })
     end
 
-    require('Comment').setup({
+    Comment.setup({
         pre_hook = pre_hook
     })
 

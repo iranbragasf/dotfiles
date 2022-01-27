@@ -1,7 +1,13 @@
 local M = {}
 
 M.config = function ()
-    require("indent_blankline").setup {
+    local ok, indent_blankline = pcall(require, "indent_blankline")
+    if not ok then
+        vim.notify("ERROR: indent_blankline not loaded", vim.log.levels.ERROR)
+        return
+    end
+
+    indent_blankline.setup {
         filetype_exclude = {
             'help',
             'text',

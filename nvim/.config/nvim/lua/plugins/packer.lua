@@ -36,7 +36,7 @@ M.download_packer = function()
 
     -- TODO: match answer with regex
     if answer == 'y' or answer == 'yes' or answer == 'Y' or answer == 'YES' or answer == '' then
-        vim.notify(':: Downloading packer.nvim...')
+        vim.notify(':: Downloading packer.nvim...', vim.log.levels.INFO)
 
         -- Remove the directory before cloning
         vim.fn.delete(install_path, 'rf')
@@ -51,10 +51,11 @@ M.download_packer = function()
         local ok, _ = pcall(require, 'packer')
 
         if not ok then
-            error('Error downloading packer.nvim')
+            vim.notify("ERROR: packer.nvim not downloaded", vim.log.levels.ERROR)
+            return
         end
 
-        vim.notify(':: packer.nvim successfully downloaded')
+        vim.notify(':: packer.nvim successfully downloaded', vim.log.levels.INFO)
 
         return packer_bootstrap
     end

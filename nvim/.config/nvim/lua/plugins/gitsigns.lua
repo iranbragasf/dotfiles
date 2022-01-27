@@ -1,7 +1,13 @@
 local M = {}
 
 M.config = function()
-    require('gitsigns').setup {
+    local ok, gitsigns = pcall(require, "gitsigns")
+    if not ok then
+        vim.notify("ERROR: gitsigns not loaded", vim.log.levels.ERROR)
+        return
+    end
+
+    gitsigns.setup {
         signs = {
             add          = { text = "▋" },
             change       = { text = "▋" },

@@ -1,7 +1,12 @@
 local M = {}
 
 M.config = function()
-    local lsp_installer = require("nvim-lsp-installer")
+    -- local lsp_installer = require("nvim-lsp-installer")
+    local ok, lsp_installer = pcall(require, "nvim-lsp-installer")
+    if not ok then
+        vim.notify("ERROR: nvim-lsp-installer not loaded", vim.log.levels.ERROR)
+        return
+    end
 
     local servers = {
         "sumneko_lua",
@@ -13,9 +18,9 @@ M.config = function()
 
     -- Automatically install Language Servers
     for _, name in pairs(servers) do
-        local ok, server = lsp_installer.get_server(name)
+        local is_server_ok, server = lsp_installer.get_server(name)
 
-        if ok then
+        if is_server_ok then
             if not server:is_installed() then
                 print("Installing " .. name)
                 server:install()

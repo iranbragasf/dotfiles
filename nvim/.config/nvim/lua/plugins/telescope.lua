@@ -8,9 +8,15 @@ M.search_dotfiles = function()
 end
 
 M.config = function()
+    local ok, telescope = pcall(require, "telescope")
+    if not ok then
+        vim.notify("ERROR: telescope not loaded", vim.log.levels.ERROR)
+        return
+    end
+
     local action_layout = require("telescope.actions.layout")
 
-    require('telescope').setup {
+    telescope.setup {
         defaults = {
             sorting_strategy = "ascending",
             layout_config = {

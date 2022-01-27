@@ -1,6 +1,24 @@
 local M = {}
 
 M.config = function()
+    local cmp_ok, cmp = pcall(require, "cmp")
+    if not cmp_ok then
+        vim.notify("ERROR: cmp not loaded", vim.log.levels.ERROR)
+        return
+    end
+
+    local luasnip_ok, luasnip = pcall(require, "luasnip")
+    if not luasnip_ok then
+        vim.notify("ERROR: luasnip not loaded", vim.log.levels.ERROR)
+        return
+    end
+
+    local lspkind_ok, lspkind = pcall(require, "lspkind")
+    if not lspkind_ok then
+        vim.notify("ERROR: lspkind not loaded", vim.log.levels.ERROR)
+        return
+    end
+
     vim.opt.shortmess:append("c") -- Don't pass messages to |ins-completion-menu|
     vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
@@ -8,10 +26,6 @@ M.config = function()
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
         return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
     end
-
-    local cmp = require('cmp')
-    local luasnip = require("luasnip")
-    local lspkind = require('lspkind')
 
     cmp.setup({
         mapping = {

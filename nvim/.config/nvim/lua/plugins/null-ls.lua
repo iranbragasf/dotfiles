@@ -1,7 +1,12 @@
 local M = {}
 
 M.config = function()
-    local null_ls = require("null-ls")
+    -- local null_ls = require("null-ls")
+    local ok, null_ls = pcall(require, "null-ls")
+    if not ok then
+        vim.notify("ERROR: null_ls not loaded", vim.log.levels.ERROR)
+        return
+    end
 
     local diagnostics = null_ls.builtins.diagnostics
     local formatting = null_ls.builtins.formatting
@@ -66,7 +71,7 @@ M.config = function()
             end
 
             -- Add `:Format` command to format current buffer
-            vim.cmd([[command! -nargs=0 Format execute "lua vim.lsp.buf.formatting_sync()"]])
+            vim.cmd([[command! -nargs=0 Format execute 'lua vim.lsp.buf.formatting_sync()']])
         end
     end
 

@@ -1,10 +1,16 @@
 local M = {}
 
 M.config = function()
+    local ok, treesitter = pcall(require, "nvim-treesitter.configs")
+    if not ok then
+        vim.notify("ERROR: treesitter not loaded", vim.log.levels.ERROR)
+        return
+    end
+
     vim.opt.foldmethod = "expr"
     vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
-    require('nvim-treesitter.configs').setup {
+    treesitter.setup {
         ensure_installed = "maintained",
         sync_install = false,
         highlight = { enable = true },
