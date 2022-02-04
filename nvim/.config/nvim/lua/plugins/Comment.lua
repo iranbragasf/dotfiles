@@ -23,9 +23,7 @@ M.config = function()
         })
     end
 
-    Comment.setup({
-        pre_hook = pre_hook
-    })
+    Comment.setup({ pre_hook = pre_hook })
 
     local ft = require('Comment.ft')
 

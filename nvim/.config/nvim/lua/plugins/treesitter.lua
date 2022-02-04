@@ -44,8 +44,10 @@ M.config = function()
         }
     }
 
-    -- TODO: open an issue to let the guys know that it'd be good to make the borders customizable
-    -- This is the code responsible for it: https://github.com/nvim-treesitter/playground/blob/deb887b3f49d66654d9faa9778e8949fe0d80bc3/lua/nvim-treesitter-playground/hl-info.lua#L102
+    -- TODO: open an issue to let the guys know that it'd be good to make the
+    -- borders customizable.
+    -- This is the code responsible for it:
+    -- https://github.com/nvim-treesitter/playground/blob/deb887b3f49d66654d9faa9778e8949fe0d80bc3/lua/nvim-treesitter-playground/hl-info.lua#L102
     vim.api.nvim_set_keymap("n", "<Leader>ts", ":TSHighlightCapturesUnderCursor<CR>", {noremap = true, silent = true})
 end
 

@@ -67,8 +67,9 @@ M.config = function()
             end
         },
         formatting = {
+            fields = { "kind", "abbr", "menu" },
             format = lspkind.cmp_format({
-                with_text = true,
+                with_text = false,
                 menu = ({
                     nvim_lsp = "[LSP]",
                     luasnip = "[LuaSnip]",

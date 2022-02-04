@@ -1,10 +1,9 @@
 local M = {}
 
 M.config = function()
-    -- local null_ls = require("null-ls")
     local ok, null_ls = pcall(require, "null-ls")
     if not ok then
-        vim.notify("ERROR: null_ls not loaded", vim.log.levels.ERROR)
+        vim.notify("ERROR: null-ls not loaded", vim.log.levels.ERROR)
         return
     end
 
@@ -52,7 +51,6 @@ M.config = function()
         local format_on_save_filetypes = {
             "json",
             "jsonc",
-            "yaml",
             "javascript",
             "typescript",
             "prisma"
@@ -65,13 +63,13 @@ M.config = function()
                 vim.cmd([[
                     augroup format_on_save
                         autocmd! * <buffer>
-                        autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+                        autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync(nil, 2000)
                     augroup END
                 ]])
             end
 
             -- Add `:Format` command to format current buffer
-            vim.cmd([[command! -nargs=0 Format execute 'lua vim.lsp.buf.formatting_sync()']])
+            vim.cmd([[command! -nargs=0 Format execute 'lua vim.lsp.buf.formatting_sync(nil, 2000)']])
         end
     end
 

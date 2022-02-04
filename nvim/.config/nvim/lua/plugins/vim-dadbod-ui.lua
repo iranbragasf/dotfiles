@@ -36,13 +36,13 @@ M.config = function()
     vim.cmd([[autocmd FileType dbui  nmap <buffer> P          <Plug>(DBUI_GotoParentNode)]])
     vim.cmd([[autocmd FileType sql   nmap <buffer> <C-s>      <Plug>(DBUI_SaveQuery)]])
     vim.cmd([[autocmd FileType sql   nmap <buffer> <Leader>r  <Plug>(DBUI_ExecuteQuery)]])
-    vim.cmd([[autocmd FileType sql   vmap <buffer> <Leader>r <Plug>(DBUI_ExecuteQuery)]])
+    vim.cmd([[autocmd FileType sql   vmap <buffer> <Leader>r  <Plug>(DBUI_ExecuteQuery)]])
     vim.cmd([[autocmd FileType dbout nmap <buffer> <Leader>dv <Plug>(DBUI_ToggleResultLayout)]])
 
     -- Exit if `vim-dadbod-ui` is the only window left
     vim.cmd([[autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && &filetype == 'dbui' | quit | endif]])
 
-    vim.cmd([[autocmd FileType dbui setlocal signcolumn=no]])
+    vim.cmd([[autocmd FileType dbui  setlocal signcolumn=no]])
     vim.cmd([[autocmd FileType dbout setlocal signcolumn=no norelativenumber]])
 end
 
