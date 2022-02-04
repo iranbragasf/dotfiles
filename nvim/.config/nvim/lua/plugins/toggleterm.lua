@@ -3,7 +3,7 @@ local M = {}
 M.config = function()
     local ok, toggleterm = pcall(require, "toggleterm")
     if not ok then
-        vim.notify("ERROR: toggleterm not loaded", vim.log.levels.ERROR)
+        vim.notify("[ERROR] toggleterm not loaded", vim.log.levels.ERROR)
         return
     end
 

@@ -3,19 +3,19 @@ local M = {}
 M.config = function()
     local cmp_ok, cmp = pcall(require, "cmp")
     if not cmp_ok then
-        vim.notify("ERROR: cmp not loaded", vim.log.levels.ERROR)
+        vim.notify("[ERROR] cmp not loaded", vim.log.levels.ERROR)
         return
     end
 
     local luasnip_ok, luasnip = pcall(require, "luasnip")
     if not luasnip_ok then
-        vim.notify("ERROR: luasnip not loaded", vim.log.levels.ERROR)
+        vim.notify("[ERROR] luasnip not loaded", vim.log.levels.ERROR)
         return
     end
 
     local lspkind_ok, lspkind = pcall(require, "lspkind")
     if not lspkind_ok then
-        vim.notify("ERROR: lspkind not loaded", vim.log.levels.ERROR)
+        vim.notify("[ERROR] lspkind not loaded", vim.log.levels.ERROR)
         return
     end
 

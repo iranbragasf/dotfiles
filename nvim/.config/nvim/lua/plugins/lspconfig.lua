@@ -83,7 +83,7 @@ local function get_client_capabilities()
     -- Add additional capabilities supported by `nvim-cmp`
     local ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
     if not ok then
-        vim.notify("ERROR: cmp_nvim_lsp not loaded", vim.log.levels.ERROR)
+        vim.notify("[ERROR] cmp_nvim_lsp not loaded", vim.log.levels.ERROR)
         return
     end
 

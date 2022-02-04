@@ -3,7 +3,7 @@ local M = {}
 M.config = function()
     local ok, gitsigns = pcall(require, "gitsigns")
     if not ok then
-        vim.notify("ERROR: gitsigns not loaded", vim.log.levels.ERROR)
+        vim.notify("[ERROR] gitsigns not loaded", vim.log.levels.ERROR)
         return
     end
 

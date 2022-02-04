@@ -3,7 +3,7 @@ local M = {}
 M.config = function()
     local ok, lsp_installer = pcall(require, "nvim-lsp-installer")
     if not ok then
-        vim.notify("ERROR: nvim-lsp-installer not loaded", vim.log.levels.ERROR)
+        vim.notify("[ERROR] nvim-lsp-installer not loaded", vim.log.levels.ERROR)
         return
     end
 

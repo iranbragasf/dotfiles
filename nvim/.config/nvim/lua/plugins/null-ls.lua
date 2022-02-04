@@ -3,7 +3,7 @@ local M = {}
 M.config = function()
     local ok, null_ls = pcall(require, "null-ls")
     if not ok then
-        vim.notify("ERROR: null-ls not loaded", vim.log.levels.ERROR)
+        vim.notify("[ERROR] null-ls not loaded", vim.log.levels.ERROR)
         return
     end
 

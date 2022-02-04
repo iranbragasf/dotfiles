@@ -3,7 +3,7 @@ local M = {}
 M.config =  function()
     local ok, onedark = pcall(require, "onedark")
     if not ok then
-        vim.notify("ERROR: onedark not loaded", vim.log.levels.ERROR)
+        vim.notify("[ERROR] onedark not loaded", vim.log.levels.ERROR)
         return
     end
 

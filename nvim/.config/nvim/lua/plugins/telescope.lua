@@ -10,7 +10,7 @@ end
 M.config = function()
     local ok, telescope = pcall(require, "telescope")
     if not ok then
-        vim.notify("ERROR: telescope not loaded", vim.log.levels.ERROR)
+        vim.notify("[ERROR] telescope not loaded", vim.log.levels.ERROR)
         return
     end
 

@@ -51,7 +51,7 @@ M.download_packer = function()
         local ok, _ = pcall(require, 'packer')
 
         if not ok then
-            vim.notify("ERROR: packer.nvim not downloaded", vim.log.levels.ERROR)
+            vim.notify("[ERROR] packer.nvim not downloaded", vim.log.levels.ERROR)
             return
         end
 
