@@ -12,30 +12,13 @@ M.config = function()
 
     local formatters = {
         formatting.prettier.with({
-            filetypes = {
-                "javascriptreact",
-                "typescript",
-                "javascript",
-                "typescriptreact",
-                "vue",
-                "css",
-                "scss",
-                "less",
-                "html",
-                "json",
-                "jsonc",
-                "yaml",
-                "markdown",
-                "graphql"
-            },
+            extra_filetypes = { "jsonc" },
             extra_args = {
                 "--tab-width", "4",
                 "--arrow-parens", "avoid",
-                "--trailing-comma", "none"
             },
             prefer_local = "node_modules/.bin"
-        }),
-        formatting.prismaFmt
+        })
     }
 
     local linters = {

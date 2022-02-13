@@ -14,7 +14,7 @@ M.config = function()
         ensure_installed = "maintained",
         sync_install = false,
         highlight = { enable = true },
-        indent = { enable = true },
+        indent = { enable = false },
         playground = {
             enable = true,
             disable = {},

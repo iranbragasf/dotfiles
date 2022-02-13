@@ -30,6 +30,7 @@ end
 M.config = function()
     local ok, nvim_tree = pcall(require, "nvim-tree")
     if not ok then
+        vim.notify("[ERROR] nvim-tree not loaded", vim.log.levels.ERROR)
         return
     end
 
@@ -48,6 +49,7 @@ M.config = function()
               info = ""
             }
         },
+        git = { ignore = false },
         view = {
             auto_resize = true,
             mappings = {
@@ -63,10 +65,6 @@ M.config = function()
             }
         }
     })
-
-    -- Workaround to highlight items that are ignored by git since it isn't
-    -- possible with `git.ignore` set to `false`
-    require('nvim-tree.lib').toggle_ignored()
 end
 
 return M

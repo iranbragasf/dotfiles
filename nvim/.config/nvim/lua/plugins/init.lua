@@ -90,6 +90,13 @@ return packer.startup({function(use)
     use { "editorconfig/editorconfig-vim" }
 
     use {
+        'iamcco/markdown-preview.nvim',
+        run = 'cd app && yarn install',
+        ft = "markdown",
+        setup = exec_setup("markdown-preview")
+    }
+
+    use {
         'mbbill/undotree',
         cmd = 'UndotreeToggle',
         setup = exec_setup("undotree"),
