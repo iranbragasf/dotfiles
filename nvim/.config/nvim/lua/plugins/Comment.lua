@@ -3,7 +3,7 @@ local M = {}
 M.config = function()
     local ok, Comment = pcall(require, "Comment")
     if not ok then
-        vim.notify("[ERROR] Comment not loaded", vim.log.levels.ERROR)
+        vim.notify("[ERROR] Comment.nvim not loaded", vim.log.levels.ERROR)
         return
     end
 
