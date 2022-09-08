@@ -59,7 +59,7 @@ vim.cmd([[
 vim.cmd([[
     augroup filetype_detect
         autocmd!
-        autocmd BufNewFile,BufRead tsconfig.json setlocal ft=jsonc
+        autocmd BufNewFile,BufRead tsconfig*.json,.eslintrc.json setlocal ft=jsonc
         autocmd BufNewFile,BufRead .env.* setlocal ft=sh
     augroup END
 ]])

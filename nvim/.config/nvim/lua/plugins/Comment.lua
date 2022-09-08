@@ -28,6 +28,7 @@ M.config = function()
     local ft = require('Comment.ft')
 
     ft.set('jsonc', {'//%s', '/*%s*/'})
+    ft.set('prisma', {'//%s'})
 end
 
 return M

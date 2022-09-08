@@ -17,7 +17,8 @@ M.config = function ()
             'dbout',
             'gitrebase',
             'gitcommit',
-            'undotree'
+            'undotree',
+            'diff'
         },
         buftype_exclude = { 'terminal', 'nofile' }
     }
