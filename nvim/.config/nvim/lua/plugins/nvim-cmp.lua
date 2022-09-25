@@ -52,9 +52,9 @@ M.config = function()
             end, { "i", "s" }),
             ["<S-Tab>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
+                    luasnip.jump(-1)
                     cmp.select_prev_item()
                 elseif luasnip.jumpable(-1) then
-                    luasnip.jump(-1)
                 else
                     fallback()
                 end
@@ -97,6 +97,7 @@ M.config = function()
     end
 
     local cmdline_opts = {
+        mapping = cmp.mapping.preset.cmdline(),
         formatting = { format = cmdline_format },
         sources = {
             { name = 'buffer' }

@@ -1,29 +1,6 @@
 local M = {}
 
 M.setup = function()
-    vim.g.nvim_tree_git_hl = 1
-    vim.g.nvim_tree_group_empty = 1
-    vim.g.nvim_tree_root_folder_modifier = ':t'
-    vim.g.nvim_tree_create_in_closed_folder = 1
-    vim.g.nvim_tree_window_picker_exclude = {
-        filetype = { 'packer', 'qf', 'dbui', 'undotree' },
-        buftype = { 'terminal' }
-    }
-    vim.g.nvim_tree_special_files = {}
-    vim.g.nvim_tree_icons = {
-        default = "",
-        symlink = "",
-        git = {
-            unstaged  = "M",
-            staged    = "M",
-            unmerged  = "!",
-            renamed   = "R",
-            untracked = "U",
-            deleted   = "D",
-            ignored   = ""
-        }
-    }
-
     vim.api.nvim_set_keymap("n", "<C-b>", ":NvimTreeToggle<CR>", { noremap = true, silent = true })
 end
 
@@ -37,21 +14,20 @@ M.config = function()
     local tree_cb = require('nvim-tree.config').nvim_tree_callback
 
     nvim_tree.setup({
-        auto_close = true,
+        create_in_closed_folder = true,
         update_focused_file = { enable = true },
         update_cwd = true,
         diagnostics = {
             enable = true,
             icons = {
-              error = "",
-              warning = "",
-              hint = "",
-              info = ""
+                error = "",
+                warning = "",
+                hint = "",
+                info = ""
             }
         },
         git = { ignore = false },
         view = {
-            auto_resize = true,
             mappings = {
                 list = {
                     { key = "l",     cb = tree_cb("edit") },
@@ -63,8 +39,48 @@ M.config = function()
                     { key = "o",     cb = tree_cb("system_open") }
                 }
             }
+        },
+        renderer = {
+            group_empty = true,
+            root_folder_modifier = ':t',
+            icons = {
+                webdev_colors = true,
+                git_placement = "before",
+                padding = " ",
+                symlink_arrow = " ➛ ",
+                show = {
+                    file = true,
+                    folder = true,
+                    folder_arrow = true,
+                    git = true,
+                },
+                glyphs = {
+                    git = {
+                        unstaged  = "M",
+                        staged    = "M",
+                        unmerged  = "!",
+                        renamed   = "R",
+                        untracked = "U",
+                        deleted   = "D",
+                        ignored   = ""
+                    }
+                },
+            },
+            special_files = {},
+        },
+        actions = {
+            open_file = {
+                quit_on_open = false,
+                resize_window = true,
+                window_picker = {
+                    exclude = {
+                        filetype = { 'packer', 'qf', 'dbui', 'undotree', "diff" },
+                        buftype = { "nofile", "terminal", "help" },
+                    },
+                },
+            },
         }
     })
-end
+    end
 
 return M

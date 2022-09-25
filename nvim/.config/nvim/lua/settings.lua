@@ -7,7 +7,6 @@ vim.opt.wildignore:append({
     "*.o"
 })
 vim.opt.wildignorecase = true
-vim.opt.hidden = true
 vim.opt.updatetime = 250
 vim.opt.mouse = "a"
 vim.opt.guicursor = "n-v-c-sm:block,i-ve:ver25,r-o:hor20"
@@ -61,5 +60,12 @@ vim.cmd([[
         autocmd!
         autocmd BufNewFile,BufRead tsconfig*.json,.eslintrc.json setlocal ft=jsonc
         autocmd BufNewFile,BufRead .env.* setlocal ft=sh
+    augroup END
+]])
+
+vim.cmd([[
+    augroup filetype_detect
+        autocmd!
+        autocmd BufNewFile,BufRead config.devmagic,config.titan setlocal ft=gitconfig
     augroup END
 ]])

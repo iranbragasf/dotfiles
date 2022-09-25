@@ -15,14 +15,13 @@ M.config = function()
             extra_filetypes = { "jsonc" },
             extra_args = {
                 "--tab-width", "4",
-                "--arrow-parens", "avoid",
             },
             prefer_local = "node_modules/.bin"
         })
     }
 
     local linters = {
-        diagnostics.eslint_d
+        --[[ diagnostics.eslint_d ]]
     }
 
     local sources = {}
@@ -32,11 +31,11 @@ M.config = function()
 
     local function on_attach(client, bufnr)
         local format_on_save_filetypes = {
-            "json",
-            "jsonc",
-            "javascript",
-            "typescript",
-            "prisma"
+            --[[ "json", ]]
+            --[[ "jsonc", ]]
+            --[[ "javascript", ]]
+            --[[ "typescript", ]]
+            --[[ "prisma" ]]
         }
 
         if client.resolved_capabilities.document_formatting then
