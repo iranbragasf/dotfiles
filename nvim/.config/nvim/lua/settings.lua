@@ -30,7 +30,7 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.swapfile = false
 vim.opt.undofile = true
-vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
+vim.opt.undodir = vim.fn.stdpath("data") .. "/undodir"
 vim.opt.foldlevelstart = 99
 vim.opt.signcolumn = "yes"
 vim.opt.wrap = false
@@ -39,33 +39,52 @@ vim.opt.wrap = false
 -- See `:h nvim_open_win` for available options.
 vim.g.border = "rounded"
 
-vim.cmd([[
-    augroup highlight_yank
-        autocmd!
-        autocmd TextYankPost * silent! lua vim.highlight.on_yank({ higroup="IncSearch", timeout=700 })
-    augroup END
-]])
+local yank_highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
+vim.api.nvim_create_autocmd('TextYankPost', {
+    group = yank_highlight_group,
+    pattern = '*',
+    callback = function()
+        vim.highlight.on_yank()
+    end,
+})
 
--- Highlight current line, but only in active window (unless it's NvimTree)
-vim.cmd([[
-    augroup cursor_line_only_in_active_window
-        autocmd!
-        autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-        autocmd WinLeave * if &ft!~?"NvimTree" | setlocal nocursorline | endif
-    augroup END
-]])
+local cursorline_in_active_window_group = vim.api.nvim_create_augroup('CursorLineInActiveWindow', { clear = true })
+vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter', 'BufWinEnter' }, {
+    group = cursorline_in_active_window_group,
+    pattern = '*',
+    callback = function()
+        vim.o.cursorline = true
+    end,
+})
+vim.api.nvim_create_autocmd("WinLeave", {
+    group = cursorline_in_active_window_group,
+    pattern = '*',
+    callback = function()
+        if vim.bo.filetype ~= "NvimTree" then
+            vim.o.cursorline = false
+        end
+    end,
+})
 
-vim.cmd([[
-    augroup filetype_detect
-        autocmd!
-        autocmd BufNewFile,BufRead tsconfig*.json,.eslintrc.json setlocal ft=jsonc
-        autocmd BufNewFile,BufRead .env.* setlocal ft=sh
-    augroup END
-]])
-
-vim.cmd([[
-    augroup filetype_detect
-        autocmd!
-        autocmd BufNewFile,BufRead config.devmagic,config.titan setlocal ft=gitconfig
-    augroup END
-]])
+local filetype_detect_group = vim.api.nvim_create_augroup('FiletypeDetect', { clear = true })
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+    group = filetype_detect_group,
+    pattern = 'tsconfig*.json,.eslintrc.json',
+    callback = function()
+        vim.bo.filetype = "jsonc"
+    end,
+})
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+    group = filetype_detect_group,
+    pattern = '.env.*',
+    callback = function()
+        vim.bo.filetype = "sh"
+    end,
+})
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+    group = filetype_detect_group,
+    pattern = 'config.devmagic,config.titan',
+    callback = function()
+        vim.bo.filetype = "gitconfig"
+    end,
+})
