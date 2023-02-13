@@ -1,25 +1,17 @@
 local M = {}
 
 M.config = function()
-    -- Enale options for floating windows globally
-    local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-    function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-        opts = opts or {}
-        opts.border = opts.border or vim.g.border
-        opts.focusable = false
-        return orig_util_open_floating_preview(contents, syntax, opts, ...)
-    end
-
     vim.diagnostic.config({
-        virtual_text = { source = "always" },
-        float = { source = "always" },
-        signs = true,
-        underline = true,
-        update_in_insert = false,
+        virtual_text = {
+            source = "always"
+        },
+        float = {
+            source = "always",
+            focusable = false
+        },
         severity_sort = true
     })
 
-    -- Change diagnostic symbols in the sign column
     local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
     -- local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
     for type, icon in pairs(signs) do
@@ -27,115 +19,98 @@ M.config = function()
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
     end
 
-    -- Add `:LspLog` command to open `lsp.log` file in new tab
-    vim.cmd([[command! -nargs=0 LspLog execute 'lua vim.cmd("tabnew " .. vim.lsp.get_log_path())']])
-
-    vim.cmd([[autocmd! FileType lspinfo nnoremap <buffer> q <Cmd>close<CR>]])
-end
-
--- This hook is used to only activate the bindings after the language server
--- attaches to the current buffer.
-local function on_attach(client, bufnr)
-    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-    -- Enable completion triggered by <C-x><C-o>
-    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
     local opts = { noremap = true, silent = true }
+    vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
+    vim.keymap.set('n', '[g', vim.diagnostic.goto_prev, opts)
+    vim.keymap.set('n', ']g', vim.diagnostic.goto_next, opts)
+    vim.keymap.set('n', '<Leader>q', vim.diagnostic.setloclist, opts)
+end
 
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
-    buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    buf_set_keymap('n', 'gi', '<Cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    buf_set_keymap('n', 'gy', '<Cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-    buf_set_keymap('n', 'gr', '<Cmd>lua vim.lsp.buf.references()<CR>', opts)
-    buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-    buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    buf_set_keymap('n', 'gs', '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-    buf_set_keymap('n', '<Leader>rn', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    buf_set_keymap('n', 'gl', '<Cmd>lua vim.diagnostic.open_float()<CR>', opts)
-    buf_set_keymap('n', '[g', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-    buf_set_keymap('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-    buf_set_keymap('n', '<Leader>q', '<Cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+local function on_attach(client, bufnr)
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-    -- No formatting capabilities by default
-    if client.resolved_capabilities.document_formatting then
-        client.resolved_capabilities.document_formatting = false
-    end
+    local buf_opts = {
+        noremap = true,
+        silent = true,
+        buffer = bufnr,
+    }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, buf_opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, buf_opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, buf_opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, buf_opts)
+    vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, buf_opts)
+    vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder, buf_opts)
+    vim.keymap.set('n', '<Leader>wr', vim.lsp.buf.remove_workspace_folder, buf_opts)
+    vim.keymap.set('n', '<Leader>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, buf_opts)
+    vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, buf_opts)
+    vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename, buf_opts)
+    vim.keymap.set('n', '<Leader>ca', vim.lsp.buf.code_action, buf_opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, buf_opts)
+    --[[ vim.keymap.set('n', '<Leader>f', function() vim.lsp.buf.format({ async = true }) end, buf_opts) ]]
 
-    if client.resolved_capabilities.document_range_formatting then
-        client.resolved_capabilities.document_range_formatting = false
-    end
-
-    -- Highlight symbol under cursor and its references
-    if client.resolved_capabilities.document_highlight then
-        vim.cmd([[
-            augroup lsp_document_highlight
-                autocmd! * <buffer>
-                autocmd CursorHold,CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
-                autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-            augroup END
-        ]])
+    if client.server_capabilities.documentHighlightProvider then
+        vim.api.nvim_create_augroup('LSPDocumentHighlight', {
+            clear = false
+        })
+        vim.api.nvim_clear_autocmds({
+            buffer = bufnr,
+            group = 'LSPDocumentHighlight',
+        })
+        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+            group = 'LSPDocumentHighlight',
+            buffer = bufnr,
+            callback = vim.lsp.buf.document_highlight,
+        })
+        vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+            group = 'LSPDocumentHighlight',
+            buffer = bufnr,
+            callback = vim.lsp.buf.clear_references,
+        })
     end
 end
 
-local function get_client_capabilities()
-    -- Add additional capabilities supported by `nvim-cmp`
-    local ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
-    if not ok then
-        vim.notify("[ERROR] cmp_nvim_lsp not loaded", vim.log.levels.ERROR)
-        return
-    end
+local capabilities = require("plugins.nvim-cmp").capabilities
 
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
-
-    return capabilities
-end
+local handlers =  {
+    ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, { focusable = false }),
+    ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, { focusable = false }),
+}
 
 M.default_opts = {
     on_attach = on_attach,
-    capabilities = get_client_capabilities(),
-    flags = { debounce_text_changes = 150 }
+    capabilities = capabilities,
+    handlers = handlers
 }
 
 M.server_opts = {
-    ["sumneko_lua"] = function(default_opts)
-        local runtime_path = vim.split(package.path, ';')
-        table.insert(runtime_path, "lua/?.lua")
-        table.insert(runtime_path, "lua/?/init.lua")
-
-        default_opts.settings = {
+    ["lua_ls"] = {
+        settings = {
             Lua = {
                 runtime = {
-                    -- Tell the language server which version of Lua you're
-                    -- using (most likely LuaJIT in the case of Neovim)
                     version = 'LuaJIT',
-                    -- Setup your lua path
-                    path = runtime_path
                 },
                 diagnostics = {
-                    -- Get the language server to recognize the `vim` global
-                    globals = {'vim'}
+                    globals = {'vim'},
                 },
                 workspace = {
-                    -- Make the server aware of Neovim runtime files
-                    library = vim.api.nvim_get_runtime_file("", true)
+                    library = vim.api.nvim_get_runtime_file("", true),
                 },
-                -- Do not send telemetry data containing a randomized but
-                -- unique identifier
-                telemetry = { enable = false }
-            }
-        }
-    end,
-    ["jsonls"] = function(default_opts)
-        default_opts.filetypes = { "json", "jsonc" }
-        default_opts.settings = {
+                telemetry = {
+                    enable = false,
+                },
+            },
+        },
+    },
+    ["jsonls"] = {
+        settings = {
             json = {
-                schemas = require('schemastore').json.schemas()
+                schemas = require('schemastore').json.schemas(),
+                validate = { enable = true },
             }
         }
-    end,
+    }
 }
 
 return M

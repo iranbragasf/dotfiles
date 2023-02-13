@@ -35,10 +35,6 @@ vim.opt.foldlevelstart = 99
 vim.opt.signcolumn = "yes"
 vim.opt.wrap = false
 
--- Custom global variable to standardize borders through config.
--- See `:h nvim_open_win` for available options.
-vim.g.border = "rounded"
-
 local yank_highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
     group = yank_highlight_group,

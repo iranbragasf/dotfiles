@@ -15,10 +15,16 @@ local function exec_config(plugin_name)
 end
 
 return packer.startup({function(use)
-    -- Packer can manage itself
     use {
         'wbthomason/packer.nvim',
         config = exec_config("packer")
+    }
+
+    use {
+        "williamboman/mason.nvim",
+        "williamboman/mason-lspconfig.nvim",
+        "jay-babu/mason-null-ls.nvim",
+        config = exec_config('mason')
     }
 
     use {
@@ -28,8 +34,16 @@ return packer.startup({function(use)
     }
 
     use {
-        'williamboman/nvim-lsp-installer',
-        config = exec_config('nvim-lsp-installer')
+        'hrsh7th/nvim-cmp',
+        'hrsh7th/cmp-nvim-lsp',
+        'hrsh7th/cmp-path',
+        'saadparwaiz1/cmp_luasnip',
+        'L3MON4D3/LuaSnip',
+        'hrsh7th/cmp-nvim-lua',
+        'hrsh7th/cmp-buffer',
+        'hrsh7th/cmp-emoji',
+        'onsails/lspkind-nvim',
+        config = exec_config('nvim-cmp'),
     }
 
     use({
@@ -39,28 +53,6 @@ return packer.startup({function(use)
     })
 
     use {
-        'hrsh7th/nvim-cmp',
-        config = exec_config('nvim-cmp'),
-        requires = {
-            'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/cmp-nvim-lua',
-            'hrsh7th/cmp-buffer',
-            'hrsh7th/cmp-path',
-            'hrsh7th/cmp-emoji',
-            'onsails/lspkind-nvim',
-            {
-                'kristijanhusak/vim-dadbod-completion',
-                requires = { 'tpope/vim-dadbod' }
-            },
-            {
-                'saadparwaiz1/cmp_luasnip',
-                -- TODO: configure snipets
-                requires = { 'L3MON4D3/LuaSnip' }
-            }
-        }
-    }
-
-    use {
         "ray-x/lsp_signature.nvim",
         config = exec_config('lsp_signature')
     }
@@ -68,14 +60,6 @@ return packer.startup({function(use)
     use {
         'numToStr/Comment.nvim',
         config = exec_config('Comment')
-    }
-
-    use {
-        'kristijanhusak/vim-dadbod-ui',
-        cmd = { "DBUIToggle", "DBUIAddConnection" },
-        setup = exec_setup('vim-dadbod-ui'),
-        config = exec_config('vim-dadbod-ui'),
-        requires = { 'tpope/vim-dadbod' }
     }
 
     use {
@@ -127,11 +111,6 @@ return packer.startup({function(use)
         'lewis6991/gitsigns.nvim',
         config = exec_config("gitsigns"),
         requires = { 'nvim-lua/plenary.nvim' }
-    }
-
-    use {
-        "akinsho/nvim-toggleterm.lua",
-        config = exec_config("toggleterm")
     }
 
     use {

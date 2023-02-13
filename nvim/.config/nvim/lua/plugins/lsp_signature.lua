@@ -8,8 +8,8 @@ M.config = function()
     end
 
     lsp_signature.setup({
-        handler_opts = { border = vim.g.border },
-        hint_enable = false
+        handler_opts = { border = "none" },
+        hint_enable = false,
     })
 end
 
