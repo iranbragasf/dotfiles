@@ -1,4 +1,3 @@
--- Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
@@ -6,7 +5,6 @@ vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", {noremap = true, silent = true})
 
 vim.keymap.set("v", "<Leader>p", '"_dP', {noremap = true})
 
--- Move text up and down
 vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", {noremap = true, silent = true})
 vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", {noremap = true, silent = true})
 vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", {noremap = true, silent = true})
@@ -23,9 +21,7 @@ vim.keymap.set("n", "<C-h>", ":tabprev<CR>", {noremap = true, silent = true})
 vim.keymap.set("n", "<C-PageUp>", ":tabmove -1<CR>", {noremap = true, silent = true})
 vim.keymap.set("n", "<C-PageDown>", ":tabmove +1<CR>", {noremap = true, silent = true})
 
--- Replace word below the cursor
 vim.keymap.set("n", "<Leader>rw", ":%s/<C-r><C-w>//g<Left><Left>", {noremap = true})
--- Replace highlighted words in visual mode
 vim.keymap.set("v", "<Leader>rw", 'y:%s/<C-r><C-r>"//g<Left><Left>', {noremap = true})
 
 -- Keymaps for better default experience
@@ -40,26 +36,25 @@ vim.keymap.set("n", "#", "#zz", {noremap = true})
 vim.keymap.set("c", "<Left>", "<Space><BS><Left>", {noremap = true})
 vim.keymap.set("c", "<Right>", "<Space><BS><Right>", {noremap = true})
 
--- QuickFix List navigation
-is_qf_list_open = false
-local fix_lists_group = vim.api.nvim_create_augroup('FixLists', { clear = true })
+local is_qf_list_open = false
+vim.api.nvim_create_augroup('FixLists', { clear = true })
 vim.api.nvim_create_autocmd('BufWinEnter', {
-    group = fix_lists_group,
+    group = "FixLists",
     pattern = 'quickfix',
     callback = function() is_qf_list_open = true end,
 })
 vim.api.nvim_create_autocmd('BufWinLeave', {
-    group = fix_lists_group,
+    group = "FixLists",
     pattern = '*',
     callback = function() is_qf_list_open = false end,
 })
-function toggle_qf_list()
+local toggle_qf_list = function()
     if is_qf_list_open == true then
-        vim.api.nvim_command("cclose")
+        vim.cmd.cclose()
         return
     end
 
-    vim.api.nvim_command("copen")
+    vim.cmd.copen()
 end
 vim.keymap.set("n", "<C-q>", toggle_qf_list, {noremap = true})
 vim.keymap.set("n", "]q", ":cnext<CR>zz", {noremap = true, silent = true})

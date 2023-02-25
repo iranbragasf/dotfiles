@@ -1,7 +1,10 @@
 local M = {}
 
 M.setup = function()
-    vim.api.nvim_set_keymap("n", "<C-b>", ":NvimTreeToggle<CR>", { noremap = true, silent = true })
+    vim.g.loaded_netrw = 1
+    vim.g.loaded_netrwPlugin = 1
+
+    vim.keymap.set("n", "<C-b>", ":NvimTreeToggle<CR>", { noremap = true, silent = true })
 end
 
 M.config = function()
@@ -11,76 +14,83 @@ M.config = function()
         return
     end
 
-    local tree_cb = require('nvim-tree.config').nvim_tree_callback
-
     nvim_tree.setup({
-        create_in_closed_folder = true,
-        update_focused_file = { enable = true },
-        update_cwd = true,
-        diagnostics = {
-            enable = true,
-            icons = {
-                error = "",
-                warning = "",
-                hint = "",
-                info = ""
-            }
-        },
-        git = { ignore = false },
+        sync_root_with_cwd = true,
         view = {
             mappings = {
                 list = {
-                    { key = "l",     cb = tree_cb("edit") },
-                    { key = "h",     cb = tree_cb("close_node") },
-                    { key = "<C-s>", cb = tree_cb("split") },
-                    { key = "L",     cb = tree_cb("cd") },
-                    { key = "H",     cb = tree_cb("dir_up") },
-                    { key = "?",     cb = tree_cb("toggle_help") },
-                    { key = "o",     cb = tree_cb("system_open") }
+                    { key = "l",     action = "edit" },
+                    { key = "h",     action = "close_node" },
+                    { key = "<C-s>", action = "split" },
+                    { key = "L",     action = "cd" },
+                    { key = "H",     action = "dir_up" },
                 }
             }
         },
         renderer = {
             group_empty = true,
-            root_folder_modifier = ':t',
+            highlight_git = true,
+            root_folder_label = ":t",
             icons = {
-                webdev_colors = true,
-                git_placement = "before",
-                padding = " ",
-                symlink_arrow = " ➛ ",
-                show = {
-                    file = true,
-                    folder = true,
-                    folder_arrow = true,
-                    git = true,
-                },
+                git_placement = "after",
                 glyphs = {
                     git = {
-                        unstaged  = "M",
-                        staged    = "M",
-                        unmerged  = "!",
-                        renamed   = "R",
-                        untracked = "U",
-                        deleted   = "D",
-                        ignored   = ""
-                    }
+                        unstaged = "✗",
+                        staged = "✓",
+                        unmerged = "",
+                        renamed = "➜",
+                        untracked = "★",
+                        deleted = "",
+                        ignored = "◌",
+                    },
+                    -- git = {
+                    --     unstaged  = "M",
+                    --     staged    = "M",
+                    --     unmerged  = "!",
+                    --     renamed   = "R",
+                    --     untracked = "U",
+                    --     deleted   = "D",
+                    --     ignored   = ""
+                    -- }
                 },
             },
             special_files = {},
         },
+        update_focused_file = {
+            enable = true,
+        },
+        git = {
+            ignore = false,
+        },
         actions = {
             open_file = {
-                quit_on_open = false,
-                resize_window = true,
                 window_picker = {
                     exclude = {
-                        filetype = { 'packer', 'qf', 'dbui', 'undotree', "diff" },
-                        buftype = { "nofile", "terminal", "help" },
-                    },
-                },
-            },
+                        filetype = {
+                            "notify",
+                            "packer",
+                            "qf",
+                            "diff",
+                            "fugitive",
+                            "fugitiveblame",
+                            "undotree"
+                        },
+                    }
+                }
+            }
         }
     })
-    end
+
+    vim.api.nvim_create_autocmd("WinLeave", {
+        group = "CursorLineInActiveWindow",
+        pattern = '*',
+        callback = function()
+            local filetype = vim.api.nvim_buf_get_option(0, "filetype")
+            if filetype == "NvimTree" then
+                vim.api.nvim_win_set_option(0, "cursorline", true)
+            end
+        end,
+    })
+end
 
 return M

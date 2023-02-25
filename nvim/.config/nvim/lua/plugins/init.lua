@@ -1,8 +1,8 @@
 local packer_bootstrap = require("plugins.packer").download_packer()
 
-local ok, packer = pcall(require, "packer")
+local packer_ok, packer = pcall(require, "packer")
 
-if not ok then
+if not packer_ok then
     return
 end
 
@@ -23,7 +23,13 @@ return packer.startup({function(use)
     use {
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
+        {
+            "jose-elias-alvarez/null-ls.nvim",
+            config = exec_config('null-ls'),
+            requires = { "nvim-lua/plenary.nvim" }
+        },
         "jay-babu/mason-null-ls.nvim",
+        'RubixDev/mason-update-all',
         config = exec_config('mason')
     }
 
@@ -46,20 +52,23 @@ return packer.startup({function(use)
         config = exec_config('nvim-cmp'),
     }
 
-    use({
-        "jose-elias-alvarez/null-ls.nvim",
-        config = exec_config('null-ls'),
-        requires = { "nvim-lua/plenary.nvim" }
-    })
-
     use {
         "ray-x/lsp_signature.nvim",
         config = exec_config('lsp_signature')
     }
 
     use {
+        'nvim-treesitter/nvim-treesitter',
+        run = ':TSUpdate',
+        config = exec_config("treesitter"),
+        requires = {
+            'JoosepAlviste/nvim-ts-context-commentstring'
+        }
+    }
+
+    use {
         'numToStr/Comment.nvim',
-        config = exec_config('Comment')
+        config = exec_config('comment')
     }
 
     use {
@@ -90,6 +99,7 @@ return packer.startup({function(use)
     use {
         'nvim-telescope/telescope.nvim',
         config = exec_config("telescope"),
+        branch = '0.1.x',
         requires = {
             'nvim-lua/plenary.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
@@ -98,19 +108,8 @@ return packer.startup({function(use)
     }
 
     use {
-        'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate',
-        config = exec_config("treesitter"),
-        requires = {
-            'nvim-treesitter/playground',
-            'JoosepAlviste/nvim-ts-context-commentstring'
-        }
-    }
-
-    use {
         'lewis6991/gitsigns.nvim',
         config = exec_config("gitsigns"),
-        requires = { 'nvim-lua/plenary.nvim' }
     }
 
     use {
@@ -119,8 +118,8 @@ return packer.startup({function(use)
     }
 
     use {
-        'monsonjeremy/onedark.nvim',
-        config = exec_config('onedark')
+        'folke/tokyonight.nvim',
+        config = exec_config("tokyonight")
     }
 
     -- Automatically set up your configuration after cloning packer.nvim
@@ -132,8 +131,8 @@ end,
 config = {
     display = {
         open_fn = function()
-            return require('packer.util').float({ border = vim.g.border })
+            return require('packer.util').float({ border = "rounded" })
         end,
-        prompt_border = vim.g.border
+        prompt_border = "rounded"
     }
 }})

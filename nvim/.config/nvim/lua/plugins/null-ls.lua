@@ -1,66 +1,60 @@
 local M = {}
 
+local lsp_formatting = function(bufnr)
+    vim.lsp.buf.format({
+        filter = function(client)
+            return client.name == "null-ls"
+        end,
+        bufnr = bufnr,
+    })
+end
+
+vim.api.nvim_create_augroup("LspFormatting", {})
+
+local on_attach = function(client, bufnr)
+    if client.supports_method("textDocument/formatting") then
+        vim.api.nvim_clear_autocmds({
+            group = "LspFormatting",
+            buffer = bufnr
+        })
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            group = "LspFormatting",
+            buffer = bufnr,
+            callback = function()
+                lsp_formatting(bufnr)
+            end,
+        })
+
+        vim.api.nvim_create_user_command("Format", function()
+            vim.lsp.buf.format({ bufnr = bufnr })
+        end, { nargs = 0 })
+    end
+end
+
 M.config = function()
-    local ok, null_ls = pcall(require, "null-ls")
-    if not ok then
+    local null_ls_ok, null_ls = pcall(require, "null-ls")
+    if not null_ls_ok then
         vim.notify("[ERROR] null-ls not loaded", vim.log.levels.ERROR)
         return
     end
 
-    local diagnostics = null_ls.builtins.diagnostics
-    local formatting = null_ls.builtins.formatting
-
-    local formatters = {
-        formatting.prettier.with({
-            extra_filetypes = { "jsonc" },
-            extra_args = {
-                "--tab-width", "4",
-            },
-            prefer_local = "node_modules/.bin"
-        })
-    }
-
-    local linters = {
-        --[[ diagnostics.eslint_d ]]
-    }
-
-    local sources = {}
-
-    vim.list_extend(sources, formatters)
-    vim.list_extend(sources, linters)
-
-    local function on_attach(client, bufnr)
-        local format_on_save_filetypes = {
-            --[[ "json", ]]
-            --[[ "jsonc", ]]
-            --[[ "javascript", ]]
-            --[[ "typescript", ]]
-            --[[ "prisma" ]]
-        }
-
-        if client.resolved_capabilities.document_formatting then
-            local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
-
-            if vim.tbl_contains(format_on_save_filetypes, filetype) then
-                vim.cmd([[
-                    augroup format_on_save
-                        autocmd! * <buffer>
-                        autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync(nil, 2000)
-                    augroup END
-                ]])
-            end
-
-            -- Add `:Format` command to format current buffer
-            vim.cmd([[command! -nargs=0 Format execute 'lua vim.lsp.buf.formatting_sync(nil, 2000)']])
-        end
-    end
-
     null_ls.setup({
-        sources = sources,
-        on_attach = on_attach
+        sources = {
+            null_ls.builtins.formatting.prettier.with({
+                extra_args = function(params)
+                    return params.options
+                        and params.options.tabSize
+                        and {
+                            "--tab-width",
+                            params.options.tabSize,
+                        }
+                end,
+            }),
+            null_ls.builtins.diagnostics.eslint_d,
+        },
+        border = "rounded",
+        on_attach = on_attach,
     })
-
-    vim.cmd([[autocmd! FileType null-ls-info nnoremap <buffer> q <Cmd>close<CR>]])
 end
 
 return M

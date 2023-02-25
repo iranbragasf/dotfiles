@@ -1,12 +1,5 @@
 local M = {}
 
-M.search_dotfiles = function()
-    require("telescope.builtin").find_files({
-        prompt_title = "Dotfiles",
-        cwd = "$HOME/dotfiles"
-    })
-end
-
 M.config = function()
     local ok, telescope = pcall(require, "telescope")
     if not ok then
@@ -15,8 +8,22 @@ M.config = function()
     end
 
     local action_layout = require("telescope.actions.layout")
+    local builtin = require('telescope.builtin')
+    local telescope_config = require("telescope.config")
 
-    telescope.setup {
+    local vimgrep_arguments = { unpack(telescope_config.values.vimgrep_arguments) }
+    local extra_vimgrep_arguments = {
+        "--hidden",
+        "--follow",
+        "--trim",
+        "--glob",
+        "!**/{.git,node_modules,coverage,__pycache__}/*",
+    }
+    for _, argument in ipairs(extra_vimgrep_arguments) do
+        table.insert(vimgrep_arguments, argument)
+    end
+
+    telescope.setup({
         defaults = {
             sorting_strategy = "ascending",
             layout_config = {
@@ -25,19 +32,7 @@ M.config = function()
             },
             prompt_prefix = "❯ ",
             selection_caret = "❯ ",
-            vimgrep_arguments = {
-                'rg',
-                '--color=never',
-                '--no-heading',
-                '--with-filename',
-                '--line-number',
-                '--column',
-                '--smart-case',
-                '--hidden',
-                '--follow',
-                "--trim", -- Trim the indentation at the beginning of presented line in the result window
-                "--glob=!{.git,node_modules,coverage,__pycache__}" -- Exclude files and directories
-            },
+            vimgrep_arguments = vimgrep_arguments,
             mappings = {
                 i = {
                     ["<Esc>"] = "close",
@@ -49,10 +44,10 @@ M.config = function()
                 }
             },
             file_ignore_patterns = {
-                "%.git/",
-                "node_modules/",
-                "coverage/",
-                "__pycache__/",
+                "^.git/",
+                "^node_modules/",
+                "^coverage/",
+                "^__pycache__/",
                 "%.o"
             }
         },
@@ -77,29 +72,29 @@ M.config = function()
                 case_mode = "smart_case"
             }
         }
-    }
+    })
 
-    -- To get extensions loaded and working with telescope, `load_extension`
-    -- must to be called somewhere after setup function
-    require('telescope').load_extension('fzf')
+    telescope.load_extension('fzf')
 
-    vim.api.nvim_set_keymap("n", "<C-p>", "<Cmd>lua require('telescope.builtin').find_files()<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<C-f>", "<Cmd>lua require('telescope.builtin').live_grep()<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", '<Leader>fb', "<Cmd>lua require('telescope.builtin').buffers()<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>fh", "<Cmd>lua require('telescope.builtin').help_tags()<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>fg", "<Cmd>lua require('telescope.builtin').grep_string({ search = vim.fn.input('Find word: ') })<CR>", {noremap = true})
-    -- Find word below the cursor accross project files
-    vim.api.nvim_set_keymap("n", "<Leader>fw", "<Cmd>lua require('telescope.builtin').grep_string({ search = vim.fn.expand('<cword>') })<CR>", {noremap = true})
-    -- Find highlighted words accross project files
-    vim.api.nvim_set_keymap("v", "<Leader>fw", [[y:lua require('telescope.builtin').grep_string({ search = vim.fn.expand('<C-r><C-r>"') })<CR>]], {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>fc", "<Cmd>lua require('telescope.builtin').commands()<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>fk", "<Cmd>lua require('telescope.builtin').keymaps()<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>s", "<Cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>S", "<Cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>ac", "<Cmd>lua require('telescope.builtin').lsp_code_actions(require('telescope.themes').get_cursor({}))<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>g", "<Cmd>Telescope diagnostics bufnr=0 previewer=false<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>G", "<Cmd>Telescope diagnostics previewer=false<CR>", {noremap = true})
-    vim.api.nvim_set_keymap("n", "<Leader>rc", "<Cmd>lua require('plugins.telescope').search_dotfiles()<CR>", {noremap = true})
+    vim.keymap.set("n", "<C-p>", builtin.find_files, {noremap = true})
+    vim.keymap.set("n", "<C-f>", builtin.live_grep, {noremap = true})
+    vim.keymap.set("n", '<Leader>fb', builtin.buffers, {noremap = true})
+    vim.keymap.set("n", "<Leader>fh", builtin.help_tags, {noremap = true})
+    vim.keymap.set("n", "<Leader>fg", function() builtin.grep_string({ search = vim.fn.input('Find word: ') }) end, {noremap = true})
+    vim.keymap.set("n", "<Leader>fw", function() builtin.grep_string({ search = vim.fn.expand('<cword>') }) end, {noremap = true})
+    vim.keymap.set("v", "<Leader>fw", [[y:lua require('telescope.builtin').grep_string({ search = vim.fn.expand('<C-r><C-r>"') })<CR>]], {noremap = true})
+    vim.keymap.set("n", "<Leader>fc", builtin.commands, {noremap = true})
+    vim.keymap.set("n", "<Leader>fk", builtin.keymaps, {noremap = true})
+    vim.keymap.set("n", "<Leader>s", builtin.lsp_document_symbols, {noremap = true})
+    vim.keymap.set("n", "<Leader>S", builtin.lsp_workspace_symbols, {noremap = true})
+    vim.keymap.set("n", "<Leader>g", ":Telescope diagnostics bufnr=0 previewer=false<CR>", {noremap = true, silent = true})
+    vim.keymap.set("n", "<Leader>G", ":Telescope diagnostics previewer=false<CR>", {noremap = true, silent = true})
+    vim.keymap.set("n", "<Leader>rc", function()
+        builtin.find_files({
+            prompt_title = "Dotfiles",
+            cwd = "$HOME/dotfiles"
+        })
+    end, { noremap = true })
 end
 
 return M

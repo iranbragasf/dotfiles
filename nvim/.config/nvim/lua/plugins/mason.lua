@@ -13,21 +13,32 @@ M.config = function()
         return
     end
 
+    local mason_null_ls_ok, mason_null_ls = pcall(require, "mason-null-ls")
+    if not mason_null_ls_ok then
+        vim.notify("[ERROR] mason-null-ls not loaded", vim.log.levels.ERROR)
+        return
+    end
+
+    local mason_update_all_ok, mason_update_all = pcall(require, "mason-update-all")
+    if not mason_update_all_ok then
+        vim.notify("[ERROR] mason-update-all not loaded", vim.log.levels.ERROR)
+        return
+    end
+
+
     mason.setup({
         ui = {
             border = "rounded",
         }
     })
 
-    local servers = {
-        "lua_ls",
-        "jsonls",
-        "yamlls",
-        "tsserver",
-    }
-
     mason_lspconfig.setup({
-        ensure_installed = servers,
+        ensure_installed = {
+            "lua_ls",
+            "jsonls",
+            "yamlls",
+            "tsserver",
+        },
     })
 
     local default_opts = require("plugins.lspconfig").default_opts
@@ -43,6 +54,12 @@ M.config = function()
             require('lspconfig')[server_name].setup(opts)
         end,
     })
+
+    mason_null_ls.setup({
+        automatic_installation = true,
+    })
+
+    mason_update_all.setup()
 end
 
 return M

@@ -1,9 +1,9 @@
 vim.opt.path:append({"**"})
 vim.opt.wildignore:append({
-    "**/.git/**",
-    "**/node_modules/**",
-    "**/coverage/**",
-    "**/__pycache__/**",
+    "**/.git/*",
+    "**/node_modules/*",
+    "**/coverage/*",
+    "**/__pycache__/*",
     "*.o"
 })
 vim.opt.wildignorecase = true
@@ -31,56 +31,53 @@ vim.opt.writebackup = false
 vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undodir"
-vim.opt.foldlevelstart = 99
 vim.opt.signcolumn = "yes"
 vim.opt.wrap = false
 
-local yank_highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
+vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
-    group = yank_highlight_group,
+    group = "YankHighlight",
     pattern = '*',
     callback = function()
         vim.highlight.on_yank()
     end,
 })
 
-local cursorline_in_active_window_group = vim.api.nvim_create_augroup('CursorLineInActiveWindow', { clear = true })
+vim.api.nvim_create_augroup('CursorLineInActiveWindow', { clear = true })
 vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter', 'BufWinEnter' }, {
-    group = cursorline_in_active_window_group,
+    group = "CursorLineInActiveWindow",
     pattern = '*',
     callback = function()
-        vim.o.cursorline = true
+        vim.api.nvim_win_set_option(0, "cursorline", true)
     end,
 })
 vim.api.nvim_create_autocmd("WinLeave", {
-    group = cursorline_in_active_window_group,
+    group = "CursorLineInActiveWindow",
     pattern = '*',
     callback = function()
-        if vim.bo.filetype ~= "NvimTree" then
-            vim.o.cursorline = false
-        end
+        vim.api.nvim_win_set_option(0, "cursorline", false)
     end,
 })
 
-local filetype_detect_group = vim.api.nvim_create_augroup('FiletypeDetect', { clear = true })
+vim.api.nvim_create_augroup('FiletypeDetect', { clear = true })
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-    group = filetype_detect_group,
+    group = "FiletypeDetect",
     pattern = 'tsconfig*.json,.eslintrc.json',
     callback = function()
-        vim.bo.filetype = "jsonc"
+        vim.api.nvim_buf_set_option(0, "filetype", "jsonc")
     end,
 })
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-    group = filetype_detect_group,
+    group = "FiletypeDetect",
     pattern = '.env.*',
     callback = function()
-        vim.bo.filetype = "sh"
+        vim.api.nvim_buf_set_option(0, "filetype", "sh")
     end,
 })
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-    group = filetype_detect_group,
+    group = "FiletypeDetect",
     pattern = 'config.devmagic,config.titan',
     callback = function()
-        vim.bo.filetype = "gitconfig"
+        vim.api.nvim_buf_set_option(0, "filetype", "gitconfig")
     end,
 })

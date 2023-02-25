@@ -46,9 +46,8 @@ local function on_attach(client, bufnr)
     end, buf_opts)
     vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, buf_opts)
     vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename, buf_opts)
-    vim.keymap.set('n', '<Leader>ca', vim.lsp.buf.code_action, buf_opts)
+    vim.keymap.set('n', '<Leader>ac', vim.lsp.buf.code_action, buf_opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, buf_opts)
-    --[[ vim.keymap.set('n', '<Leader>f', function() vim.lsp.buf.format({ async = true }) end, buf_opts) ]]
 
     if client.server_capabilities.documentHighlightProvider then
         vim.api.nvim_create_augroup('LSPDocumentHighlight', {

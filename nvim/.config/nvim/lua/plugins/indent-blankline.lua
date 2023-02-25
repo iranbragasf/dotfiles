@@ -7,7 +7,7 @@ M.config = function ()
         return
     end
 
-    indent_blankline.setup {
+    indent_blankline.setup({
         filetype_exclude = {
             'help',
             'text',
@@ -21,7 +21,7 @@ M.config = function ()
             'diff'
         },
         buftype_exclude = { 'terminal', 'nofile' }
-    }
+    })
 end
 
 return M
