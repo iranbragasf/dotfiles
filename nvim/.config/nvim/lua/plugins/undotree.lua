@@ -1,6 +1,6 @@
 local M = {}
 
-M.setup = function()
+M.init = function()
     vim.g.undotree_WindowLayout = 2
     vim.g.undotree_SplitWidth = 30
     vim.g.undotree_DiffAutoOpen = 0
@@ -22,7 +22,7 @@ M.config = function()
     -- vim.cmd([[autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && &filetype == 'undotree' | quit | endif]])
 
     vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "undotree", "diff" },
+        pattern = "undotree",
         callback = function()
             vim.api.nvim_win_set_option(0, "signcolumn", "no")
         end

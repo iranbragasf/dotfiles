@@ -1,13 +1,13 @@
 local M = {}
 
 M.config = function()
-    local ok, gitsigns = pcall(require, "gitsigns")
-    if not ok then
+    local gitsigns_ok, gitsigns = pcall(require, "gitsigns")
+    if not gitsigns_ok then
         vim.notify("[ERROR] gitsigns not loaded", vim.log.levels.ERROR)
         return
     end
 
-    gitsigns.setup {
+    gitsigns.setup({
         signs = {
             add          = { text = "▋" },
             change       = { text = "▋" },
@@ -47,7 +47,7 @@ M.config = function()
             map('n', '<Leader>hp', gs.preview_hunk)
             map('n', '<Leader>hb', function() gs.blame_line({ full=true }) end)
         end
-    }
+    })
 end
 
 return M

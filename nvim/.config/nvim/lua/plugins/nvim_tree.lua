@@ -1,6 +1,6 @@
 local M = {}
 
-M.setup = function()
+M.init = function()
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
 
@@ -8,8 +8,8 @@ M.setup = function()
 end
 
 M.config = function()
-    local ok, nvim_tree = pcall(require, "nvim-tree")
-    if not ok then
+    local nvim_tree_ok, nvim_tree = pcall(require, "nvim-tree")
+    if not nvim_tree_ok then
         vim.notify("[ERROR] nvim-tree not loaded", vim.log.levels.ERROR)
         return
     end

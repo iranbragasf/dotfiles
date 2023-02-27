@@ -1,5 +1,15 @@
 local M = {}
 
+M.init = function()
+    vim.api.nvim_create_autocmd("FileType", {
+        group = "CursorLineInActiveWindow",
+        pattern = 'lspinfo',
+        callback = function()
+            vim.api.nvim_win_set_option(0, "cursorline", true)
+        end,
+    })
+end
+
 M.config = function()
     vim.diagnostic.config({
         virtual_text = {
@@ -12,8 +22,8 @@ M.config = function()
         severity_sort = true
     })
 
-    local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-    -- local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+    -- local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+    local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
     for type, icon in pairs(signs) do
         local hl = "DiagnosticSign" .. type
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
@@ -26,7 +36,7 @@ M.config = function()
     vim.keymap.set('n', '<Leader>q', vim.diagnostic.setloclist, opts)
 end
 
-local function on_attach(client, bufnr)
+local on_attach = function(client, bufnr)
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
     local buf_opts = {
@@ -70,9 +80,9 @@ local function on_attach(client, bufnr)
     end
 end
 
-local capabilities = require("plugins.nvim-cmp").capabilities
+local capabilities = require("plugins.cmp").capabilities
 
-local handlers =  {
+local handlers = {
     ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, { focusable = false }),
     ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, { focusable = false }),
 }
@@ -83,21 +93,15 @@ M.default_opts = {
     handlers = handlers
 }
 
-M.server_opts = {
+local custom_server_opts = {
     ["lua_ls"] = {
         settings = {
             Lua = {
-                runtime = {
-                    version = 'LuaJIT',
-                },
-                diagnostics = {
-                    globals = {'vim'},
-                },
                 workspace = {
-                    library = vim.api.nvim_get_runtime_file("", true),
+                    checkThirdParty = false,
                 },
-                telemetry = {
-                    enable = false,
+                completion = {
+                    callSnippet = "Replace",
                 },
             },
         },
@@ -111,5 +115,11 @@ M.server_opts = {
         }
     }
 }
+
+M.server_opts = {}
+
+for server_name, opts in pairs(custom_server_opts) do
+    M.server_opts[server_name] = vim.tbl_extend("force", M.default_opts, opts)
+end
 
 return M

@@ -59,6 +59,13 @@ vim.api.nvim_create_autocmd("WinLeave", {
     end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "diff",
+    callback = function()
+        vim.api.nvim_win_set_option(0, "signcolumn", "no")
+    end
+})
+
 vim.api.nvim_create_augroup('FiletypeDetect', { clear = true })
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     group = "FiletypeDetect",

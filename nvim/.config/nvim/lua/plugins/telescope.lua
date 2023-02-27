@@ -1,8 +1,8 @@
 local M = {}
 
 M.config = function()
-    local ok, telescope = pcall(require, "telescope")
-    if not ok then
+    local telescope_ok, telescope = pcall(require, "telescope")
+    if not telescope_ok then
         vim.notify("[ERROR] telescope not loaded", vim.log.levels.ERROR)
         return
     end
@@ -70,7 +70,7 @@ M.config = function()
                 override_generic_sorter = true,
                 override_file_sorter = true,
                 case_mode = "smart_case"
-            }
+            },
         }
     })
 
@@ -80,7 +80,7 @@ M.config = function()
     vim.keymap.set("n", "<C-f>", builtin.live_grep, {noremap = true})
     vim.keymap.set("n", '<Leader>fb', builtin.buffers, {noremap = true})
     vim.keymap.set("n", "<Leader>fh", builtin.help_tags, {noremap = true})
-    vim.keymap.set("n", "<Leader>fg", function() builtin.grep_string({ search = vim.fn.input('Find word: ') }) end, {noremap = true})
+    vim.keymap.set("n", "<Leader>fg", function() builtin.grep_string({ search = vim.fn.input({ prompt = "Find word: " }) }) end, {noremap = true})
     vim.keymap.set("n", "<Leader>fw", function() builtin.grep_string({ search = vim.fn.expand('<cword>') }) end, {noremap = true})
     vim.keymap.set("v", "<Leader>fw", [[y:lua require('telescope.builtin').grep_string({ search = vim.fn.expand('<C-r><C-r>"') })<CR>]], {noremap = true})
     vim.keymap.set("n", "<Leader>fc", builtin.commands, {noremap = true})

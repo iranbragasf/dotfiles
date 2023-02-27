@@ -1,8 +1,8 @@
 local M = {}
 
 M.config = function ()
-    local ok, indent_blankline = pcall(require, "indent_blankline")
-    if not ok then
+    local indent_blankline_ok, indent_blankline = pcall(require, "indent_blankline")
+    if not indent_blankline_ok then
         vim.notify("[ERROR] indent-blankline not loaded", vim.log.levels.ERROR)
         return
     end

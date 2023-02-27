@@ -19,12 +19,11 @@ M.config = function()
         return
     end
 
-    local mason_update_all_ok, mason_update_all = pcall(require, "mason-update-all")
-    if not mason_update_all_ok then
-        vim.notify("[ERROR] mason-update-all not loaded", vim.log.levels.ERROR)
+    local lspconfig_ok, lspconfig = pcall(require, "lspconfig")
+    if not lspconfig_ok then
+        vim.notify("[ERROR] lspconfig not loaded", vim.log.levels.ERROR)
         return
     end
-
 
     mason.setup({
         ui = {
@@ -45,21 +44,18 @@ M.config = function()
     local server_opts = require("plugins.lspconfig").server_opts
     mason_lspconfig.setup_handlers({
         function(server_name)
-            local opts = default_opts
-
             if server_opts[server_name] then
-                opts = vim.tbl_extend("force", opts, server_opts[server_name])
+                lspconfig[server_name].setup(server_opts[server_name])
+                return
             end
 
-            require('lspconfig')[server_name].setup(opts)
+            lspconfig[server_name].setup(default_opts)
         end,
     })
 
     mason_null_ls.setup({
         automatic_installation = true,
     })
-
-    mason_update_all.setup()
 end
 
 return M

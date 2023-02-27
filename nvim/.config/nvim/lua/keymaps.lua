@@ -21,6 +21,13 @@ vim.keymap.set("n", "<C-h>", ":tabprev<CR>", {noremap = true, silent = true})
 vim.keymap.set("n", "<C-PageUp>", ":tabmove -1<CR>", {noremap = true, silent = true})
 vim.keymap.set("n", "<C-PageDown>", ":tabmove +1<CR>", {noremap = true, silent = true})
 
+-- map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
+-- map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer" })
+-- map("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
+-- map("n", "]b", "<cmd>bnext<cr>", { desc = "Next buffer" })
+-- map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+-- map("n", "<leader>`", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+
 vim.keymap.set("n", "<Leader>rw", ":%s/<C-r><C-w>//g<Left><Left>", {noremap = true})
 vim.keymap.set("v", "<Leader>rw", 'y:%s/<C-r><C-r>"//g<Left><Left>', {noremap = true})
 

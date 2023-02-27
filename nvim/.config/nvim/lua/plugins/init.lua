@@ -1,138 +1,193 @@
-local packer_bootstrap = require("plugins.packer").download_packer()
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable",
+        lazypath,
+    })
+end
+vim.opt.rtp:prepend(lazypath)
 
-local packer_ok, packer = pcall(require, "packer")
-
-if not packer_ok then
+local lazy_ok, lazy = pcall(require, "lazy")
+if not lazy_ok then
+    vim.notify("[ERROR] lazy.nvim not loaded", vim.log.levels.ERROR)
     return
 end
 
-local function exec_setup(plugin_name)
-    require("plugins." .. plugin_name).setup()
-end
-
-local function exec_config(plugin_name)
-    require("plugins." .. plugin_name).config()
-end
-
-return packer.startup({function(use)
-    use {
-        'wbthomason/packer.nvim',
-        config = exec_config("packer")
-    }
-
-    use {
+lazy.setup({
+    {
         "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
-        {
-            "jose-elias-alvarez/null-ls.nvim",
-            config = exec_config('null-ls'),
-            requires = { "nvim-lua/plenary.nvim" }
+        dependencies = {
+            "williamboman/mason-lspconfig.nvim",
+            "jay-babu/mason-null-ls.nvim",
+            {
+                'folke/neodev.nvim',
+                config = function()
+                    require("neodev").setup()
+                end
+            }
         },
-        "jay-babu/mason-null-ls.nvim",
-        'RubixDev/mason-update-all',
-        config = exec_config('mason')
-    }
-
-    use {
+        config = function()
+            require("plugins.mason").config()
+        end
+    },
+    {
         'neovim/nvim-lspconfig',
-        config = exec_config('lspconfig'),
-        requires = { "b0o/schemastore.nvim" }
-    }
-
-    use {
+        dependencies = { "b0o/schemastore.nvim" },
+        init = function()
+            require("plugins.lspconfig").init()
+        end,
+        config = function()
+            require("plugins.lspconfig").config()
+        end
+    },
+    {
         'hrsh7th/nvim-cmp',
-        'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-path',
-        'saadparwaiz1/cmp_luasnip',
-        'L3MON4D3/LuaSnip',
-        'hrsh7th/cmp-nvim-lua',
-        'hrsh7th/cmp-buffer',
-        'hrsh7th/cmp-emoji',
-        'onsails/lspkind-nvim',
-        config = exec_config('nvim-cmp'),
-    }
-
-    use {
+        dependencies = {
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-path',
+            {
+                'saadparwaiz1/cmp_luasnip',
+                dependencies = { 'L3MON4D3/LuaSnip' }
+            },
+            'hrsh7th/cmp-nvim-lua',
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-emoji',
+            'onsails/lspkind-nvim',
+        },
+        config = function()
+            require("plugins.cmp").config()
+        end
+    },
+    -- {
+    --     "L3MON4D3/LuaSnip",
+    --     dependencies = {
+    --         "rafamadriz/friendly-snippets",
+    --         config = function()
+    --             require("luasnip.loaders.from_vscode").lazy_load()
+    --         end,
+    --     },
+    --     opts = {
+    --         history = true,
+    --         delete_check_events = "TextChanged",
+    --     },
+    --     -- stylua: ignore
+    --     keys = {
+    --         {
+    --             "<tab>",
+    --             function()
+    --                 return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
+    --             end,
+    --             expr = true, silent = true, mode = "i",
+    --         },
+    --         { "<tab>", function() require("luasnip").jump(1) end, mode = "s" },
+    --         { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
+    --     },
+    -- },
+    {
         "ray-x/lsp_signature.nvim",
-        config = exec_config('lsp_signature')
-    }
-
-    use {
+        config = function()
+            require('plugins.lsp_signature').config()
+        end
+    },
+    {
+        "jose-elias-alvarez/null-ls.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            require("plugins.null_ls").config()
+        end
+    },
+    {
+        'nvim-telescope/telescope.nvim',
+        version = '*',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+            'kyazdani42/nvim-web-devicons',
+        },
+        config = function ()
+            require("plugins.telescope").config()
+        end
+    },
+    {
         'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate',
-        config = exec_config("treesitter"),
-        requires = {
-            'JoosepAlviste/nvim-ts-context-commentstring'
-        }
-    }
-
-    use {
+        build = ':TSUpdate',
+        dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
+        config = function()
+            require("plugins.treesitter").config()
+        end,
+    },
+    {
         'numToStr/Comment.nvim',
-        config = exec_config('comment')
-    }
-
-    use {
+        dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
+        config = function()
+            require('plugins.comment').config()
+        end
+    },
+    {
         'kyazdani42/nvim-tree.lua',
-        setup = exec_setup('nvim-tree'),
-        config = exec_config('nvim-tree'),
-        requires = { 'kyazdani42/nvim-web-devicons' }
-    }
-
-    -- TODO: create a `EditorConfigGenerate` commannd to generate a
-    -- `.editorconfig` file with base settings in project root
-    use { "editorconfig/editorconfig-vim" }
-
-    use {
-        'iamcco/markdown-preview.nvim',
-        run = 'cd app && yarn install',
-        ft = "markdown",
-        setup = exec_setup("markdown-preview")
-    }
-
-    use {
+        dependencies = { 'kyazdani42/nvim-web-devicons' },
+        cmd = "NvimTreeToggle",
+        init = function()
+            require('plugins.nvim_tree').init()
+        end,
+        config = function()
+            require('plugins.nvim_tree').config()
+        end,
+    },
+    {
         'mbbill/undotree',
         cmd = 'UndotreeToggle',
-        setup = exec_setup("undotree"),
-        config = exec_config("undotree")
-    }
-
-    use {
-        'nvim-telescope/telescope.nvim',
-        config = exec_config("telescope"),
-        branch = '0.1.x',
-        requires = {
-            'nvim-lua/plenary.nvim',
-            { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
-            'kyazdani42/nvim-web-devicons'
-        }
-    }
-
-    use {
-        'lewis6991/gitsigns.nvim',
-        config = exec_config("gitsigns"),
-    }
-
-    use {
-        "lukas-reineke/indent-blankline.nvim",
-        config = exec_config("indent-blankline")
-    }
-
-    use {
-        'folke/tokyonight.nvim',
-        config = exec_config("tokyonight")
-    }
-
-    -- Automatically set up your configuration after cloning packer.nvim
-    -- Must be put at the end after all plugins
-    if packer_bootstrap then
-        packer.sync()
-    end
-end,
-config = {
-    display = {
-        open_fn = function()
-            return require('packer.util').float({ border = "rounded" })
+        init = function()
+            require("plugins.undotree").init()
         end,
-        prompt_border = "rounded"
+        config = function()
+            require("plugins.undotree").config()
+        end
+    },
+    -- TODO: create a `EditorConfigGenerate` commannd to generate a
+    -- `.editorconfig` file with base settings in project root
+    { "editorconfig/editorconfig-vim" },
+    {
+        'lewis6991/gitsigns.nvim',
+        config = function()
+            require("plugins.gitsigns").config()
+        end
+    },
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        config = function()
+            require("plugins.indent_blankline").config()
+        end
+    },
+    {
+        'iamcco/markdown-preview.nvim',
+        build = 'cd app && npm install',
+        ft = "markdown",
+        init = function()
+            vim.g.mkdp_auto_close = 0
+        end
+    },
+    {
+        "folke/tokyonight.nvim",
+        priority = 1000,
+        config = function()
+            vim.cmd.colorscheme("tokyonight")
+        end,
+    },
+}, {
+    ui = {
+        border = "rounded"
     }
-}})
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    group = "CursorLineInActiveWindow",
+    pattern = 'lazy',
+    callback = function()
+        vim.api.nvim_win_set_option(0, "cursorline", true)
+    end,
+})
