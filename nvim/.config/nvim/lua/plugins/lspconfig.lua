@@ -36,6 +36,15 @@ M.config = function()
     vim.keymap.set('n', '<Leader>q', vim.diagnostic.setloclist, opts)
 end
 
+local lsp_formatting = function(bufnr)
+    vim.lsp.buf.format({
+        filter = function(client)
+            return client.name == "null-ls"
+        end,
+        bufnr = bufnr,
+    })
+end
+
 local on_attach = function(client, bufnr)
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -58,6 +67,25 @@ local on_attach = function(client, bufnr)
     vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename, buf_opts)
     vim.keymap.set('n', '<Leader>ac', vim.lsp.buf.code_action, buf_opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, buf_opts)
+
+    if client.supports_method("textDocument/formatting") then
+        vim.api.nvim_create_augroup("LspFormatting", {})
+        vim.api.nvim_clear_autocmds({
+            group = "LspFormatting",
+            buffer = bufnr
+        })
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            group = "LspFormatting",
+            buffer = bufnr,
+            callback = function()
+                lsp_formatting(bufnr)
+            end,
+        })
+
+        vim.api.nvim_create_user_command("Format", function()
+            lsp_formatting(bufnr)
+        end, { nargs = 0 })
+    end
 
     if client.server_capabilities.documentHighlightProvider then
         vim.api.nvim_create_augroup('LSPDocumentHighlight', {

@@ -21,12 +21,8 @@ vim.keymap.set("n", "<C-h>", ":tabprev<CR>", {noremap = true, silent = true})
 vim.keymap.set("n", "<C-PageUp>", ":tabmove -1<CR>", {noremap = true, silent = true})
 vim.keymap.set("n", "<C-PageDown>", ":tabmove +1<CR>", {noremap = true, silent = true})
 
--- map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
--- map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer" })
--- map("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
--- map("n", "]b", "<cmd>bnext<cr>", { desc = "Next buffer" })
--- map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
--- map("n", "<leader>`", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+vim.keymap.set("n", "<S-h>", ":bprevious<CR>", {noremap = true, silent = true})
+vim.keymap.set("n", "<S-l>", ":bnext<CR>", {noremap = true, silent = true})
 
 vim.keymap.set("n", "<Leader>rw", ":%s/<C-r><C-w>//g<Left><Left>", {noremap = true})
 vim.keymap.set("v", "<Leader>rw", 'y:%s/<C-r><C-r>"//g<Left><Left>', {noremap = true})
@@ -42,6 +38,10 @@ vim.keymap.set("n", "*", "*zz", {noremap = true})
 vim.keymap.set("n", "#", "#zz", {noremap = true})
 vim.keymap.set("c", "<Left>", "<Space><BS><Left>", {noremap = true})
 vim.keymap.set("c", "<Right>", "<Space><BS><Right>", {noremap = true})
+vim.keymap.set("v", "<", "<gv", {noremap = true})
+vim.keymap.set("v", ">", ">gv", {noremap = true})
+
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", {noremap = true})
 
 local is_qf_list_open = false
 vim.api.nvim_create_augroup('FixLists', { clear = true })

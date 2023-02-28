@@ -19,29 +19,28 @@ end
 
 lazy.setup({
     {
-        "williamboman/mason.nvim",
+        'neovim/nvim-lspconfig',
         dependencies = {
-            "williamboman/mason-lspconfig.nvim",
-            "jay-babu/mason-null-ls.nvim",
             {
                 'folke/neodev.nvim',
                 config = function()
                     require("neodev").setup()
                 end
-            }
+            },
+            "b0o/schemastore.nvim",
         },
-        config = function()
-            require("plugins.mason").config()
-        end
-    },
-    {
-        'neovim/nvim-lspconfig',
-        dependencies = { "b0o/schemastore.nvim" },
         init = function()
             require("plugins.lspconfig").init()
         end,
         config = function()
             require("plugins.lspconfig").config()
+        end
+    },
+    {
+        "williamboman/mason.nvim",
+        dependencies = { "williamboman/mason-lspconfig.nvim" },
+        config = function()
+            require("plugins.mason").config()
         end
     },
     {
@@ -51,7 +50,7 @@ lazy.setup({
             'hrsh7th/cmp-path',
             {
                 'saadparwaiz1/cmp_luasnip',
-                dependencies = { 'L3MON4D3/LuaSnip' }
+                dependencies = { "L3MON4D3/LuaSnip" },
             },
             'hrsh7th/cmp-nvim-lua',
             'hrsh7th/cmp-buffer',
@@ -62,8 +61,8 @@ lazy.setup({
             require("plugins.cmp").config()
         end
     },
-    -- {
-    --     "L3MON4D3/LuaSnip",
+    {
+        "L3MON4D3/LuaSnip",
     --     dependencies = {
     --         "rafamadriz/friendly-snippets",
     --         config = function()
@@ -86,7 +85,7 @@ lazy.setup({
     --         { "<tab>", function() require("luasnip").jump(1) end, mode = "s" },
     --         { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
     --     },
-    -- },
+    },
     {
         "ray-x/lsp_signature.nvim",
         config = function()
@@ -106,9 +105,10 @@ lazy.setup({
         dependencies = {
             'nvim-lua/plenary.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+            "debugloop/telescope-undo.nvim",
             'kyazdani42/nvim-web-devicons',
         },
-        config = function ()
+        config = function()
             require("plugins.telescope").config()
         end
     },
@@ -122,7 +122,6 @@ lazy.setup({
     },
     {
         'numToStr/Comment.nvim',
-        dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
         config = function()
             require('plugins.comment').config()
         end
@@ -137,16 +136,6 @@ lazy.setup({
         config = function()
             require('plugins.nvim_tree').config()
         end,
-    },
-    {
-        'mbbill/undotree',
-        cmd = 'UndotreeToggle',
-        init = function()
-            require("plugins.undotree").init()
-        end,
-        config = function()
-            require("plugins.undotree").config()
-        end
     },
     -- TODO: create a `EditorConfigGenerate` commannd to generate a
     -- `.editorconfig` file with base settings in project root

@@ -13,23 +13,25 @@ M.config = function()
         return
     end
 
-    local mason_null_ls_ok, mason_null_ls = pcall(require, "mason-null-ls")
-    if not mason_null_ls_ok then
-        vim.notify("[ERROR] mason-null-ls not loaded", vim.log.levels.ERROR)
-        return
-    end
-
-    local lspconfig_ok, lspconfig = pcall(require, "lspconfig")
-    if not lspconfig_ok then
-        vim.notify("[ERROR] lspconfig not loaded", vim.log.levels.ERROR)
-        return
-    end
+    local mason_registry = require("mason-registry")
 
     mason.setup({
         ui = {
             border = "rounded",
         }
     })
+
+    local ensure_installed = {
+        "prettier",
+        "eslint_d",
+    }
+
+    for _, package_name in ipairs(ensure_installed) do
+        local package = mason_registry.get_package(package_name)
+        if not package:is_installed() then
+            package:install()
+        end
+    end
 
     mason_lspconfig.setup({
         ensure_installed = {
@@ -42,19 +44,18 @@ M.config = function()
 
     local default_opts = require("plugins.lspconfig").default_opts
     local server_opts = require("plugins.lspconfig").server_opts
+
     mason_lspconfig.setup_handlers({
         function(server_name)
+            local lspconfig = require("lspconfig")
+
             if server_opts[server_name] then
                 lspconfig[server_name].setup(server_opts[server_name])
                 return
             end
 
             lspconfig[server_name].setup(default_opts)
-        end,
-    })
-
-    mason_null_ls.setup({
-        automatic_installation = true,
+        end
     })
 end
 
