@@ -17,6 +17,15 @@ if not lazy_ok then
     return
 end
 
+vim.api.nvim_create_autocmd("FileType", {
+    group = "CursorLineInActiveWindow",
+    pattern = 'lazy',
+    callback = function()
+        vim.api.nvim_win_set_option(0, "cursorline", true)
+        vim.api.nvim_win_set_option(0, "signcolumn", "no")
+    end,
+})
+
 lazy.setup({
     {
         'neovim/nvim-lspconfig',
@@ -63,28 +72,11 @@ lazy.setup({
     },
     {
         "L3MON4D3/LuaSnip",
-    --     dependencies = {
-    --         "rafamadriz/friendly-snippets",
-    --         config = function()
-    --             require("luasnip.loaders.from_vscode").lazy_load()
-    --         end,
-    --     },
-    --     opts = {
-    --         history = true,
-    --         delete_check_events = "TextChanged",
-    --     },
-    --     -- stylua: ignore
-    --     keys = {
-    --         {
-    --             "<tab>",
-    --             function()
-    --                 return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
-    --             end,
-    --             expr = true, silent = true, mode = "i",
-    --         },
-    --         { "<tab>", function() require("luasnip").jump(1) end, mode = "s" },
-    --         { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
-    --     },
+        version = "1.*",
+        dependencies = { "rafamadriz/friendly-snippets" },
+        config = function()
+            require("plugins.luasnip").config()
+        end,
     },
     {
         "ray-x/lsp_signature.nvim",
@@ -171,12 +163,4 @@ lazy.setup({
     ui = {
         border = "rounded"
     }
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-    group = "CursorLineInActiveWindow",
-    pattern = 'lazy',
-    callback = function()
-        vim.api.nvim_win_set_option(0, "cursorline", true)
-    end,
 })

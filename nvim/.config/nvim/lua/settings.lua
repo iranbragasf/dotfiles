@@ -33,6 +33,8 @@ vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undodir"
 vim.opt.signcolumn = "yes"
 vim.opt.wrap = false
+vim.opt.completeopt = { "menu", "menuone", "noinsert" }
+vim.opt.shortmess:append("c")
 
 vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {

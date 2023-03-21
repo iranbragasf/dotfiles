@@ -34,6 +34,8 @@ M.config = function()
     vim.keymap.set('n', '[g', vim.diagnostic.goto_prev, opts)
     vim.keymap.set('n', ']g', vim.diagnostic.goto_next, opts)
     vim.keymap.set('n', '<Leader>q', vim.diagnostic.setloclist, opts)
+
+    require('lspconfig.ui.windows').default_options.border = "rounded"
 end
 
 local lsp_formatting = function(bufnr)
