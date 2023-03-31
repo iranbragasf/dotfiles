@@ -113,8 +113,8 @@ end
 local capabilities = require("plugins.cmp").capabilities
 
 local handlers = {
-    ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, { focusable = false }),
-    ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, { focusable = false }),
+    ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { focusable = false }),
+    ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { focusable = false }),
 }
 
 M.default_opts = {

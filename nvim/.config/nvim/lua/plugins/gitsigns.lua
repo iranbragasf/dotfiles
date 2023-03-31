@@ -18,7 +18,7 @@ M.config = function()
         },
         current_line_blame = true,
         current_line_blame_opts = { delay = 250 },
-        preview_config = { border = "rounded" },
+        preview_config = { border = "none" },
         on_attach = function(bufnr)
             local gs = package.loaded.gitsigns
 

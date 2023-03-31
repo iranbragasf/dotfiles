@@ -7,10 +7,22 @@ M.config = function()
         return
     end
 
+    local types = require("luasnip.util.types")
+
+    local colors = require("tokyonight.colors").setup()
+
     luasnip.setup({
         history = true,
-        update_events = { "TextChanged", "TextChangedI" },
+        update_events = "TextChanged,TextChangedI",
         delete_check_events = "TextChanged",
+        enable_autosnippets = true,
+        ext_opts = {
+            [types.choiceNode] = {
+                active = {
+                    virt_text = {{"●", "Constant"}}
+                }
+            },
+        }
     })
 
     require("luasnip.loaders.from_vscode").lazy_load()

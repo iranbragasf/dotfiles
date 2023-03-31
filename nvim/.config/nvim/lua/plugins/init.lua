@@ -23,6 +23,7 @@ vim.api.nvim_create_autocmd("FileType", {
     callback = function()
         vim.api.nvim_win_set_option(0, "cursorline", true)
         vim.api.nvim_win_set_option(0, "signcolumn", "no")
+        vim.keymap.set("n", "<Esc>", ":close<CR>", { noremap = true, silent = true, buffer = true })
     end,
 })
 
@@ -96,7 +97,10 @@ lazy.setup({
         version = '*',
         dependencies = {
             'nvim-lua/plenary.nvim',
-            { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+            {
+                'nvim-telescope/telescope-fzf-native.nvim',
+                build = 'make'
+            },
             "debugloop/telescope-undo.nvim",
             'kyazdani42/nvim-web-devicons',
         },
@@ -129,7 +133,7 @@ lazy.setup({
             require('plugins.nvim_tree').config()
         end,
     },
-    -- TODO: create a `EditorConfigGenerate` commannd to generate a
+    -- TODO: create an `EditorConfigGenerate` command to generate a
     -- `.editorconfig` file with base settings in project root
     { "editorconfig/editorconfig-vim" },
     {
@@ -153,14 +157,14 @@ lazy.setup({
         end
     },
     {
+        "fladson/vim-kitty",
+        ft = "kitty",
+    },
+    {
         "folke/tokyonight.nvim",
         priority = 1000,
         config = function()
             vim.cmd.colorscheme("tokyonight")
         end,
     },
-}, {
-    ui = {
-        border = "rounded"
-    }
-})
+}, { ui = { border = "rounded" } })
