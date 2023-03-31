@@ -43,6 +43,8 @@ vim.keymap.set("v", ">", ">gv", {noremap = true})
 
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", {noremap = true})
 
+-- TODO: toggle location list
+-- https://rafaelleru.github.io/blog/quickfix-autocomands
 local is_qf_list_open = false
 vim.api.nvim_create_augroup('FixLists', { clear = true })
 vim.api.nvim_create_autocmd('BufWinEnter', {
