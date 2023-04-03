@@ -35,23 +35,14 @@ M.config = function()
                 git_placement = "after",
                 glyphs = {
                     git = {
-                        unstaged = "✗",
-                        staged = "✓",
-                        unmerged = "",
-                        renamed = "➜",
-                        untracked = "★",
-                        deleted = "",
-                        ignored = "◌",
-                    },
-                    -- git = {
-                    --     unstaged  = "M",
-                    --     staged    = "M",
-                    --     unmerged  = "!",
-                    --     renamed   = "R",
-                    --     untracked = "U",
-                    --     deleted   = "D",
-                    --     ignored   = ""
-                    -- }
+                        unstaged  = "M",
+                        staged    = "M",
+                        unmerged  = "!",
+                        renamed   = "R",
+                        untracked = "U",
+                        deleted   = "D",
+                        ignored   = ""
+                    }
                 },
             },
             special_files = {},
@@ -63,10 +54,10 @@ M.config = function()
             enable = true,
             show_on_dirs = true,
             icons = {
-                hint = " ",
-                info = " ",
-                warning = " ",
-                error = " ",
+                hint = " ",
+                info = " ",
+                warning = " ",
+                error = " ",
             },
         },
         git = {

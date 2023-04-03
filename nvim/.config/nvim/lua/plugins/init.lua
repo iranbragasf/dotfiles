@@ -122,7 +122,7 @@ lazy.setup({
             require('plugins.comment').config()
         end
     },
-    -- TODO: preview images in neovim buffer
+    -- TODO: preview images in buffers
     {
         'kyazdani42/nvim-tree.lua',
         dependencies = { 'kyazdani42/nvim-web-devicons' },
