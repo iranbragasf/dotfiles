@@ -28,8 +28,37 @@ M.config = function()
 
     for _, package_name in ipairs(ensure_installed) do
         local package = mason_registry.get_package(package_name)
+
         if not package:is_installed() then
-            package:install()
+            local notify_opts = { title = "mason.nvim" }
+
+            vim.notify(
+                string.format("[mason.nvim] installing %s", package_name),
+                vim.log.levels.INFO,
+                notify_opts
+            )
+
+            package:install():once("closed", vim.schedule_wrap(function()
+                if package:is_installed() then
+                    vim.notify(
+                        string.format(
+                            "[mason.nvim] %s was successfully installed",
+                            package_name
+                        ),
+                        vim.log.levels.INFO,
+                        notify_opts
+                    )
+                else
+                    vim.notify(
+                        string.format(
+                            "[mason.nvim] failed to install %s. Installation logs are available in :Mason and :MasonLog",
+                            package_name
+                        ),
+                        vim.log.levels.ERROR,
+                        notify_opts
+                    )
+                end
+            end))
         end
     end
 
