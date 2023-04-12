@@ -28,7 +28,6 @@ M.config = function()
             sorting_strategy = "ascending",
             layout_config = {
                 prompt_position = "top",
-                horizontal = { preview_width = 0.5 }
             },
             prompt_prefix = "❯ ",
             selection_caret = "❯ ",

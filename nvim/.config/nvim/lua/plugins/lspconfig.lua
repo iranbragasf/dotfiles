@@ -1,15 +1,5 @@
 local M = {}
 
-M.init = function()
-    vim.api.nvim_create_autocmd("FileType", {
-        group = "CursorLineInActiveWindow",
-        pattern = 'lspinfo',
-        callback = function()
-            vim.api.nvim_win_set_option(0, "cursorline", true)
-        end,
-    })
-end
-
 M.config = function()
     vim.diagnostic.config({
         virtual_text = {
@@ -40,6 +30,14 @@ M.config = function()
     vim.keymap.set('n', '<Leader>q', vim.diagnostic.setloclist, opts)
 
     require('lspconfig.ui.windows').default_options.border = "rounded"
+
+    vim.api.nvim_create_autocmd("FileType", {
+        group = "CursorLineInActiveWindow",
+        pattern = 'lspinfo',
+        callback = function()
+            vim.api.nvim_win_set_option(0, "cursorline", true)
+        end,
+    })
 end
 
 local lsp_formatting = function(bufnr)
@@ -117,8 +115,14 @@ end
 local capabilities = require("plugins.cmp").capabilities
 
 local handlers = {
-    ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { focusable = false }),
-    ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { focusable = false }),
+    ["textDocument/hover"] = vim.lsp.with(
+        vim.lsp.handlers.hover,
+        { focusable = false }
+    ),
+    ["textDocument/signatureHelp"] = vim.lsp.with(
+        vim.lsp.handlers.signature_help,
+        { focusable = false }
+    ),
 }
 
 M.default_opts = {

@@ -1,5 +1,45 @@
 local M = {}
 
+local install_missing_pkgs = function(pkg_list)
+    local mason_registry = require("mason-registry")
+
+    for _, pkg_name in ipairs(pkg_list) do
+        local pkg = mason_registry.get_package(pkg_name)
+
+        if not pkg:is_installed() then
+            local notify_opts = { title = "mason.nvim" }
+
+            vim.notify(
+                string.format("[mason.nvim] installing %s", pkg_name),
+                vim.log.levels.INFO,
+                notify_opts
+            )
+
+            pkg:install():once("closed", vim.schedule_wrap(function()
+                if pkg:is_installed() then
+                    vim.notify(
+                        string.format(
+                            "[mason.nvim] %s was successfully installed",
+                            pkg_name
+                        ),
+                        vim.log.levels.INFO,
+                        notify_opts
+                    )
+                else
+                    vim.notify(
+                        string.format(
+                            "[mason.nvim] failed to install %s. Installation logs are available in :Mason and :MasonLog",
+                            pkg_name
+                        ),
+                        vim.log.levels.ERROR,
+                        notify_opts
+                    )
+                end
+            end))
+        end
+    end
+end
+
 M.config = function()
     local mason_ok, mason = pcall(require, "mason")
     if not mason_ok then
@@ -13,8 +53,6 @@ M.config = function()
         return
     end
 
-    local mason_registry = require("mason-registry")
-
     mason.setup({
         ui = {
             border = "rounded",
@@ -26,41 +64,7 @@ M.config = function()
         "eslint_d",
     }
 
-    for _, package_name in ipairs(ensure_installed) do
-        local package = mason_registry.get_package(package_name)
-
-        if not package:is_installed() then
-            local notify_opts = { title = "mason.nvim" }
-
-            vim.notify(
-                string.format("[mason.nvim] installing %s", package_name),
-                vim.log.levels.INFO,
-                notify_opts
-            )
-
-            package:install():once("closed", vim.schedule_wrap(function()
-                if package:is_installed() then
-                    vim.notify(
-                        string.format(
-                            "[mason.nvim] %s was successfully installed",
-                            package_name
-                        ),
-                        vim.log.levels.INFO,
-                        notify_opts
-                    )
-                else
-                    vim.notify(
-                        string.format(
-                            "[mason.nvim] failed to install %s. Installation logs are available in :Mason and :MasonLog",
-                            package_name
-                        ),
-                        vim.log.levels.ERROR,
-                        notify_opts
-                    )
-                end
-            end))
-        end
-    end
+    install_missing_pkgs(ensure_installed)
 
     mason_lspconfig.setup({
         ensure_installed = {

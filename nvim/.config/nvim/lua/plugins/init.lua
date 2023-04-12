@@ -39,9 +39,6 @@ lazy.setup({
             },
             "b0o/schemastore.nvim",
         },
-        init = function()
-            require("plugins.lspconfig").init()
-        end,
         config = function()
             require("plugins.lspconfig").config()
         end
