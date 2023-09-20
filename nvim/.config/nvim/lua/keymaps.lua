@@ -58,7 +58,7 @@ vim.api.nvim_create_autocmd('BufWinLeave', {
     callback = function() is_qf_list_open = false end,
 })
 local toggle_qf_list = function()
-    if is_qf_list_open == true then
+    if is_qf_list_open then
         vim.cmd.cclose()
         return
     end

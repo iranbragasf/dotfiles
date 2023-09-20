@@ -70,23 +70,10 @@ M.config = function()
                 override_file_sorter = true,
                 case_mode = "smart_case"
             },
-            undo = {
-                layout_config = {
-                    horizontal = { preview_width = 0.75 }
-                },
-                entry_format = "#$ID, $STAT, $TIME",
-            },
         }
     })
 
-    local extensions = {
-        "fzf",
-        "undo",
-    }
-
-    for _, extension in ipairs(extensions) do
-        telescope.load_extension(extension)
-    end
+    telescope.load_extension("fzf")
 
     vim.keymap.set("n", "<C-p>", builtin.find_files, {noremap = true})
     vim.keymap.set("n", "<C-f>", builtin.live_grep, {noremap = true})
@@ -107,7 +94,6 @@ M.config = function()
             cwd = "$HOME/dotfiles"
         })
     end, { noremap = true })
-    vim.keymap.set("n", "<Leader>u", telescope.extensions.undo.undo, {noremap = true, silent = true})
 
     vim.api.nvim_create_autocmd("User", {
         pattern = "TelescopePreviewerLoaded",

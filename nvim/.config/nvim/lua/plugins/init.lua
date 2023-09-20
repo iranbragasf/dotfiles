@@ -98,7 +98,6 @@ lazy.setup({
                 'nvim-telescope/telescope-fzf-native.nvim',
                 build = 'make'
             },
-            "debugloop/telescope-undo.nvim",
             'kyazdani42/nvim-web-devicons',
         },
         config = function()
@@ -131,6 +130,16 @@ lazy.setup({
             require('plugins.nvim_tree').config()
         end,
     },
+    {
+        'mbbill/undotree',
+        cmd = 'UndotreeToggle',
+        init = function()
+            require("plugins.undotree").init()
+        end,
+        config = function()
+            require("plugins.undotree").config()
+        end
+    },
     -- TODO: create an `EditorConfigGenerate` command to generate a
     -- `.editorconfig` file with base settings in project root
     { "editorconfig/editorconfig-vim" },
@@ -155,14 +164,15 @@ lazy.setup({
         end
     },
     {
-        "fladson/vim-kitty",
-        ft = "kitty",
-    },
-    {
-        "folke/tokyonight.nvim",
+        "navarasu/onedark.nvim",
         priority = 1000,
         config = function()
-            vim.cmd.colorscheme("tokyonight")
+            require('onedark').setup {
+                style = 'darker',
+                comments = 'italic',
+                keywords = 'italic',
+            }
+            require('onedark').load()
         end,
     },
 }, { ui = { border = "rounded" } })

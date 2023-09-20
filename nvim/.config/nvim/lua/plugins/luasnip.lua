@@ -9,8 +9,6 @@ M.config = function()
 
     local types = require("luasnip.util.types")
 
-    local colors = require("tokyonight.colors").setup()
-
     luasnip.setup({
         history = true,
         update_events = "TextChanged,TextChangedI",

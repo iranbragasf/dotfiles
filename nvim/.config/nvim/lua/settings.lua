@@ -35,6 +35,8 @@ vim.opt.signcolumn = "yes"
 vim.opt.wrap = false
 vim.opt.completeopt = { "menu", "menuone", "noinsert" }
 vim.opt.shortmess:append("c")
+vim.opt.cursorline = true
+vim.opt.laststatus = 3
 
 vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -46,20 +48,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 vim.api.nvim_create_augroup('CursorLineInActiveWindow', { clear = true })
-vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter', 'BufWinEnter' }, {
-    group = "CursorLineInActiveWindow",
-    pattern = '*',
-    callback = function()
-        vim.api.nvim_win_set_option(0, "cursorline", true)
-    end,
-})
-vim.api.nvim_create_autocmd("WinLeave", {
-    group = "CursorLineInActiveWindow",
-    pattern = '*',
-    callback = function()
-        vim.api.nvim_win_set_option(0, "cursorline", false)
-    end,
-})
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "diff",
