@@ -40,14 +40,14 @@ lazy.setup({
             "b0o/schemastore.nvim",
         },
         config = function()
-            require("plugins.lspconfig").config()
+            require("iranbragasf.plugins.lspconfig").config()
         end
     },
     {
         "williamboman/mason.nvim",
         dependencies = { "williamboman/mason-lspconfig.nvim" },
         config = function()
-            require("plugins.mason").config()
+            require("iranbragasf.plugins.mason").config()
         end
     },
     {
@@ -65,7 +65,7 @@ lazy.setup({
             'onsails/lspkind-nvim',
         },
         config = function()
-            require("plugins.cmp").config()
+            require("iranbragasf.plugins.cmp").config()
         end
     },
     {
@@ -73,20 +73,20 @@ lazy.setup({
         version = "1.*",
         dependencies = { "rafamadriz/friendly-snippets" },
         config = function()
-            require("plugins.luasnip").config()
+            require("iranbragasf.plugins.luasnip").config()
         end,
     },
     {
         "ray-x/lsp_signature.nvim",
         config = function()
-            require('plugins.lsp_signature').config()
+            require("iranbragasf.plugins.lsp_signature").config()
         end
     },
     {
         "jose-elias-alvarez/null-ls.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
-            require("plugins.null_ls").config()
+            require("iranbragasf.plugins.null_ls").config()
         end
     },
     {
@@ -101,7 +101,7 @@ lazy.setup({
             'kyazdani42/nvim-web-devicons',
         },
         config = function()
-            require("plugins.telescope").config()
+            require("iranbragasf.plugins.telescope").config()
         end
     },
     {
@@ -109,13 +109,13 @@ lazy.setup({
         build = ':TSUpdate',
         dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
         config = function()
-            require("plugins.treesitter").config()
+            require("iranbragasf.plugins.treesitter").config()
         end,
     },
     {
         'numToStr/Comment.nvim',
         config = function()
-            require('plugins.comment').config()
+            require("iranbragasf.plugins.comment").config()
         end
     },
     -- TODO: preview images in buffers
@@ -124,20 +124,20 @@ lazy.setup({
         dependencies = { 'kyazdani42/nvim-web-devicons' },
         cmd = "NvimTreeToggle",
         init = function()
-            require('plugins.nvim_tree').init()
+            require("iranbragasf.plugins.nvim_tree").init()
         end,
         config = function()
-            require('plugins.nvim_tree').config()
+            require("iranbragasf.plugins.nvim_tree").config()
         end,
     },
     {
         'mbbill/undotree',
         cmd = 'UndotreeToggle',
         init = function()
-            require("plugins.undotree").init()
+            require("iranbragasf.plugins.undotree").init()
         end,
         config = function()
-            require("plugins.undotree").config()
+            require("iranbragasf.plugins.undotree").config()
         end
     },
     -- TODO: create an `EditorConfigGenerate` command to generate a
@@ -146,13 +146,13 @@ lazy.setup({
     {
         'lewis6991/gitsigns.nvim',
         config = function()
-            require("plugins.gitsigns").config()
+            require("iranbragasf.plugins.gitsigns").config()
         end
     },
     {
         "lukas-reineke/indent-blankline.nvim",
         config = function()
-            require("plugins.indent_blankline").config()
+            require("iranbragasf.plugins.indent_blankline").config()
         end
     },
     {

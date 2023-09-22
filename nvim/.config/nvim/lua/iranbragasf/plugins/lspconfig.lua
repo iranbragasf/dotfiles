@@ -112,7 +112,7 @@ local on_attach = function(client, bufnr)
     end
 end
 
-local capabilities = require("plugins.cmp").capabilities
+local capabilities = require("iranbragasf.plugins.cmp").capabilities
 
 local handlers = {
     ["textDocument/hover"] = vim.lsp.with(

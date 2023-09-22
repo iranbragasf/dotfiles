@@ -1,3 +1,3 @@
-require("settings")
-require("keymaps")
-require("plugins")
+require("iranbragasf.settings")
+require("iranbragasf.keymaps")
+require("iranbragasf.plugins")

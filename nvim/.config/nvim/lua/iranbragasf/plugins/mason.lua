@@ -75,8 +75,8 @@ M.config = function()
         },
     })
 
-    local default_opts = require("plugins.lspconfig").default_opts
-    local server_opts = require("plugins.lspconfig").server_opts
+    local default_opts = require("iranbragasf.plugins.lspconfig").default_opts
+    local server_opts = require("iranbragasf.plugins.lspconfig").server_opts
 
     mason_lspconfig.setup_handlers({
         function(server_name)
