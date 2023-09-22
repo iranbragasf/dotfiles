@@ -1,9 +1,7 @@
 [user]
-	email = iran.brg@gmail.com
+	email = iranbragasf@gmail.com
 	name = Iran Braga
 [init]
 	defaultBranch = main
-[includeif "gitdir:~/personal/projects/devmagic/"]
-    path = ~/.config/git/config.devmagic
-[includeif "gitdir:~/personal/projects/titan/"]
-    path = ~/.config/git/config.titan
+[includeif "gitdir:~/personal/hiperbanco/"]
+    path = ~/.config/git/config.hiperbanco
