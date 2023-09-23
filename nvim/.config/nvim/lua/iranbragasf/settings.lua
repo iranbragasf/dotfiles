@@ -8,6 +8,7 @@ vim.opt.wildignore:append({
 })
 vim.opt.wildignorecase = true
 vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
 vim.opt.mouse = "a"
 vim.opt.guicursor = "n-v-c-sm:block,i-ve:ver25,r-o:hor20"
 vim.opt.clipboard = "unnamedplus"
@@ -73,7 +74,7 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 })
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     group = "FiletypeDetect",
-    pattern = 'config.devmagic,config.titan',
+    pattern = '*/.config/git/*',
     callback = function()
         vim.api.nvim_buf_set_option(0, "filetype", "gitconfig")
     end,

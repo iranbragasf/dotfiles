@@ -20,7 +20,7 @@ M.config = function ()
             'undotree',
             'diff'
         },
-        buftype_exclude = { 'terminal', 'nofile' }
+        buftype_exclude = { 'terminal', 'nofile' },
     })
 end
 

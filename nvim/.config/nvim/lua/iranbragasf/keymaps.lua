@@ -3,7 +3,7 @@ vim.g.maplocalleader = " "
 
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", {noremap = true, silent = true})
 
-vim.keymap.set("v", "<Leader>p", '"_dP', {noremap = true})
+vim.keymap.set("x", "<Leader>p", '"_dP', {noremap = true})
 
 vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", {noremap = true, silent = true})
 vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", {noremap = true, silent = true})

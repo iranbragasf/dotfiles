@@ -8,7 +8,7 @@ M.config = function()
     end
 
     treesitter.setup({
-        ensure_installed = "all",
+        ensure_installed = { "javascript", "typescript", "html", "css", "json", "jsonc"  },
         sync_install = false,
         auto_install = true,
         highlight = { enable = true },

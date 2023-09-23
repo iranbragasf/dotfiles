@@ -12,12 +12,7 @@ M.config = function()
         severity_sort = true
     })
 
-    local signs = {
-        Error = " ",
-        Warn = " ",
-        Hint = " ",
-        Info = " "
-    }
+    local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
     for type, icon in pairs(signs) do
         local hl = "DiagnosticSign" .. type
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
@@ -125,13 +120,13 @@ local handlers = {
     ),
 }
 
-M.default_opts = {
+M.default_server_opts = {
     on_attach = on_attach,
     capabilities = capabilities,
     handlers = handlers
 }
 
-local custom_server_opts = {
+M.server_opts = {
     ["lua_ls"] = {
         settings = {
             Lua = {
@@ -151,13 +146,11 @@ local custom_server_opts = {
                 validate = { enable = true },
             }
         }
-    }
+    },
 }
 
-M.server_opts = {}
-
-for server_name, opts in pairs(custom_server_opts) do
-    M.server_opts[server_name] = vim.tbl_extend("force", M.default_opts, opts)
+for server_name, opts in pairs(M.server_opts) do
+    M.server_opts[server_name] = vim.tbl_extend("force", M.default_server_opts, opts)
 end
 
 return M
