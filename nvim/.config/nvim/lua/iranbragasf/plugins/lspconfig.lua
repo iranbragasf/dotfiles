@@ -1,48 +1,37 @@
 local M = {}
 
-M.config = function()
-    vim.diagnostic.config({
-        virtual_text = {
-            source = "always"
-        },
-        float = {
-            source = "always",
-            focusable = false
-        },
-        severity_sort = true
-    })
+vim.diagnostic.config({
+    virtual_text = {
+        source = "always"
+    },
+    float = {
+        source = "always",
+        focusable = false
+    },
+    severity_sort = true
+})
 
-    local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-    for type, icon in pairs(signs) do
-        local hl = "DiagnosticSign" .. type
-        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-    end
-
-    local opts = { noremap = true, silent = true }
-    vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
-    vim.keymap.set('n', '[g', vim.diagnostic.goto_prev, opts)
-    vim.keymap.set('n', ']g', vim.diagnostic.goto_next, opts)
-    vim.keymap.set('n', '<Leader>q', vim.diagnostic.setloclist, opts)
-
-    require('lspconfig.ui.windows').default_options.border = "rounded"
-
-    vim.api.nvim_create_autocmd("FileType", {
-        group = "CursorLineInActiveWindow",
-        pattern = 'lspinfo',
-        callback = function()
-            vim.api.nvim_win_set_option(0, "cursorline", true)
-        end,
-    })
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
-local lsp_formatting = function(bufnr)
-    vim.lsp.buf.format({
-        filter = function(client)
-            return client.name == "null-ls"
-        end,
-        bufnr = bufnr,
-    })
-end
+local opts = { noremap = true, silent = true }
+vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
+vim.keymap.set('n', '[g', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', ']g', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<Leader>q', vim.diagnostic.setloclist, opts)
+
+require('lspconfig.ui.windows').default_options.border = "rounded"
+
+vim.api.nvim_create_autocmd("FileType", {
+    group = "CursorLineInActiveWindow",
+    pattern = 'lspinfo',
+    callback = function()
+        vim.api.nvim_win_set_option(0, "cursorline", true)
+    end,
+})
 
 local on_attach = function(client, bufnr)
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -52,39 +41,21 @@ local on_attach = function(client, bufnr)
         silent = true,
         buffer = bufnr,
     }
+
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, buf_opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, buf_opts)
+    -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, buf_opts)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, buf_opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, buf_opts)
+    -- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, buf_opts)
     vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, buf_opts)
     vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder, buf_opts)
     vim.keymap.set('n', '<Leader>wr', vim.lsp.buf.remove_workspace_folder, buf_opts)
     vim.keymap.set('n', '<Leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, buf_opts)
-    vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, buf_opts)
+    -- vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, buf_opts)
     vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename, buf_opts)
     vim.keymap.set('n', '<Leader>ac', vim.lsp.buf.code_action, buf_opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, buf_opts)
-
-    if client.supports_method("textDocument/formatting") then
-        vim.api.nvim_create_augroup("LspFormatting", {})
-        vim.api.nvim_clear_autocmds({
-            group = "LspFormatting",
-            buffer = bufnr
-        })
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            group = "LspFormatting",
-            buffer = bufnr,
-            callback = function()
-                lsp_formatting(bufnr)
-            end,
-        })
-
-        vim.api.nvim_create_user_command("Format", function()
-            lsp_formatting(bufnr)
-        end, { nargs = 0 })
-    end
+    -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, buf_opts)
 
     if client.server_capabilities.documentHighlightProvider then
         vim.api.nvim_create_augroup('LSPDocumentHighlight', {
@@ -107,24 +78,23 @@ local on_attach = function(client, bufnr)
     end
 end
 
-local capabilities = require("iranbragasf.plugins.cmp").capabilities
-
 local handlers = {
-    ["textDocument/hover"] = vim.lsp.with(
-        vim.lsp.handlers.hover,
-        { focusable = false }
-    ),
-    ["textDocument/signatureHelp"] = vim.lsp.with(
-        vim.lsp.handlers.signature_help,
-        { focusable = false }
-    ),
+    ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { focusable = false }),
+    ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { focusable = false }),
 }
 
 M.default_server_opts = {
     on_attach = on_attach,
-    capabilities = capabilities,
-    handlers = handlers
+    capabilities = require('cmp_nvim_lsp').default_capabilities(),
+    handlers = handlers,
 }
+
+local organize_imports = function ()
+    vim.lsp.buf.execute_command({
+        command = "_typescript.organizeImports",
+        arguments = { vim.api.nvim_buf_get_name(0) }
+    })
+end
 
 M.server_opts = {
     ["lua_ls"] = {
@@ -147,10 +117,21 @@ M.server_opts = {
             }
         }
     },
+    ["tsserver"] = {
+        init_options = {
+            disableSuggestions = true,
+            commands = {
+                OrganizeImports = {
+                    organize_imports,
+                    description = "Organize imports"
+                }
+            }
+        }
+    }
 }
 
-for server_name, opts in pairs(M.server_opts) do
-    M.server_opts[server_name] = vim.tbl_extend("force", M.default_server_opts, opts)
+for server_name, custom_server_opts in pairs(M.server_opts) do
+    M.server_opts[server_name] = vim.tbl_extend("force", M.default_server_opts, custom_server_opts)
 end
 
 return M

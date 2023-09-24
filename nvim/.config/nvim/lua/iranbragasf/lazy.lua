@@ -11,12 +11,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-local lazy_ok, lazy = pcall(require, "lazy")
-if not lazy_ok then
-    vim.notify("[ERROR] lazy.nvim not loaded", vim.log.levels.ERROR)
-    return
-end
-
 vim.api.nvim_create_autocmd("FileType", {
     group = "CursorLineInActiveWindow",
     pattern = 'lazy',
@@ -27,7 +21,7 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
-lazy.setup({
+require("lazy").setup({
     {
         'neovim/nvim-lspconfig',
         dependencies = {
@@ -40,14 +34,14 @@ lazy.setup({
             "b0o/schemastore.nvim",
         },
         config = function()
-            require("iranbragasf.plugins.lspconfig").config()
+            require("iranbragasf.plugins.lspconfig")
         end
     },
     {
         "williamboman/mason.nvim",
         dependencies = { "williamboman/mason-lspconfig.nvim" },
         config = function()
-            require("iranbragasf.plugins.mason").config()
+            require("iranbragasf.plugins.mason")
         end
     },
     {
@@ -55,43 +49,39 @@ lazy.setup({
         dependencies = {
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-path',
-            {
-                'saadparwaiz1/cmp_luasnip',
-                dependencies = { "L3MON4D3/LuaSnip" },
-            },
+            'saadparwaiz1/cmp_luasnip',
             'hrsh7th/cmp-nvim-lua',
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-emoji',
             'onsails/lspkind-nvim',
         },
         config = function()
-            require("iranbragasf.plugins.cmp").config()
+            require("iranbragasf.plugins.cmp")
         end
     },
     {
         "L3MON4D3/LuaSnip",
-        version = "1.*",
+        version = "2.*",
         dependencies = { "rafamadriz/friendly-snippets" },
         config = function()
-            require("iranbragasf.plugins.luasnip").config()
+            require("iranbragasf.plugins.luasnip")
         end,
     },
     {
         "ray-x/lsp_signature.nvim",
         config = function()
-            require("iranbragasf.plugins.lsp_signature").config()
+            require("iranbragasf.plugins.lsp_signature")
         end
     },
     {
         "jose-elias-alvarez/null-ls.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
-            require("iranbragasf.plugins.null_ls").config()
+            require("iranbragasf.plugins.null_ls")
         end
     },
     {
         'nvim-telescope/telescope.nvim',
-        version = '*',
+        branch = '0.1.x',
         dependencies = {
             'nvim-lua/plenary.nvim',
             {
@@ -101,7 +91,7 @@ lazy.setup({
             'kyazdani42/nvim-web-devicons',
         },
         config = function()
-            require("iranbragasf.plugins.telescope").config()
+            require("iranbragasf.plugins.telescope")
         end
     },
     {
@@ -109,19 +99,17 @@ lazy.setup({
         build = ':TSUpdate',
         dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
         config = function()
-            require("iranbragasf.plugins.treesitter").config()
+            require("iranbragasf.plugins.treesitter")
         end,
     },
     {
         'numToStr/Comment.nvim',
         config = function()
-            require("iranbragasf.plugins.comment").config()
+            require("iranbragasf.plugins.comment")
         end
     },
-    -- TODO: preview images in buffers
     {
         'kyazdani42/nvim-tree.lua',
-        dependencies = { 'kyazdani42/nvim-web-devicons' },
         cmd = "NvimTreeToggle",
         init = function()
             require("iranbragasf.plugins.nvim_tree").init()
@@ -134,10 +122,16 @@ lazy.setup({
         'mbbill/undotree',
         cmd = 'UndotreeToggle',
         init = function()
-            require("iranbragasf.plugins.undotree").init()
+            vim.g.undotree_WindowLayout = 2
+            vim.g.undotree_SplitWidth = 30
+            vim.g.undotree_DiffAutoOpen = 0
+            vim.g.undotree_SetFocusWhenToggle = 1
+            vim.g.undotree_TreeVertShape = "│"
+
+            vim.keymap.set("n", "<Leader>u", ":UndotreeToggle<CR>", {noremap = true, silent = true})
         end,
         config = function()
-            require("iranbragasf.plugins.undotree").config()
+            require("iranbragasf.plugins.undotree")
         end
     },
     -- TODO: create an `EditorConfigGenerate` command to generate a
@@ -146,13 +140,13 @@ lazy.setup({
     {
         'lewis6991/gitsigns.nvim',
         config = function()
-            require("iranbragasf.plugins.gitsigns").config()
+            require("iranbragasf.plugins.gitsigns")
         end
     },
     {
         "lukas-reineke/indent-blankline.nvim",
         config = function()
-            require("iranbragasf.plugins.indent_blankline").config()
+            require("iranbragasf.plugins.indent_blankline")
         end
     },
     {
@@ -166,6 +160,7 @@ lazy.setup({
     {
         "navarasu/onedark.nvim",
         priority = 1000,
+        lazy = false,
         config = function()
             require('onedark').setup {
                 style = 'darker',
