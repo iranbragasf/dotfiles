@@ -120,11 +120,11 @@ M.server_opts = {
     ["tsserver"] = {
         init_options = {
             disableSuggestions = true,
-            commands = {
-                OrganizeImports = {
-                    organize_imports,
-                    description = "Organize imports"
-                }
+        },
+        commands = {
+            OrganizeImports = {
+                organize_imports,
+                description = "Organize imports"
             }
         }
     }
