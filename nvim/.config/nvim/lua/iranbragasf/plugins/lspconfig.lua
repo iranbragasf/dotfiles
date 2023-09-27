@@ -89,7 +89,7 @@ M.default_server_opts = {
     handlers = handlers,
 }
 
-local organize_imports = function ()
+local organize_imports = function()
     vim.lsp.buf.execute_command({
         command = "_typescript.organizeImports",
         arguments = { vim.api.nvim_buf_get_name(0) }

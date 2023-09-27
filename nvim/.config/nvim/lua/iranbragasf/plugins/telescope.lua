@@ -27,8 +27,6 @@ telescope.setup({
         mappings = {
             i = {
                 ["<Esc>"] = "close",
-                ["<C-j>"] = "move_selection_next",
-                ["<C-k>"] = "move_selection_previous",
                 ["<C-s>"] = "select_horizontal",
                 ["<C-a>"] = "toggle_all",
                 ["<M-p>"] = action_layout.toggle_preview

@@ -162,12 +162,7 @@ require("lazy").setup({
         priority = 1000,
         lazy = false,
         config = function()
-            require('onedark').setup {
-                style = 'darker',
-                comments = 'italic',
-                keywords = 'italic',
-            }
-            require('onedark').load()
+            require("iranbragasf.plugins.onedark")
         end,
     },
 }, { ui = { border = "rounded" } })
