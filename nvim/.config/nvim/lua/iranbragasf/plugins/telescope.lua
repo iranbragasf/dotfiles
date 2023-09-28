@@ -102,3 +102,12 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.api.nvim_win_set_option(0, "cursorline", false)
     end,
 })
+
+-- Workaround to make Treesitter based folding work with files opened with Telescope
+-- See: https://github.com/nvim-telescope/telescope.nvim/issues/699
+vim.api.nvim_create_augroup("TSFoldingWorkaround", { clear = true })
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+    group = "TSFoldingWorkaround",
+    pattern = "*",
+    command = "normal zx",
+})

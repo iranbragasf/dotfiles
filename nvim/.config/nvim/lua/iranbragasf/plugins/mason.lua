@@ -11,6 +11,7 @@ mason_lspconfig.setup({
         "lua_ls",
         "tsserver",
         "eslint",
+        "jsonls",
     },
 })
 

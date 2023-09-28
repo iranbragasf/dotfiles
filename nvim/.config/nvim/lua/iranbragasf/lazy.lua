@@ -75,6 +75,7 @@ require("lazy").setup({
     },
     {
         "jose-elias-alvarez/null-ls.nvim",
+        dependencies = { 'nvim-lua/plenary.nvim' },
         config = function()
             require("iranbragasf.plugins.null_ls")
         end
@@ -127,7 +128,6 @@ require("lazy").setup({
             vim.g.undotree_DiffAutoOpen = 0
             vim.g.undotree_SetFocusWhenToggle = 1
             vim.g.undotree_TreeVertShape = "│"
-
             vim.keymap.set("n", "<Leader>u", ":UndotreeToggle<CR>", {noremap = true, silent = true})
         end,
         config = function()
@@ -136,7 +136,8 @@ require("lazy").setup({
     },
     -- TODO: create an `EditorConfigGenerate` command to generate a
     -- `.editorconfig` file with base settings in project root
-    { "editorconfig/editorconfig-vim" },
+    "editorconfig/editorconfig-vim",
+    'tpope/vim-sleuth',
     {
         'lewis6991/gitsigns.nvim',
         config = function()
