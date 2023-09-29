@@ -117,6 +117,17 @@ M.server_opts = {
             }
         }
     },
+    ["yamlls"] = {
+        settings = {
+            yaml = {
+                schemaStore = {
+                    enable = false,
+                    url = "",
+                },
+                schemas = require('schemastore').yaml.schemas(),
+            }
+        }
+    },
     ["tsserver"] = {
         init_options = {
             disableSuggestions = true,
