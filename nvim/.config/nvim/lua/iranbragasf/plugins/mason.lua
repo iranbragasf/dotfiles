@@ -4,6 +4,12 @@ require("mason").setup({
     }
 })
 
+require("mason-null-ls").setup({
+    ensure_installed = {
+        "prettier",
+    }
+})
+
 local mason_lspconfig = require("mason-lspconfig")
 
 mason_lspconfig.setup({

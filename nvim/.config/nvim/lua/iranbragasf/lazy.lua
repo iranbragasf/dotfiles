@@ -39,7 +39,10 @@ require("lazy").setup({
     },
     {
         "williamboman/mason.nvim",
-        dependencies = { "williamboman/mason-lspconfig.nvim" },
+        dependencies = {
+            "williamboman/mason-lspconfig.nvim",
+            "jay-babu/mason-null-ls.nvim",
+        },
         config = function()
             require("iranbragasf.plugins.mason")
         end

@@ -1,13 +1,8 @@
 local M = {}
 
 vim.diagnostic.config({
-    virtual_text = {
-        source = "always"
-    },
-    float = {
-        source = "always",
-        focusable = false
-    },
+    virtual_text = { source = "always" },
+    float = { source = "always" },
     severity_sort = true
 })
 
@@ -78,23 +73,10 @@ local on_attach = function(client, bufnr)
     end
 end
 
-local handlers = {
-    ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { focusable = false }),
-    ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { focusable = false }),
-}
-
 M.default_server_opts = {
     on_attach = on_attach,
     capabilities = require('cmp_nvim_lsp').default_capabilities(),
-    handlers = handlers,
 }
-
-local organize_imports = function()
-    vim.lsp.buf.execute_command({
-        command = "_typescript.organizeImports",
-        arguments = { vim.api.nvim_buf_get_name(0) }
-    })
-end
 
 M.server_opts = {
     ["lua_ls"] = {
@@ -132,12 +114,6 @@ M.server_opts = {
         init_options = {
             disableSuggestions = true,
         },
-        commands = {
-            OrganizeImports = {
-                organize_imports,
-                description = "Organize imports"
-            }
-        }
     }
 }
 

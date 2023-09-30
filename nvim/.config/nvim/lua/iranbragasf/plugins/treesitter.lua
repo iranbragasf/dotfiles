@@ -4,7 +4,7 @@ vim.opt.foldenable = false
 vim.opt.foldlevel = 99
 
 require("nvim-treesitter.configs").setup({
-    ensure_installed = { "lua", "javascript", "typescript" },
+    ensure_installed = { "lua", "javascript", "typescript", "json", "jsonc" },
     sync_install = false,
     auto_install = true,
     highlight = { enable = true },
