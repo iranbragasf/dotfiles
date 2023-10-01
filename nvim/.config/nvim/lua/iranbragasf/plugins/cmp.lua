@@ -10,11 +10,10 @@ cmp.setup({
         completeopt = "menuone,noinsert"
     },
     window = {
-        completion = cmp.config.window.bordered({
-            border = "none",
-            side_padding = 0,
+        completion = {
             col_offset = -3,
-        }),
+            side_padding = 0,
+        }
     },
     mapping = cmp.mapping.preset.insert({
         ['<C-u>'] = cmp.mapping.scroll_docs(-4),
@@ -28,17 +27,28 @@ cmp.setup({
     formatting = {
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
-            local item = require("lspkind").cmp_format({
+            local kind = require("lspkind").cmp_format({
                 mode = "symbol_text",
+                preset = 'codicons',
                 maxwidth = 50,
                 ellipsis_char = '...',
             })(entry, vim_item)
-            local icon_and_kind = vim.split(item.kind, "%s", { trimempty = true })
-            local icon = icon_and_kind[1]
-            local kind = icon_and_kind[2]
-            item.kind = " " .. (icon or "") .. " "
-            item.menu = "    (" .. (kind or "") .. ")"
-            return item
+            local icon_and_text = vim.split(kind.kind, "%s", { trimempty = true })
+            local icon = icon_and_text[1]
+            local text = icon_and_text[2]
+
+            if vim.tbl_contains({ 'path' }, entry.source.name) then
+                local devicon, hl_group = require('nvim-web-devicons').get_icon(entry:get_completion_item().label)
+                if devicon then
+                    icon = devicon
+                    vim_item.kind_hl_group = hl_group
+                end
+            end
+
+            kind.kind = " " .. (icon or "") .. " "
+            kind.menu = "    (" .. (text or "") .. ")"
+
+            return kind
         end,
     },
     sources = cmp.config.sources({

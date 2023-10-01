@@ -1,4 +1,5 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
         "git",
@@ -79,7 +80,6 @@ require("lazy").setup({
     },
     {
         "ray-x/lsp_signature.nvim",
-        event = "VeryLazy",
         config = function()
             require("iranbragasf.plugins.lsp_signature")
         end

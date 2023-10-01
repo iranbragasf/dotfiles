@@ -6,7 +6,8 @@ require("mason").setup({
 
 require("mason-null-ls").setup({
     ensure_installed = {
-        "prettier",
+        "prettierd",
+        "eslint_d",
     }
 })
 
@@ -16,7 +17,6 @@ mason_lspconfig.setup({
     ensure_installed = {
         "lua_ls",
         "tsserver",
-        "eslint",
         "jsonls",
     },
 })
