@@ -48,6 +48,13 @@ require("lazy").setup({
         end
     },
     {
+        "jose-elias-alvarez/null-ls.nvim",
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        config = function()
+            require("iranbragasf.plugins.null_ls")
+        end
+    },
+    {
         'hrsh7th/nvim-cmp',
         dependencies = {
             'hrsh7th/cmp-nvim-lsp',
@@ -72,15 +79,17 @@ require("lazy").setup({
     },
     {
         "ray-x/lsp_signature.nvim",
+        event = "VeryLazy",
         config = function()
             require("iranbragasf.plugins.lsp_signature")
         end
     },
     {
-        "jose-elias-alvarez/null-ls.nvim",
-        dependencies = { 'nvim-lua/plenary.nvim' },
+        "j-hui/fidget.nvim",
+        tag = "legacy",
+        event = "LspAttach",
         config = function()
-            require("iranbragasf.plugins.null_ls")
+            require("fidget").setup()
         end
     },
     {
@@ -149,6 +158,7 @@ require("lazy").setup({
     },
     {
         "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
         config = function()
             require("iranbragasf.plugins.indent_blankline")
         end
