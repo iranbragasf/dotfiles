@@ -1,7 +1,9 @@
 [user]
-	email = iranbragasf@gmail.com
-	name = Iran Braga
+    email = iranbragasf@gmail.com
+    name = Iran Braga
 [init]
-	defaultBranch = main
+    defaultBranch = main
+[pull]
+    rebase = false
 [includeif "gitdir:~/personal/hiperbanco/"]
     path = ~/.config/git/config.hiperbanco
