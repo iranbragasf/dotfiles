@@ -101,7 +101,7 @@ require("lazy").setup({
                 'nvim-telescope/telescope-fzf-native.nvim',
                 build = 'make'
             },
-            'kyazdani42/nvim-web-devicons',
+            "nvim-tree/nvim-web-devicons",
         },
         config = function()
             require("iranbragasf.plugins.telescope")
@@ -122,13 +122,16 @@ require("lazy").setup({
         end
     },
     {
-        'kyazdani42/nvim-tree.lua',
-        cmd = "NvimTreeToggle",
+        "nvim-tree/nvim-tree.lua",
+        version = "*",
+        lazy = false,
+        dependencies = { "nvim-tree/nvim-web-devicons" },
         init = function()
-            require("iranbragasf.plugins.nvim_tree").init()
+            vim.g.loaded_netrw = 1
+            vim.g.loaded_netrwPlugin = 1
         end,
         config = function()
-            require("iranbragasf.plugins.nvim_tree").config()
+            require("iranbragasf.plugins.nvim_tree")
         end,
     },
     {

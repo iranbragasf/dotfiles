@@ -1,9 +1,9 @@
 vim.opt.path:append({"**"})
 vim.opt.wildignore:append({
-    "**/.git/*",
-    "**/node_modules/*",
-    "**/coverage/*",
-    "**/__pycache__/*",
+    "**/.git/**",
+    "**/node_modules/**",
+    "**/coverage/**",
+    "**/__pycache__/**",
     "*.o"
 })
 vim.opt.wildignorecase = true

@@ -1,97 +1,58 @@
-local M = {}
+local on_attach = function(bufnr)
+    local api = require("nvim-tree.api")
 
-M.init = function()
-    vim.g.loaded_netrw = 1
-    vim.g.loaded_netrwPlugin = 1
-
-    vim.keymap.set("n", "<C-b>", ":NvimTreeToggle<CR>", { noremap = true, silent = true })
-end
-
-M.config = function()
-    local nvim_tree_ok, nvim_tree = pcall(require, "nvim-tree")
-    if not nvim_tree_ok then
-        vim.notify("[ERROR] nvim-tree not loaded", vim.log.levels.ERROR)
-        return
+    local opts = function(desc)
+        return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
     end
 
-    nvim_tree.setup({
-        sync_root_with_cwd = true,
-        view = {
-            mappings = {
-                list = {
-                    { key = "l",     action = "edit" },
-                    { key = "h",     action = "close_node" },
-                    { key = "<C-s>", action = "split" },
-                    { key = "L",     action = "cd" },
-                    { key = "H",     action = "dir_up" },
-                }
-            }
-        },
-        renderer = {
-            group_empty = true,
-            highlight_git = true,
-            root_folder_label = ":t",
-            icons = {
-                git_placement = "after",
-                glyphs = {
-                    git = {
-                        unstaged  = "M",
-                        staged    = "A",
-                        unmerged  = "!",
-                        renamed   = "R",
-                        untracked = "U",
-                        deleted   = "D",
-                        ignored   = ""
-                    }
-                },
-            },
-            special_files = {},
-        },
-        update_focused_file = {
-            enable = true,
-        },
-        diagnostics = {
-            enable = true,
-            show_on_dirs = true,
-            icons = {
-                hint = " ",
-                info = " ",
-                warning = " ",
-                error = " ",
-            },
-        },
-        git = {
-            ignore = false,
-        },
-        actions = {
-            open_file = {
-                window_picker = {
-                    exclude = {
-                        filetype = {
-                            "notify",
-                            "packer",
-                            "qf",
-                            "diff",
-                            "fugitive",
-                            "fugitiveblame",
-                            "undotree"
-                        },
-                    }
-                }
-            }
-        }
-    })
+    -- default mappings
+    api.config.mappings.default_on_attach(bufnr)
 
-    vim.api.nvim_create_autocmd("WinLeave", {
-        group = "CursorLineInActiveWindow",
-        pattern = '*',
-        callback = function()
-            local filetype = vim.api.nvim_buf_get_option(0, "filetype")
-            if filetype == "NvimTree" then
-                vim.api.nvim_win_set_option(0, "cursorline", true)
-            end
-        end,
-    })
+    -- custom mappings
+    vim.keymap.set('n', 'l', api.node.open.edit, opts('Open'))
+    vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts('Close'))
+    vim.keymap.set('n', '<C-s>', api.node.open.horizontal, opts('Open: Horizontal Split'))
+    vim.keymap.del('n', '<C-e>', { buffer = bufnr })
 end
 
-return M
+require("nvim-tree").setup({
+    on_attach = on_attach,
+    disable_netrw = true,
+    sync_root_with_cwd = true,
+    view = { signcolumn = "no" },
+    renderer = {
+        group_empty = true,
+        root_folder_label = ":t",
+        special_files = {},
+        highlight_git = true,
+        icons = {
+            git_placement = "after",
+            diagnostics_placement = "after",
+            glyphs = {
+                git = {
+                    unstaged  = "M",
+                    staged    = "A",
+                    unmerged  = "!",
+                    renamed   = "R",
+                    untracked = "U",
+                    deleted   = "D",
+                    ignored   = ""
+                }
+            },
+        }
+    },
+    update_focused_file = { enable = true },
+    diagnostics = {
+        enable = true,
+        show_on_dirs = true,
+        icons = {
+            error = " ",
+            warning = " ",
+            hint = " ",
+            info = " "
+        }
+    },
+    filters = { git_ignored = false },
+})
+
+vim.keymap.set("n", "<C-e>", ":NvimTreeToggle<CR>", {noremap = true, silent = true})
