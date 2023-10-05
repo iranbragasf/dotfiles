@@ -15,8 +15,8 @@ vim.keymap.set("n", "<C-Down>", ":resize -5<CR>", {noremap = true, silent = true
 vim.keymap.set("n", "<C-Left>", ":vertical resize +5<CR>", {noremap = true, silent = true})
 vim.keymap.set("n", "<C-Right>", ":vertical resize -5<CR>", {noremap = true, silent = true})
 
-vim.keymap.set("n", "<A-h>", ":bprevious<CR>", {noremap = true, silent = true})
-vim.keymap.set("n", "<A-l>", ":bnext<CR>", {noremap = true, silent = true})
+vim.keymap.set("n", "<C-h>", ":bprevious<CR>", {noremap = true, silent = true})
+vim.keymap.set("n", "<C-l>", ":bnext<CR>", {noremap = true, silent = true})
 
 vim.keymap.set("n", "<Leader>rw", ":%s/<C-r><C-w>//g<Left><Left>", {noremap = true})
 vim.keymap.set("v", "<Leader>rw", 'y:%s/<C-r><C-r>"//g<Left><Left>', {noremap = true})
