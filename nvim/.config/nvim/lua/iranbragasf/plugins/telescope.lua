@@ -109,5 +109,22 @@ vim.api.nvim_create_augroup("TSFoldingWorkaround", { clear = true })
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
     group = "TSFoldingWorkaround",
     pattern = "*",
-    command = "normal zx",
+    callback = function()
+        local exclude_filetypes = {
+            "lazy",
+            "lspinfo",
+            "mason",
+            "null-ls-info",
+            "TelescopePrompt",
+            "TelescopeResults",
+            "NvimTree",
+            "undotree",
+        }
+
+        if vim.tbl_contains(exclude_filetypes, vim.api.nvim_buf_get_option(0, "filetype")) then
+            return
+        end
+
+        vim.cmd("normal zx")
+    end
 })
