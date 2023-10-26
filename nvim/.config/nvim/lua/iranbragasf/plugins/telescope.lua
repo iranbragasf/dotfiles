@@ -85,7 +85,7 @@ vim.keymap.set("n", "gr", builtin.lsp_references, {noremap = true})
 vim.keymap.set("n", "<Leader>rc", function()
     builtin.find_files({
         prompt_title = "Dotfiles",
-        cwd = "$HOME/dotfiles"
+        cwd = "$HOME/personal/dotfiles"
     })
 end, { noremap = true })
 

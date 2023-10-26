@@ -89,7 +89,7 @@ require("lazy").setup({
         tag = "legacy",
         event = "LspAttach",
         config = function()
-            require("fidget").setup()
+            require("iranbragasf.plugins.fidget")
         end
     },
     {
