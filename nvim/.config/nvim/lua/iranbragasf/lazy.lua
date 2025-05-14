@@ -74,6 +74,7 @@ require("lazy").setup({
         "L3MON4D3/LuaSnip",
         version = "2.*",
         dependencies = { "rafamadriz/friendly-snippets" },
+        run = "make install_jsregexp",
         config = function()
             require("iranbragasf.plugins.luasnip")
         end,
@@ -168,7 +169,7 @@ require("lazy").setup({
     },
     {
         'iamcco/markdown-preview.nvim',
-        build = 'cd app && npm install',
+        build = 'cd app && yarn install',
         ft = "markdown",
         init = function()
             vim.g.mkdp_auto_close = 0
