@@ -5,5 +5,5 @@
     defaultBranch = main
 [pull]
     rebase = false
-[includeif "gitdir:~/personal/hiperbanco/"]
-    path = ~/.config/git/config.hiperbanco
+[includeif "gitdir:~/personal/mb-labs/"]
+    path = ~/.config/git/config.mb-labs
