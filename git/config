@@ -5,5 +5,5 @@
     defaultBranch = main
 [pull]
     rebase = false
-[includeif "gitdir:~/personal/mb-labs/"]
-    path = ~/.config/git/config.mb-labs
+[includeif "gitdir:~/personal/mblabs/"]
+    path = ~/.config/git/config.mblabs
