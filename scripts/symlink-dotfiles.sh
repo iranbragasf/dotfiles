@@ -16,16 +16,13 @@ main() {
         fi
 
         if [[ -L "$linkpath" || -e "$linkpath" ]]; then
-            echo "⚠️  Skipping '$linkpath' (already exists)"
             continue
         fi
 
         ln -s "$dir" "$linkpath"
-        echo "✅ Linked '$linkpath' -> '$dir'"
     done
 
     sudo ln -s "$SOURCE_DIR/tlp/01-mytlp.conf" '/etc/tlp.d/'
-    echo "✅ Linked '$SOURCE_DIR/tlp/01-mytlp.conf' -> '/etc/tlp.d/'"
 }
 
 main
