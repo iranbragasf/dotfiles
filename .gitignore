@@ -1,3 +1,1 @@
 nvim/.config/nvim/lazy-lock.json
-copyq/*
-!copyq/copyq.conf
