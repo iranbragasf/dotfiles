@@ -3,7 +3,7 @@
 set -eou pipefail
 
 main() {
-    local IGNORE_LIST=(".git" "scripts" ".gitignore" "README.md" "tlp" "awesome" "rofi")
+    local IGNORE_LIST=(".git" "scripts" ".gitignore" "README.md" "tlp" "awesome" "rofi", "copyq")
     local SOURCE_DIR="$HOME/personal/dotfiles"
     local TARGET_DIR="$XDG_CONFIG_HOME"
 
