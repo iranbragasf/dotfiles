@@ -7,6 +7,7 @@ update_system() {
     sudo apt upgrade -y
 }
 
+# TODO: fix the error: "ERRO metrics from this machine have already been reported and can be found in: /home/iranbraga/.cache/ubuntu-report/ubuntu.24.04"
 disable_ubuntu_report() {
     ubuntu-report send no
     sudo apt purge -y ubuntu-report
@@ -113,6 +114,21 @@ install_packages() {
         && sudo apt update \
         && sudo apt install -y gh
 
+    # Instal mise
+    sudo install -dm 755 /etc/apt/keyrings
+    wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null
+    echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
+    sudo apt update
+    sudo apt install -y mise
+    # Activate mise to be able to use the installed tools globally
+    echo 'eval "$(mise activate bash)"' >> ~/.bashrc
+    source ~/.bashrc
+    # Setup completion in bash
+    mise use -g usage
+    mkdir -vp ~/.local/share/bash-completion/
+    mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
+    source ~/.bashrc
+
     setup_flatpak
     install_flatpaks
 }
@@ -209,7 +225,6 @@ cleanup() {
 
 main() {
     update_system
-    # TODO: fix the error: "ERRO metrics from this machine have already been reported and can be found in: /home/iranbraga/.cache/ubuntu-report/ubuntu.24.04"
     # disable_ubuntu_report
     enable_trim
     enable_firewall
