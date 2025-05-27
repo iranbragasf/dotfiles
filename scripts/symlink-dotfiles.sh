@@ -3,7 +3,7 @@
 set -eou pipefail
 
 main() {
-    local IGNORE_LIST=(".git" "scripts" ".gitignore" "README.md" "tlp")
+    local IGNORE_LIST=(".git" "scripts" ".gitignore" "README.md" "tlp" "awesome" "rofi")
     local SOURCE_DIR="$HOME/personal/dotfiles"
     local TARGET_DIR="$XDG_CONFIG_HOME"
 
@@ -19,10 +19,10 @@ main() {
             continue
         fi
 
-        ln -s "$dir" "$linkpath"
+        ln -vs "$dir" "$linkpath"
     done
 
-    sudo ln -s "$SOURCE_DIR/tlp/01-mytlp.conf" '/etc/tlp.d/'
+    sudo ln -vs "$SOURCE_DIR/tlp/01-mytlp.conf" '/etc/tlp.d/'
 }
 
 main
