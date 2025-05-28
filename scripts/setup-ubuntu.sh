@@ -2,6 +2,22 @@
 
 set -eou pipefail
 
+setup_xdg_base_directory_spec() {
+cat << 'EOF' >> ~/.bashrc
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+EOF
+    # TODO: why simply `source ~/.bashrc` after writing the variables into it
+    # doesn't work?
+    export XDG_CONFIG_HOME="$HOME/.config"
+    export XDG_CACHE_HOME="$HOME/.cache"
+    export XDG_DATA_HOME="$HOME/.local/share"
+    export XDG_STATE_HOME="$HOME/.local/state"
+}
+
+
 update_system() {
     sudo apt update
     sudo apt upgrade -y
@@ -34,7 +50,7 @@ setup_flatpak() {
     sudo apt install -y flatpak
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     echo 'export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share"' >> ~/.bashrc
-    source ~/.bashrc
+    export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share"
 }
 
 install_flatpaks() {
@@ -128,13 +144,13 @@ install_packages() {
     echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
     sudo apt update
     sudo apt install -y mise
-    # Activate mise to be able to use the installed tools globally
     echo 'eval "$(mise activate bash)"' >> ~/.bashrc
+    #NOTE: mise has to be activated to be able to use the installed tools globally
     source ~/.bashrc
-    # Setup autocompletion in bash
     mise use -g usage
     mkdir -vp ~/.local/share/bash-completion/completions/
     mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
+    # NOTE: source to enable completion immediatly
     source ~/.bashrc
 
     setup_flatpak
@@ -202,18 +218,6 @@ setup_gnome() {
 
     # TODO: <Super>.	    Open emoji picker
     # TODO: <Super><A-r>	Record the screen
-}
-
-setup_xdg_base_directory_spec() {
-cat << 'EOF' >> ~/.bashrc
-# XDG Base Directory Specification
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_STATE_HOME="$HOME/.local/state"
-EOF
-
-source ~/.bashrc
 }
 
 create_screenshots_dir() {
