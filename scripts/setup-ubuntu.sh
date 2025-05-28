@@ -35,7 +35,8 @@ enable_firewall() {
 setup_flatpak() {
     sudo apt install -y flatpak
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share"
+    echo 'export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share"' >> ~/.bashrc
+    source ~/.bashrc
 }
 
 install_flatpaks() {
@@ -200,16 +201,24 @@ setup_gnome() {
     # TODO: <Super><A-r>	Record the screen
 }
 
+setup_xdg_base_directory_spec() {
+cat << 'EOF' >> ~/.bashrc
+# XDG Base Directory Specification
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+EOF
+
+source ~/.bashrc
+}
+
 cleanup() {
     sudo apt autoremove -y --purge
 }
 
 main() {
-    export XDG_CONFIG_HOME="$HOME/.config"
-    export XDG_CACHE_HOME="$HOME/.cache"
-    export XDG_DATA_HOME="$HOME/.local/share"
-    export XDG_STATE_HOME="$HOME/.local/state"
-
+    setup_xdg_base_directory_spec
     update_system
     # disable_ubuntu_report
     enable_trim
