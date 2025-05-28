@@ -2,11 +2,6 @@
 
 set -eou pipefail
 
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_STATE_HOME="$HOME/.local/state"
-
 update_system() {
     sudo apt update
     sudo apt upgrade -y
@@ -40,6 +35,7 @@ enable_firewall() {
 setup_flatpak() {
     sudo apt install -y flatpak
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share"
 }
 
 install_flatpaks() {
@@ -209,6 +205,11 @@ cleanup() {
 }
 
 main() {
+    export XDG_CONFIG_HOME="$HOME/.config"
+    export XDG_CACHE_HOME="$HOME/.cache"
+    export XDG_DATA_HOME="$HOME/.local/share"
+    export XDG_STATE_HOME="$HOME/.local/state"
+
     update_system
     # disable_ubuntu_report
     enable_trim
