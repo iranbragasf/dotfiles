@@ -7,9 +7,7 @@ update_system() {
     sudo apt upgrade -y
 }
 
-# TODO: fix the error: "ERRO metrics from this machine have already been
-# reported and can be found in:
-# /home/iranbraga/.cache/ubuntu-report/ubuntu.24.04"
+# TODO: fix the error: "ERRO metrics from this machine have already been reported and can be found in: /home/iranbraga/.cache/ubuntu-report/ubuntu.24.04"
 disable_ubuntu_report() {
     ubuntu-report send no
     sudo apt purge -y ubuntu-report
@@ -215,6 +213,10 @@ EOF
 source ~/.bashrc
 }
 
+create_screenshots_dir() {
+    mkdir -vp ~/Pictures/Screenshots/
+}
+
 cleanup() {
     sudo apt autoremove -y --purge
 }
@@ -233,6 +235,7 @@ main() {
     setup_github_ssh
     setup_dotfiles
     setup_gnome
+    create_screenshots_dir
     cleanup
 }
 
