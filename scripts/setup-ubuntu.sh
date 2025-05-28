@@ -2,6 +2,11 @@
 
 set -eou pipefail
 
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
 update_system() {
     sudo apt update
     sudo apt upgrade -y
@@ -128,9 +133,9 @@ install_packages() {
     # Activate mise to be able to use the installed tools globally
     echo 'eval "$(mise activate bash)"' >> ~/.bashrc
     source ~/.bashrc
-    # Setup completion in bash
+    # Setup autocompletion in bash
     mise use -g usage
-    mkdir -vp ~/.local/share/bash-completion/
+    mkdir -vp ~/.local/share/bash-completion/completions/
     mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
     source ~/.bashrc
 
