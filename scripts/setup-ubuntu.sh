@@ -170,6 +170,7 @@ setup_gnome() {
     gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
     # gsettings set org.gnome.desktop.interface monospace-font-name 'CaskaydiaMono Nerd Font 10'
     gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
+    gsettings set org.gnome.desktop.session idle-delay 0
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type 'nothing'
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
     gsettings set org.gnome.desktop.interface show-battery-percentage true
@@ -218,6 +219,8 @@ cleanup() {
 }
 
 main() {
+    # NOTE: XDG Base Directory must be set first of all because it's required
+    # in the following steps
     setup_xdg_base_directory_spec
     update_system
     # disable_ubuntu_report
