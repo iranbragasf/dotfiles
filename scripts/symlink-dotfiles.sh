@@ -3,7 +3,7 @@
 set -eou pipefail
 
 main() {
-    local IGNORE_LIST=(".git" "scripts" ".gitignore" "README.md" "tlp" "awesome" "rofi")
+    local IGNORE_LIST=(".git" "scripts" ".gitignore" "README.md" "tlp" "awesome" "rofi" "ssh")
     local SOURCE_DIR="$HOME/personal/dotfiles"
 
     for dir in "$SOURCE_DIR"/*/; do
@@ -21,7 +21,8 @@ main() {
         ln -vs "$dir" "$linkpath"
     done
 
-    sudo ln -vs "$SOURCE_DIR/tlp/01-mytlp.conf" '/etc/tlp.d/'
+    sudo ln -vs "$SOURCE_DIR/tlp/01-mytlp.conf" '/etc/tlp.d/01-mytlp.conf'
+    sudo ln -vs "$SOURCE_DIR/ssh/config" "$HOME/.ssh/config"
 }
 
 main

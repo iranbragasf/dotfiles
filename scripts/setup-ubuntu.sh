@@ -142,7 +142,7 @@ install_packages() {
 }
 
 setup_github_ssh() {
-    local SSH_KEY_FILE="$HOME/.ssh/id_ed25519"
+    local SSH_KEY_FILE="$HOME/.ssh/github"
     local EMAIL="iranbrgasf@gmail.com"
     local TITLE=$(hostname)
     ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY_FILE" -N ""
