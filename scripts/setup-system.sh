@@ -7,7 +7,9 @@ update_system() {
     sudo apt upgrade -y
 }
 
-# TODO: fix the error: "ERRO metrics from this machine have already been reported and can be found in: /home/iranbraga/.cache/ubuntu-report/ubuntu.24.04"
+# TODO: fix the error: "ERRO metrics from this machine have already been
+# reported and can be found in:
+# /home/iranbraga/.cache/ubuntu-report/ubuntu.24.04"
 disable_ubuntu_report() {
     ubuntu-report send no
     sudo apt purge -y ubuntu-report
@@ -22,14 +24,13 @@ enable_firewall() {
     sudo ufw enable
 }
 
+# TODO: configure `apt` to download packages in parallel
 # setup_parallel_download() {
-#     # TODO: configure `apt` to download packages in parallel
 # }
 
+# TODO: auto set Google DNS for every new wifi and ethernet connection.
 # setup_google_dns() {
-#     # TODO: auto set Google DNS for every new wifi and ethernet connection.
 # }
-
 
 setup_flatpak() {
     sudo apt install -y flatpak
@@ -60,9 +61,12 @@ install_packages() {
         flameshot \
         obs-studio \
         gparted \
-        copyq
+        copyq \
+        gnome-software \
+        gnome-software-plugin-flatpak
 
     # Install Google Chorome
+    # TODO: log in and synchronize google chrome
     cd /tmp
     wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     sudo apt install -y ./google-chrome-stable_current_amd64.deb
@@ -114,7 +118,7 @@ install_packages() {
         && sudo apt update \
         && sudo apt install -y gh
 
-    # Instal mise
+    # Install mise
     sudo install -dm 755 /etc/apt/keyrings
     wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null
     echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
@@ -194,8 +198,8 @@ setup_gnome() {
     # TODO; <Super><A-r>	Record the screen
 }
 
+# TODO: set up timeshift from command line.
 setup_system_backup() {
-    # TODO: set up timeshift from command line.
     sudo apt install -y timeshift
 }
 
@@ -235,12 +239,10 @@ main() {
     setup_dotfiles
     setup_gnome
     # setup_system_backup
-    # It's important to backup the system before removing snaps, to guarantee that nothing breaks.
+    # NOTE: It's important to backup the system before removing snaps to
+    # guarantee that nothing breaks.
     # remove_snaps
     cleanup
-
-    # sudo apt install -y gnome-software gnome-software-common gnome-software-plugin-flatpak
-    # TODO: log in and synchronize google chrome
 }
 
 main
