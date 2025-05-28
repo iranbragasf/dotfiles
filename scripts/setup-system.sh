@@ -63,7 +63,8 @@ install_packages() {
         gparted \
         copyq \
         gnome-software \
-        gnome-software-plugin-flatpak
+        gnome-software-plugin-flatpak \
+        timeshift
 
     # Install Google Chorome
     # TODO: log in and synchronize google chrome
@@ -194,33 +195,8 @@ setup_gnome() {
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/ command 'copyq toggle'
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/ binding '<Super>v'
 
-    # TODO; <Super>.	    Open emoji picker
-    # TODO; <Super><A-r>	Record the screen
-}
-
-# TODO: set up timeshift from command line.
-setup_system_backup() {
-    sudo apt install -y timeshift
-}
-
-remove_snaps() {
-    while [ "$(snap list | wc -l)" -gt 0 ]; do
-        for snap in $(snap list | tail -n +2 | cut -d ' ' -f 1); do
-            snap remove --purge "$snap" 2> /dev/null
-        done
-    done
-
-    sudo systemctl stop snapd
-    sudo systemctl disable snapd
-    # Prevent the snapd service from being started or enabled
-    sudo systemctl mask snapd
-    sudo apt purge -y snapd
-    # Prevent snapd from being upgraded automatically by apt
-    sudo apt-mark hold snapd
-    # Remove snap leftovers, if any
-    sudo rm -rf ~/snap /var/snap /var/lib/snapd /var/cache/snapd
-    # Prevent snap from being reinstalled
-    echo -e 'Package: snapd\nPin: release a=*\nPin-Priority: -10' | sudo tee /etc/apt/preferences.d/nosnap.pref
+    # TODO: <Super>.	    Open emoji picker
+    # TODO: <Super><A-r>	Record the screen
 }
 
 cleanup() {
@@ -238,10 +214,6 @@ main() {
     setup_github_ssh
     setup_dotfiles
     setup_gnome
-    # setup_system_backup
-    # NOTE: It's important to backup the system before removing snaps to
-    # guarantee that nothing breaks.
-    # remove_snaps
     cleanup
 }
 
