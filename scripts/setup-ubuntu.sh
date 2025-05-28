@@ -168,7 +168,7 @@ setup_gnome() {
     gsettings set org.gnome.shell.extensions.dash-to-dock extend-height true
     gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
     # gsettings set org.gnome.desktop.interface monospace-font-name 'CaskaydiaMono Nerd Font 10'
-    gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll true
+    gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type 'nothing'
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
     gsettings set org.gnome.desktop.interface show-battery-percentage true
