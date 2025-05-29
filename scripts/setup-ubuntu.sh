@@ -78,7 +78,11 @@ install_packages() {
         copyq \
         gnome-software \
         gnome-software-plugin-flatpak \
-        timeshift
+        timeshift \
+        btop \
+        uuid \
+        ripgrep \
+        fd-find
 
     # Install Google Chorome
     # TODO: log in and synchronize google chrome
