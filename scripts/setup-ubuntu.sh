@@ -226,6 +226,10 @@ cleanup() {
     sudo apt autoremove -y --purge
 }
 
+reboot_system() {
+    systemctl reboot
+}
+
 main() {
     # NOTE: XDG Base Directory must be set first of all because it's required
     # in the following steps
@@ -242,6 +246,7 @@ main() {
     setup_gnome
     create_screenshots_dir
     cleanup
+    reboot_system
 }
 
 main
