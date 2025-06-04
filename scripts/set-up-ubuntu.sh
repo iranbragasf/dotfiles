@@ -2,12 +2,14 @@
 
 set -eou pipefail
 
-setup_xdg_base_directory_spec() {
+set_up_xdg_base_directory_spec() {
 cat << 'EOF' >> ~/.bashrc
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
+export EDITOR="nvim"
+alias htop="btop"
 EOF
     # TODO: why simply `source ~/.bashrc` after writing the variables into it
     # doesn't work?
@@ -16,7 +18,6 @@ EOF
     export XDG_DATA_HOME="$HOME/.local/share"
     export XDG_STATE_HOME="$HOME/.local/state"
 }
-
 
 update_system() {
     sudo apt update
@@ -39,14 +40,14 @@ enable_firewall() {
 }
 
 # TODO: configure `apt` to download packages in parallel
-# setup_parallel_download() {
+# set_up_parallel_download() {
 # }
 
 # TODO: auto set Google DNS for every new wifi and ethernet connection.
-# setup_google_dns() {
+# set_up_google_dns() {
 # }
 
-setup_flatpak() {
+set_up_flatpak() {
     sudo apt install -y flatpak
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
@@ -65,8 +66,6 @@ install_packages() {
     sudo apt install -y \
         ubuntu-restricted-extras \
         curl \
-        zsh \
-        tmux \
         neovim \
         tlp \
         tldr \
@@ -75,7 +74,6 @@ install_packages() {
         flameshot \
         obs-studio \
         gparted \
-        copyq \
         gnome-software \
         gnome-software-plugin-flatpak \
         timeshift \
@@ -147,19 +145,21 @@ install_packages() {
     sudo apt update
     sudo apt install -y mise
     echo 'eval "$(mise activate bash)"' >> ~/.bashrc
-    #NOTE: mise has to be activated to be able to use the installed tools globally
-    source ~/.bashrc
+    eval "$(mise activate bash)"
     mise use -g usage
     mkdir -vp ~/.local/share/bash-completion/completions/
     mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
-    # NOTE: source to enable completion immediatly
-    source ~/.bashrc
 
-    setup_flatpak
+    # Install copyq
+    sudo add-apt-repository -y ppa:hluk/copyq
+    sudo apt update
+    sudo apt install -y copyq
+
+    set_up_flatpak
     install_flatpaks
 }
 
-setup_github_ssh() {
+set_up_github_ssh() {
     local SSH_KEY_FILE="$HOME/.ssh/github"
     local EMAIL="iranbrgasf@gmail.com"
     local TITLE=$(hostname)
@@ -170,7 +170,7 @@ setup_github_ssh() {
     gh ssh-key add "$SSH_KEY_FILE.pub" --title "$TITLE"
 }
 
-setup_dotfiles() {
+set_up_dotfiles() {
     local current_dir=$(pwd)
     mkdir -vp ~/personal
     cd ~/personal
@@ -181,10 +181,12 @@ setup_dotfiles() {
     cd "$current_dir"
 }
 
-setup_gnome() {
+set_up_gnome() {
     gsettings set org.gnome.shell.extensions.dash-to-dock click-action "minimize-or-previews"
     gsettings set org.gnome.mutter center-new-windows true
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    gsettings set org.gnome.desktop.interface gtk-theme 'Yaru-dark'
+    gsettings set org.gnome.desktop.interface icon-theme 'Yaru-dark'
     gsettings set org.gnome.shell.extensions.dash-to-dock extend-height true
     gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
     # gsettings set org.gnome.desktop.interface monospace-font-name 'CaskaydiaMono Nerd Font 10'
@@ -202,11 +204,11 @@ setup_gnome() {
 
     gsettings set org.gnome.shell.keybindings show-screenshot-ui '[]'
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name 'Screenshot entire screen to clipboard'
-    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command 'flameshot screen -c'
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command 'flameshot screen --clipboard'
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding 'Print'
 
-    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ name 'Screenshot entire screen to ~/Pictures/Screenshots'
-    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ command "flameshot screen -p $HOME/Pictures/Screenshots"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ name 'Screenshot entire screen and save to the screenshots directory'
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ command "flameshot screen --path $HOME/Pictures/Screenshots"
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ binding '<Super>Print'
 
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/ name 'Screenshot region'
@@ -236,18 +238,18 @@ reboot_system() {
 
 main() {
     # NOTE: XDG Base Directory must be set first of all because it's required
-    # in the following steps
-    setup_xdg_base_directory_spec
+    # in the subsequent steps
+    set_up_xdg_base_directory_spec
     update_system
     # disable_ubuntu_report
     enable_trim
     enable_firewall
-    # setup_parallel_download
-    # setup_google_dns
+    # set_up_parallel_download
+    # set_up_google_dns
     install_packages
-    setup_github_ssh
-    setup_dotfiles
-    setup_gnome
+    set_up_github_ssh
+    set_up_dotfiles
+    set_up_gnome
     create_screenshots_dir
     cleanup
     reboot_system
