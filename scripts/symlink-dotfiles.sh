@@ -21,8 +21,13 @@ main() {
         ln -vs "$dir" "$linkpath"
     done
 
-    sudo ln -vs "$SOURCE_DIR/tlp/01-mytlp.conf" '/etc/tlp.d/01-mytlp.conf'
-    sudo ln -vs "$SOURCE_DIR/ssh/config" "$HOME/.ssh/config"
+    if [[ ! -L "/etc/tlp.d/01-mytlp.conf" && ! -e "/etc/tlp.d/01-mytlp.conf" ]]; then
+        sudo ln -vs "$SOURCE_DIR/tlp/01-mytlp.conf" '/etc/tlp.d/01-mytlp.conf'
+    fi
+
+    if [[ ! -L "/etc/tlp.d/01-mytlp.conf" && ! -e "/etc/tlp.d/01-mytlp.conf" ]]; then
+        sudo ln -vs "$SOURCE_DIR/ssh/config" "$HOME/.ssh/config"
+    fi
 }
 
 main
