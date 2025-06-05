@@ -10,6 +10,7 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 export EDITOR="nvim"
 alias htop="btop"
+alias fc-cache="fc-cache -fv"
 EOF
     # TODO: why simply `source ~/.bashrc` after writing the variables into it
     # doesn't work?
@@ -174,11 +175,22 @@ set_up_dotfiles() {
     local current_dir=$(pwd)
     mkdir -vp ~/personal
     cd ~/personal
-    git clone git@github.com:iranbrg/dotfiles.git
+    git clone git@github.com:iranbragasf/dotfiles.git
     cd ./dotfiles
     chmod +x ./scripts/symlink-dotfiles.sh
     ./scripts/symlink-dotfiles.sh
     cd "$current_dir"
+}
+
+install_fonts() {
+    cd /tmp
+    wget https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz
+    mkdir -vp JetBrainsMono
+    tar -xvf JetBrainsMono.tar.xz -C ./JetBrainsMono
+    sudo mkdir -vp /usr/share/fonts/truetype/jetbrainsmono
+    sudo mv ./JetBrainsMono/*.ttf /usr/share/fonts/truetype/jetbrainsmono
+    fc-cache -fv
+    cd -
 }
 
 set_up_gnome() {
@@ -189,7 +201,6 @@ set_up_gnome() {
     gsettings set org.gnome.desktop.interface icon-theme 'Yaru-dark'
     gsettings set org.gnome.shell.extensions.dash-to-dock extend-height true
     gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-    # gsettings set org.gnome.desktop.interface monospace-font-name 'CaskaydiaMono Nerd Font 10'
     gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
     gsettings set org.gnome.desktop.session idle-delay 0
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type 'nothing'
@@ -199,6 +210,7 @@ set_up_gnome() {
     gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
     gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 4112
     gsettings set org.gnome.shell.extensions.dash-to-dock show-mounts false
+    gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font Mono 13'
 
     gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/']"
 
@@ -237,8 +249,6 @@ reboot_system() {
 }
 
 main() {
-    # NOTE: XDG Base Directory must be set first of all because it's required
-    # in the subsequent steps
     set_up_xdg_base_directory_spec
     update_system
     # disable_ubuntu_report
@@ -249,6 +259,7 @@ main() {
     install_packages
     set_up_github_ssh
     set_up_dotfiles
+    install_fonts
     set_up_gnome
     create_screenshots_dir
     cleanup

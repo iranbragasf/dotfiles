@@ -2,8 +2,8 @@
 
 set -eou pipefail
 
-# NOTE: It's important to backup the system before removing snaps to guarantee
-# that its possiblle the restore system in case something breaks.
+# NOTE: It's important to back up the system before removing snaps to guarantee
+# that it's possible to restore the system in case something breaks.
 
 main() {
     while [ "$(snap list | wc -l)" -gt 0 ]; do
