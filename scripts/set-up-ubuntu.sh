@@ -40,7 +40,9 @@ enable_firewall() {
     sudo ufw enable
 }
 
-# TODO: configure `apt` to download packages in parallel
+# TODO: configure `apt` to download packages in parallel. Should `nala` be
+# considered?
+# https://www.reddit.com/r/Ubuntu/comments/178mh36/apt_vs_nala/?show=original
 # set_up_parallel_download() {
 # }
 
@@ -184,11 +186,21 @@ set_up_dotfiles() {
 
 install_fonts() {
     cd /tmp
+
+    # Install Symbols Only Nerd Font
+    wget https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.tar.xz
+    mkdir -vp NerdFontsSymbolsOnly
+    tar -xvf NerdFontsSymbolsOnly.tar.xz -C ./NerdFontsSymbolsOnly
+    sudo mkdir -vp /usr/share/fonts/truetype/nerdfontssymbolsonly
+    sudo mv ./NerdFontsSymbolsOnly/*.ttf /usr/share/fonts/truetype/nerdfontssymbolsonly
+
+    # Install JetBrainsMono Nerd Font
     wget https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz
     mkdir -vp JetBrainsMono
     tar -xvf JetBrainsMono.tar.xz -C ./JetBrainsMono
     sudo mkdir -vp /usr/share/fonts/truetype/jetbrainsmono
     sudo mv ./JetBrainsMono/*.ttf /usr/share/fonts/truetype/jetbrainsmono
+
     fc-cache -fv
     cd -
 }
