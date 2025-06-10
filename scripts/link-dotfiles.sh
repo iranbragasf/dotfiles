@@ -3,7 +3,7 @@
 set -eou pipefail
 
 main() {
-    local IGNORE_LIST=(".git" "scripts" ".gitignore" "README.md" "tlp" "awesome" "rofi" "ssh")
+    local IGNORE_LIST=(".git" "scripts" ".gitignore" "README.md" "tlp" "awesome" "rofi" "ssh" "xmodmap")
     local SOURCE_DIR="$HOME/personal/dotfiles"
 
     for dir in "$SOURCE_DIR"/*/; do
@@ -25,8 +25,16 @@ main() {
         sudo ln -vs "$SOURCE_DIR/tlp/01-mytlp.conf" '/etc/tlp.d/01-mytlp.conf'
     fi
 
-    if [[ ! -L "/etc/tlp.d/01-mytlp.conf" && ! -e "/etc/tlp.d/01-mytlp.conf" ]]; then
+    if [[ ! -L "$HOME/.ssh/config" && ! -e "$HOME/.ssh/config" ]]; then
         sudo ln -vs "$SOURCE_DIR/ssh/config" "$HOME/.ssh/config"
+    fi
+
+    if [[ ! -L "$HOME/.Xmodmap" && ! -e "$HOME/.Xmodmap" ]]; then
+        sudo ln -vs "$SOURCE_DIR/xmodmap/.Xmodmap" "$HOME/.Xmodmap"
+    fi
+
+    if [[ ! -L "$HOME/.xprofile" && ! -e "$HOME/.xprofile" ]]; then
+        sudo ln -vs "$SOURCE_DIR/xmodmap/.xprofile" "$HOME/.xprofile"
     fi
 }
 
