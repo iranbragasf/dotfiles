@@ -163,14 +163,14 @@ install_packages() {
 }
 
 set_up_github_ssh() {
-    local SSH_KEY_FILE="$HOME/.ssh/github"
+    local SSH_KEY_keymap_layout_file_path="$HOME/.ssh/github"
     local EMAIL="iranbrgasf@gmail.com"
     local TITLE=$(hostname)
-    ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY_FILE" -N ""
+    ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY_keymap_layout_file_path" -N ""
     eval "$(ssh-agent -s)"
-    ssh-add "$SSH_KEY_FILE"
+    ssh-add "$SSH_KEY_keymap_layout_file_path"
     gh auth login --git-protocol ssh --skip-ssh-key --web --scopes admin:public_key
-    gh ssh-key add "$SSH_KEY_FILE.pub" --title "$TITLE"
+    gh ssh-key add "$SSH_KEY_keymap_layout_file_path.pub" --title "$TITLE"
 }
 
 set_up_dotfiles() {
@@ -252,6 +252,14 @@ create_screenshots_dir() {
     mkdir -vp ~/Pictures/Screenshots/
 }
 
+# NOTE: for some reason Gnome freezes when pressing media keys.
+# See: https://tinyurl.com/73amac83
+disable_scroll_lock_mod3() {
+    local keymap_layout_path="/usr/share/X11/xkb/symbols/br"
+    sudo cp -v "$keymap_layout_file_path" "$keymap_layout_file_path.bak"
+    sudo sed -i '/^[[:space:]]*modifier_map Mod3[[:space:]]\+{ Scroll_Lock };/s/^/\/\/ /' "$keymap_layout_path"
+}
+
 cleanup() {
     sudo apt autoremove -y --purge
 }
@@ -274,6 +282,7 @@ main() {
     install_fonts
     set_up_gnome
     create_screenshots_dir
+    disable_scroll_lock_mod3
     cleanup
     reboot_system
 }

@@ -28,14 +28,6 @@ main() {
     if [[ ! -L "$HOME/.ssh/config" && ! -e "$HOME/.ssh/config" ]]; then
         sudo ln -vs "$SOURCE_DIR/ssh/config" "$HOME/.ssh/config"
     fi
-
-    if [[ ! -L "$HOME/.Xmodmap" && ! -e "$HOME/.Xmodmap" ]]; then
-        sudo ln -vs "$SOURCE_DIR/xmodmap/.Xmodmap" "$HOME/.Xmodmap"
-    fi
-
-    if [[ ! -L "$HOME/.xprofile" && ! -e "$HOME/.xprofile" ]]; then
-        sudo ln -vs "$SOURCE_DIR/xmodmap/.xprofile" "$HOME/.xprofile"
-    fi
 }
 
 main
