@@ -1,0 +1,11 @@
+# <C-Right> to move right by word
+"\e[1;5C": forward-word
+
+# <C-Left> to move left by word
+"\e[1;5D": backward-word
+
+# <C-Backspace> to delete previous word
+"\C-h": backward-kill-word
+
+# <C-Delete> to delete next word
+"\e[3;5~": kill-word

@@ -2,15 +2,16 @@
 
 set -eou pipefail
 
-set_up_xdg_base_directory_spec() {
+set_up_xdg_base_directory() {
 cat << 'EOF' >> ~/.bashrc
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 export EDITOR="nvim"
+export INPUTRC="$XDG_CONFIG_HOME"/readline/inputrc
+
 alias htop="btop"
-alias fc-cache="fc-cache -fv"
 EOF
     # TODO: why simply `source ~/.bashrc` after writing the variables into it
     # doesn't work?
@@ -25,7 +26,9 @@ update_system() {
     sudo apt upgrade -y
 }
 
-# TODO: fix the error: "ERRO metrics from this machine have already been reported and can be found in: /home/iranbraga/.cache/ubuntu-report/ubuntu.24.04"
+# TODO: fix the error: "ERRO metrics from this machine have already been
+# reported and can be found in:
+# /home/iranbraga/.cache/ubuntu-report/ubuntu.24.04"
 disable_ubuntu_report() {
     ubuntu-report send no
     sudo apt purge -y ubuntu-report
@@ -269,7 +272,7 @@ reboot_system() {
 }
 
 main() {
-    set_up_xdg_base_directory_spec
+    set_up_xdg_base_directory
     update_system
     # disable_ubuntu_report
     enable_trim
