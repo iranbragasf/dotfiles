@@ -39,6 +39,10 @@ enable_trim() {
     sudo systemctl enable fstrim.timer
 }
 
+reduce_swappiness() {
+    sudo sysctl --write vm.swappiness=10
+}
+
 enable_firewall() {
     sudo ufw enable
 }
@@ -168,7 +172,7 @@ install_packages() {
 set_up_github_ssh() {
     local SSH_KEY_keymap_layout_file_path="$HOME/.ssh/github"
     local EMAIL="iranbrgasf@gmail.com"
-    local TITLE=$(hostname)
+    local TITLE=$(hostnamectl hostname)
     ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY_keymap_layout_file_path" -N ""
     eval "$(ssh-agent -s)"
     ssh-add "$SSH_KEY_keymap_layout_file_path"
@@ -277,6 +281,7 @@ main() {
     update_system
     # disable_ubuntu_report
     enable_trim
+    reduce_swappiness
     enable_firewall
     # set_up_parallel_download
     # set_up_google_dns
