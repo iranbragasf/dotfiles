@@ -26,7 +26,7 @@ main() {
     fi
 
     if [[ ! -L "$HOME/.ssh/config" && ! -e "$HOME/.ssh/config" ]]; then
-        sudo ln -vs "$SOURCE_DIR/ssh/config" "$HOME/.ssh/config"
+        ln -vs "$SOURCE_DIR/ssh/config" "$HOME/.ssh/config"
     fi
 }
 

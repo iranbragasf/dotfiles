@@ -181,6 +181,7 @@ set_up_dotfiles() {
     mkdir -vp ~/personal
     cd ~/personal
     git clone git@github.com:iranbragasf/dotfiles.git
+    git clone git@github.com:iranbragasf/obsidian-vault.git
     cd ./dotfiles
     chmod +x ./scripts/symlink-dotfiles.sh
     ./scripts/symlink-dotfiles.sh
