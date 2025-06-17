@@ -3,10 +3,15 @@
 set -eou pipefail
 
 main() {
-    local IGNORE_LIST=(".git" "scripts" ".gitignore" "README.md" "tlp" "awesome" "rofi" "ssh" "xmodmap")
-    local SOURCE_DIR="$HOME/personal/dotfiles"
+    local DOTFILES_DIR="$HOME/personal/dotfiles"
+    if [ ! -d "$DOTFILES_DIR" ]; then
+        echo "dotfiles directory not found at '$DOTFILES_DIR'"
+        exit 1
+    fi
 
-    for dir in "$SOURCE_DIR"/*/; do
+    local IGNORE_LIST=(".git" "scripts" ".gitignore" "README.md" "tlp" "awesome" "rofi" "ssh" "xmodmap")
+
+    for dir in "$DOTFILES_DIR"/*/; do
         local dirname=$(basename "$dir")
         local linkpath="$XDG_CONFIG_HOME/$dirname"
 
@@ -18,15 +23,15 @@ main() {
             continue
         fi
 
-        ln -vs "$dir" "$linkpath"
+        ln -sv "$dir" "$linkpath"
     done
 
     if [[ ! -L "/etc/tlp.d/01-mytlp.conf" && ! -e "/etc/tlp.d/01-mytlp.conf" ]]; then
-        sudo ln -vs "$SOURCE_DIR/tlp/01-mytlp.conf" '/etc/tlp.d/01-mytlp.conf'
+        sudo ln -sv "$DOTFILES_DIR/tlp/01-mytlp.conf" '/etc/tlp.d/01-mytlp.conf'
     fi
 
     if [[ ! -L "$HOME/.ssh/config" && ! -e "$HOME/.ssh/config" ]]; then
-        ln -vs "$SOURCE_DIR/ssh/config" "$HOME/.ssh/config"
+        ln -sv "$DOTFILES_DIR/ssh/config" "$HOME/.ssh/config"
     fi
 }
 
