@@ -160,9 +160,9 @@ install_packages() {
     mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
 
     # Install copyq
-    sudo add-apt-repository -y ppa:hluk/copyq
-    sudo apt update
-    sudo apt install -y copyq
+    # sudo add-apt-repository -y ppa:hluk/copyq
+    # sudo apt update
+    # sudo apt install -y copyq
 
     set_up_flatpak
     install_flatpaks
@@ -230,6 +230,7 @@ set_up_gnome() {
     gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 4112
     gsettings set org.gnome.shell.extensions.dash-to-dock show-mounts false
     gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font Mono 13'
+    gsettings set org.gnome.shell favorite-apps "['google-chrome.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Software.desktop', 'yelp.desktop']"
 
     gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/']"
 
@@ -246,10 +247,11 @@ set_up_gnome() {
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/ command 'flameshot gui'
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/ binding '<Super><Shift>s'
 
-    gsettings set org.gnome.shell.keybindings toggle-message-tray '[]'
-    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/ name 'Open clipboard history'
-    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/ command 'copyq toggle'
-    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/ binding '<Super>v'
+    # TODO: set up clipboard manager. See: https://youtube.com/shorts/GKGnx1zMdEI?si=nE-51FQOpskGqvfS
+    # gsettings set org.gnome.shell.keybindings toggle-message-tray '[]'
+    # gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/ name 'Open clipboard history'
+    # gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/ command 'copyq toggle'
+    # gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/ binding '<Super>v'
 
     # TODO: <Super>.	    Open emoji picker
     # TODO: <Super><A-r>	Record the screen
