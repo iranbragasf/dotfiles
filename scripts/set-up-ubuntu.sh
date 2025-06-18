@@ -219,7 +219,7 @@ set_up_gnome() {
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
     gsettings set org.gnome.desktop.interface gtk-theme 'Yaru-dark'
     gsettings set org.gnome.desktop.interface icon-theme 'Yaru-dark'
-    gsettings set org.gnome.shell.extensions.dash-to-dock extend-height true
+    gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
     gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
     gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
     gsettings set org.gnome.desktop.session idle-delay 0
