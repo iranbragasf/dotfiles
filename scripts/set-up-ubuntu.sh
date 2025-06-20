@@ -225,6 +225,7 @@ set_up_gnome() {
     gsettings set org.gnome.desktop.session idle-delay 0
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type 'nothing'
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
+    gsettings set org.gnome.settings-daemon.plugins.power idle-dim false
     gsettings set org.gnome.desktop.interface show-battery-percentage true
     gsettings set org.gnome.shell.extensions.ding show-home false
     gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
