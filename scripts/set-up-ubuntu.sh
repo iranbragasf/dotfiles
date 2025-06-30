@@ -98,6 +98,8 @@ install_packages() {
     wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     sudo apt install -y ./google-chrome-stable_current_amd64.deb
     xdg-settings set default-web-browser google-chrome.desktop
+    # Configure the default browser to handle `whatsapp:` links
+    xdg-mime default $(xdg-settings get default-web-browser) 'x-scheme-handler/whatsapp'
     cd -
 
     # Install Docker
