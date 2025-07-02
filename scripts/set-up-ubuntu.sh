@@ -70,7 +70,8 @@ install_flatpaks() {
         com.slack.Slack \
         io.dbeaver.DBeaverCommunity \
         md.obsidian.Obsidian \
-        org.nickvision.tubeconverter
+        org.nickvision.tubeconverter \
+        com.github.johnfactotum.Foliate
 }
 
 install_packages() {
