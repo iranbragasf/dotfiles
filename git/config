@@ -6,4 +6,4 @@
 [pull]
     rebase = false
 [includeif "gitdir:~/personal/mblabs/"]
-    path = ~/.config/git/config.mblabs
+    path = ~/.config/git/config-mblabs
