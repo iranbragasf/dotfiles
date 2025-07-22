@@ -1,12 +1,8 @@
 vim.g.have_nerd_font = true
 
-vim.opt.winborder = "rounded"
 vim.opt.colorcolumn = "80"
 vim.opt.path:append({ "**" })
-vim.opt.wildignore:append({
-	".git/**",
-	"node_modules/**",
-})
+vim.opt.wildignore:append({ "**/.git/**", "**/node_modules/**" })
 vim.opt.wildignorecase = true
 vim.opt.updatetime = 250
 vim.opt.timeoutlen = 300
@@ -53,36 +49,36 @@ vim.opt.listchars = {
 	nbsp = "␣",
     eol = "↵",
 }
+vim.opt.winborder = "none"
+vim.cmd.colorscheme("habamax")
 
 vim.api.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",
 	group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
-	callback = function()
-		vim.hl.on_yank()
-	end,
+	callback = function() vim.hl.on_yank() end,
+})
+
+vim.api.nvim_create_autocmd("VimResized", {
+	pattern = "*",
+	group = vim.api.nvim_create_augroup("resize-windows", { clear = true }),
+	callback = function() vim.cmd.tabdo("wincmd =") end,
 })
 
 vim.api.nvim_create_augroup("filetype-detect", { clear = true })
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 	group = "filetype-detect",
 	pattern = { "tsconfig*.json", ".eslintrc.json" },
-	callback = function()
-		vim.opt_local.filetype = "jsonc"
-	end,
+	callback = function() vim.opt_local.filetype = "jsonc" end,
 })
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 	group = "filetype-detect",
 	pattern = ".env.*",
-	callback = function()
-		vim.opt_local.filetype = "sh"
-	end,
+	callback = function() vim.opt_local.filetype = "sh" end,
 })
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 	group = "filetype-detect",
 	pattern = "*/git/config*",
-	callback = function()
-        vim.opt_local.filetype = "gitconfig"
-    end,
+	callback = function() vim.opt_local.filetype = "gitconfig" end,
 })
 
 vim.g.mapleader = " "
@@ -105,8 +101,8 @@ vim.keymap.set({ "n", "v" }, "<C-Up>", ":resize +2<CR>", { noremap = true, silen
 vim.keymap.set({ "n", "v" }, "<C-Down>", ":resize -2<CR>", { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, "<C-Right>", ":vertical resize +2<CR>", { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, "<C-Left>", ":vertical resize -2<CR>", { noremap = true, silent = true })
--- TODO: toggle quickfix and location lists and open in the current window,
--- whether there're more open
+-- TODO: toggle quickfix and location lists and open them in the current
+-- window, whether there're more windows open
 vim.keymap.set("n", "<C-q>", ":copen<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "]q", ":cnext<CR>zz", { noremap = true, silent = true })
 vim.keymap.set("n", "[q", ":cprev<CR>zz", { noremap = true, silent = true })
