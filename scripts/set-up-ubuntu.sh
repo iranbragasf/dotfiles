@@ -8,10 +8,12 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 export EDITOR="nvim"
 export MANPAGER="nvim +Man!"
-export INPUTRC="$XDG_CONFIG_HOME"/readline/inputrc
+export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
 
+alias vim="nvim"
 alias htop="btop"
 EOF
     # TODO: why simply `source ~/.bashrc` after writing the variables into it
@@ -78,7 +80,6 @@ install_packages() {
     sudo apt install -y \
         ubuntu-restricted-extras \
         curl \
-        neovim \
         tlp \
         tldr \
         xclip \
@@ -162,6 +163,13 @@ install_packages() {
     mise use -g usage
     mkdir -vp ~/.local/share/bash-completion/completions/
     mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
+
+    # Install neovim
+    cd /tmp
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    sudo rm -rf /opt/nvim
+    sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+    cd -
 
     # Install copyq
     # sudo add-apt-repository -y ppa:hluk/copyq
