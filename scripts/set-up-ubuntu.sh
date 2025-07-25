@@ -181,14 +181,14 @@ install_packages() {
 }
 
 set_up_github_ssh() {
-    local SSH_KEY_keymap_layout_file_path="$HOME/.ssh/github"
+    local SSH_KEY="$HOME/.ssh/github"
     local EMAIL="iranbrgasf@gmail.com"
     local TITLE=$(hostnamectl hostname)
-    ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY_keymap_layout_file_path" -N ""
+    ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY" -N ""
     eval "$(ssh-agent -s)"
-    ssh-add "$SSH_KEY_keymap_layout_file_path"
+    ssh-add "$SSH_KEY"
     gh auth login --git-protocol ssh --skip-ssh-key --web --scopes admin:public_key
-    gh ssh-key add "$SSH_KEY_keymap_layout_file_path.pub" --title "$TITLE"
+    gh ssh-key add "$SSH_KEY.pub" --title "$TITLE"
 }
 
 set_up_dotfiles() {
