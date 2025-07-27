@@ -1,7 +1,12 @@
 return {
     "neovim/nvim-lspconfig",
-    dependencies = { "b0o/schemastore.nvim", },
+    dependencies = {
+        "b0o/schemastore.nvim",
+        'nvim-telescope/telescope.nvim'
+    },
     config = function()
+        local telescope_builtin = require("telescope.builtin")
+
         vim.keymap.set("n", "[g", function() vim.diagnostic.jump({ count = -1 }) end, { noremap = true })
         vim.keymap.set("n", "]g", function() vim.diagnostic.jump({ count = 1 }) end, { noremap = true })
         vim.keymap.set("n", "[G", function()
@@ -10,15 +15,19 @@ return {
                 local first = diagnostics[1]
                 vim.api.nvim_win_set_cursor(0, { first.lnum + 1, first.col })
             end
-        end)
+        end, { noremap = true })
         vim.keymap.set("n", "]G", function()
             local diagnostics = vim.diagnostic.get(0)
             if #diagnostics > 0 then
                 local last = diagnostics[#diagnostics]
                 vim.api.nvim_win_set_cursor(0, { last.lnum + 1, last.col })
             end
-        end)
+        end, { noremap = true } )
         vim.keymap.set("n", "gl", vim.diagnostic.open_float, { noremap = true })
+        -- vim.keymap.set("n", "<Leader>m", telescope_builtin.diagnostics, { noremap = true })
+        vim.keymap.set("n", "<Leader>m", function()
+            vim.diagnostic.setqflist({ title = "Workspace Diagnostics" })
+        end, { noremap = true })
 
         vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
@@ -30,19 +39,17 @@ return {
 
                 map("<Leader>rn", vim.lsp.buf.rename)
                 map("<Leader>ac", vim.lsp.buf.code_action, { "n", "x" })
-                -- map("gr", require("telescope.builtin").lsp_references)
-                -- map("gi", require("telescope.builtin").lsp_implementations)
-                -- map("gd", require("telescope.builtin").lsp_definitions)
-                map("gr", vim.lsp.buf.references)
-                map("gi", vim.lsp.buf.implementation)
-                map("gd", vim.lsp.buf.definition)
+                map("gr", telescope_builtin.lsp_references)
+                map("gi", telescope_builtin.lsp_implementations)
+                map("gd", telescope_builtin.lsp_definitions)
+                -- map("gr", vim.lsp.buf.references)
+                -- map("gi", vim.lsp.buf.implementation)
+                -- map("gd", vim.lsp.buf.definition)
                 map("gD", vim.lsp.buf.declaration)
-                -- map("<Leader>o", require("telescope.builtin").lsp_document_symbols)
-                -- map("<Leader>s", require("telescope.builtin").lsp_dynamic_workspace_symbols)
-                -- map("gy", require("telescope.builtin").lsp_type_definitions)
-                map("<Leader>o", vim.lsp.buf.document_symbol)
-                map("<Leader>s", vim.lsp.buf.workspace_symbol)
-                map("gy", vim.lsp.buf.type_definition)
+                map("<Leader>o", telescope_builtin.lsp_document_symbols)
+                map("gy", telescope_builtin.lsp_type_definitions)
+                -- map("<Leader>o", vim.lsp.buf.document_symbol)
+                -- map("gy", vim.lsp.buf.type_definition)
                 map("<C-k>", vim.lsp.buf.signature_help, { "i", "s", "n" })
 
                 -- NOTE: Highlight references of the word under the cursor when

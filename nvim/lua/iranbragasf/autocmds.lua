@@ -8,10 +8,15 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function() vim.hl.on_yank() end,
 })
 
+-- TOOD: keep the splits' size proportion rather than equaly split the screen (`wincmd =`)
 vim.api.nvim_create_autocmd("VimResized", {
     pattern = "*",
-    group = create_augroup("resize-windows"),
-    callback = function() vim.cmd.tabdo("wincmd =") end,
+    group = create_augroup("resize-splits"),
+    callback = function()
+        local current_tab = vim.fn.tabpagenr()
+        vim.cmd("tabdo wincmd =")
+        vim.cmd("tabnext " .. current_tab)
+    end,
 })
 
 local filetype_detect_augroup = create_augroup("filetype-detect")

@@ -48,4 +48,4 @@ vim.opt.listchars = {
     eol = "↵",
 }
 vim.opt.winborder = "none"
-vim.cmd.colorscheme("habamax")
+vim.cmd("colorscheme habamax")
