@@ -92,8 +92,7 @@ install_packages() {
         timeshift \
         btop \
         uuid \
-        ripgrep \
-        fd-find
+        ripgrep
 
     # Install Google Chorome
     cd /tmp
