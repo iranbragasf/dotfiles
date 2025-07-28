@@ -11,46 +11,71 @@ return {
         vim.keymap.set("n", "]g", function() vim.diagnostic.jump({ count = 1 }) end, { noremap = true })
         vim.keymap.set("n", "[G", function()
             local diagnostics = vim.diagnostic.get(0)
-            if #diagnostics > 0 then
-                local first = diagnostics[1]
-                vim.api.nvim_win_set_cursor(0, { first.lnum + 1, first.col })
+            if #diagnostics == 0 then
+                vim.notify("No more valid diagnostics to move to", vim.log.levels.ERROR)
+                return
             end
-        end, { noremap = true })
+            table.sort(diagnostics, function(a, b)
+                if a.lnum == b.lnum then
+                    return a.col < b.col
+                end
+                return a.lnum < b.lnum
+            end)
+            local first = diagnostics[1]
+            vim.api.nvim_win_set_cursor(0, { first.lnum + 1, first.col })
+        end)
         vim.keymap.set("n", "]G", function()
             local diagnostics = vim.diagnostic.get(0)
-            if #diagnostics > 0 then
-                local last = diagnostics[#diagnostics]
-                vim.api.nvim_win_set_cursor(0, { last.lnum + 1, last.col })
+            if #diagnostics == 0 then
+                vim.notify("No more valid diagnostics to move to", vim.log.levels.ERROR)
+                return
             end
-        end, { noremap = true } )
+            table.sort(diagnostics, function(a, b)
+                if a.lnum == b.lnum then
+                    return a.col < b.col
+                end
+                return a.lnum < b.lnum
+            end)
+            local last = diagnostics[#diagnostics]
+            vim.api.nvim_win_set_cursor(0, { last.lnum + 1, last.col })
+        end)
         vim.keymap.set("n", "gl", vim.diagnostic.open_float, { noremap = true })
-        -- vim.keymap.set("n", "<Leader>m", telescope_builtin.diagnostics, { noremap = true })
-        vim.keymap.set("n", "<Leader>m", function()
-            vim.diagnostic.setqflist({ title = "Workspace Diagnostics" })
-        end, { noremap = true })
+        vim.keymap.set("n", "<Leader>m", telescope_builtin.diagnostics, { noremap = true })
+        -- vim.keymap.set("n", "<Leader>m", function()
+        --     vim.diagnostic.setqflist({ title = "Workspace Diagnostics" })
+        -- end, { noremap = true })
+
+        vim.diagnostic.config({
+            virtual_text = true,
+            signs = {
+                text = {
+                    [vim.diagnostic.severity.ERROR] = "󰅚 ",
+                    [vim.diagnostic.severity.WARN] = "󰀪 ",
+                    [vim.diagnostic.severity.INFO] = "󰋽 ",
+                    [vim.diagnostic.severity.HINT] = "󰌶 ",
+                },
+            },
+            float = { source = true },
+            severity_sort = true,
+        })
 
         vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
             callback = function(event)
-                local map = function(keys, func, mode)
-                    mode = mode or "n"
-                    vim.keymap.set(mode, keys, func, { buffer = event.buf })
-                end
-
-                map("<Leader>rn", vim.lsp.buf.rename)
-                map("<Leader>ac", vim.lsp.buf.code_action, { "n", "x" })
-                map("gr", telescope_builtin.lsp_references)
-                map("gi", telescope_builtin.lsp_implementations)
-                map("gd", telescope_builtin.lsp_definitions)
-                -- map("gr", vim.lsp.buf.references)
-                -- map("gi", vim.lsp.buf.implementation)
-                -- map("gd", vim.lsp.buf.definition)
-                map("gD", vim.lsp.buf.declaration)
-                map("<Leader>o", telescope_builtin.lsp_document_symbols)
-                map("gy", telescope_builtin.lsp_type_definitions)
-                -- map("<Leader>o", vim.lsp.buf.document_symbol)
-                -- map("gy", vim.lsp.buf.type_definition)
-                map("<C-k>", vim.lsp.buf.signature_help, { "i", "s", "n" })
+                vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename, { buffer = event.buf })
+                vim.keymap.set({ "n", "x" }, "<Leader>ac", vim.lsp.buf.code_action,  { buffer = event.buf })
+                vim.keymap.set("n", "gr", telescope_builtin.lsp_references, { buffer = event.buf })
+                vim.keymap.set("n", "gi", telescope_builtin.lsp_implementations, { buffer = event.buf })
+                vim.keymap.set("n", "gd", telescope_builtin.lsp_definitions, { buffer = event.buf })
+                -- vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = event.buf })
+                -- vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = event.buf })
+                -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = event.buf })
+                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = event.buf })
+                vim.keymap.set("n", "<Leader>o", telescope_builtin.lsp_document_symbols, { buffer = event.buf })
+                vim.keymap.set("n", "gy", telescope_builtin.lsp_type_definitions, { buffer = event.buf })
+                -- vim.keymap.set("n", "<Leader>o", vim.lsp.buf.document_symbol, { buffer = event.buf })
+                -- vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { buffer = event.buf })
+                vim.keymap.set({ "i", "s", "n" }, "<C-k>", vim.lsp.buf.signature_help, { buffer = event.buf })
 
                 -- NOTE: Highlight references of the word under the cursor when
                 -- it rests there for a little while.
@@ -78,20 +103,6 @@ return {
                     })
                 end
             end,
-        })
-
-        vim.diagnostic.config({
-            virtual_text = true,
-            signs = {
-                text = {
-                    [vim.diagnostic.severity.ERROR] = "󰅚 ",
-                    [vim.diagnostic.severity.WARN] = "󰀪 ",
-                    [vim.diagnostic.severity.INFO] = "󰋽 ",
-                    [vim.diagnostic.severity.HINT] = "󰌶 ",
-                },
-            } or true,
-            float = { source = true },
-            severity_sort = true,
         })
     end
 }

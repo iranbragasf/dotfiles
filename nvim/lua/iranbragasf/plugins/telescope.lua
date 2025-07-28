@@ -38,8 +38,8 @@ return {
                         i = {
                             ["<Esc>"] = actions.close,
                             ["<C-s>"] = actions.select_horizontal,
-                            ["<C-f>"] = actions.preview_scrolling_up,
-                            ["<C-b>"] = actions.preview_scrolling_down,
+                            ["<C-b>"] = actions.preview_scrolling_up,
+                            ["<C-f>"] = actions.preview_scrolling_down,
                             ["<M-p>"] = actions_layout.toggle_preview,
                             ["<C-a>"] = actions.toggle_all,
                         }
