@@ -1,18 +1,13 @@
 return {
     "neovim/nvim-lspconfig",
-    dependencies = {
-        "b0o/schemastore.nvim",
-        'nvim-telescope/telescope.nvim'
-    },
+    dependencies = { "b0o/schemastore.nvim" },
     config = function()
-        local telescope_builtin = require("telescope.builtin")
-
         vim.keymap.set("n", "[g", function() vim.diagnostic.jump({ count = -1 }) end, { noremap = true })
         vim.keymap.set("n", "]g", function() vim.diagnostic.jump({ count = 1 }) end, { noremap = true })
         vim.keymap.set("n", "[G", function()
             local diagnostics = vim.diagnostic.get(0)
             if #diagnostics == 0 then
-                vim.notify("No more valid diagnostics to move to", vim.log.levels.ERROR)
+                vim.notify("No more valid diagnostics to move to", vim.log.levels.WARN)
                 return
             end
             table.sort(diagnostics, function(a, b)
@@ -27,7 +22,7 @@ return {
         vim.keymap.set("n", "]G", function()
             local diagnostics = vim.diagnostic.get(0)
             if #diagnostics == 0 then
-                vim.notify("No more valid diagnostics to move to", vim.log.levels.ERROR)
+                vim.notify("No more valid diagnostics to move to", vim.log.levels.WARN)
                 return
             end
             table.sort(diagnostics, function(a, b)
@@ -40,10 +35,9 @@ return {
             vim.api.nvim_win_set_cursor(0, { last.lnum + 1, last.col })
         end)
         vim.keymap.set("n", "gl", vim.diagnostic.open_float, { noremap = true })
-        vim.keymap.set("n", "<Leader>m", telescope_builtin.diagnostics, { noremap = true })
-        -- vim.keymap.set("n", "<Leader>m", function()
-        --     vim.diagnostic.setqflist({ title = "Workspace Diagnostics" })
-        -- end, { noremap = true })
+        vim.keymap.set("n", "<Leader>m", function()
+            vim.diagnostic.setqflist({ title = "Workspace Diagnostics" })
+        end, { noremap = true })
 
         vim.diagnostic.config({
             virtual_text = true,
@@ -64,17 +58,12 @@ return {
             callback = function(event)
                 vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename, { buffer = event.buf })
                 vim.keymap.set({ "n", "x" }, "<Leader>ac", vim.lsp.buf.code_action,  { buffer = event.buf })
-                vim.keymap.set("n", "gr", telescope_builtin.lsp_references, { buffer = event.buf })
-                vim.keymap.set("n", "gi", telescope_builtin.lsp_implementations, { buffer = event.buf })
-                vim.keymap.set("n", "gd", telescope_builtin.lsp_definitions, { buffer = event.buf })
-                -- vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = event.buf })
-                -- vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = event.buf })
-                -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = event.buf })
+                vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = event.buf })
+                vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = event.buf })
+                vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = event.buf })
                 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = event.buf })
-                vim.keymap.set("n", "<Leader>o", telescope_builtin.lsp_document_symbols, { buffer = event.buf })
-                vim.keymap.set("n", "gy", telescope_builtin.lsp_type_definitions, { buffer = event.buf })
-                -- vim.keymap.set("n", "<Leader>o", vim.lsp.buf.document_symbol, { buffer = event.buf })
-                -- vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { buffer = event.buf })
+                vim.keymap.set("n", "<Leader>o", vim.lsp.buf.document_symbol, { buffer = event.buf })
+                vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { buffer = event.buf })
                 vim.keymap.set({ "i", "s", "n" }, "<C-k>", vim.lsp.buf.signature_help, { buffer = event.buf })
 
                 -- NOTE: Highlight references of the word under the cursor when

@@ -7,6 +7,7 @@ return {
             'nvim-lua/plenary.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
             "nvim-tree/nvim-web-devicons",
+            "neovim/nvim-lspconfig",
         },
         config = function()
             local telescope = require("telescope")
@@ -78,9 +79,22 @@ return {
                     cwd = "$HOME/personal/dotfiles"
                 })
             end, { noremap = true })
+            vim.keymap.set("n", "<Leader>m", builtin.diagnostics, { noremap = true })
 
             vim.api.nvim_create_user_command("Command", builtin.commands, { nargs = 0 })
             vim.api.nvim_create_user_command("Keymap", builtin.keymaps, { nargs = 0 })
+
+            -- NOTE: overrides keymaps defined in `lspconfig` module.
+            vim.api.nvim_create_autocmd("LspAttach", {
+                group = "lsp-attach",
+                callback = function(event)
+                    vim.keymap.set("n", "gr", builtin.lsp_references, { buffer = event.buf })
+                    vim.keymap.set("n", "gi", builtin.lsp_implementations, { buffer = event.buf })
+                    vim.keymap.set("n", "gd", builtin.lsp_definitions, { buffer = event.buf })
+                    vim.keymap.set("n", "<Leader>o", builtin.lsp_document_symbols, { buffer = event.buf })
+                    vim.keymap.set("n", "gy", builtin.lsp_type_definitions, { buffer = event.buf })
+                end,
+            })
         end
     },
 }
