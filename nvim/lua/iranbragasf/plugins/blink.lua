@@ -3,12 +3,17 @@ return {
     event = 'VimEnter',
     version = '1.*',
     dependencies = {
+        'L3MON4D3/LuaSnip',
         'disrupted/blink-cmp-conventional-commits',
         "bydlw98/blink-cmp-sshconfig",
     },
     --- @module 'blink.cmp'
     --- @type blink.cmp.Config
     opts = {
+        keymap = {
+            ['<C-s>'] = { 'show_signature', 'hide_signature', 'fallback' },
+            ['<C-k>'] = false,
+        },
         sources = {
             default = {
                 "lsp",
@@ -41,12 +46,12 @@ return {
                 }
             },
         },
-        snippets = { preset = "luasnip" },
         signature = {
             enabled = true,
             window = {
-                show_documentation = true
+                show_documentation = true,
             }
-        }
+        },
+        snippets = { preset = 'luasnip' },
     },
 }

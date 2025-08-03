@@ -7,7 +7,7 @@ return {
             'nvim-lua/plenary.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
             "nvim-tree/nvim-web-devicons",
-            "neovim/nvim-lspconfig",
+            "neovim/nvim-lspconfig", -- NOTE: must be loaded fist to have some keymaps overriden.
         },
         config = function()
             local telescope = require("telescope")

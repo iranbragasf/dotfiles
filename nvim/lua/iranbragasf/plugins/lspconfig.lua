@@ -64,25 +64,23 @@ return {
                 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = event.buf })
                 vim.keymap.set("n", "<Leader>o", vim.lsp.buf.document_symbol, { buffer = event.buf })
                 vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { buffer = event.buf })
-                vim.keymap.set({ "i", "s", "n" }, "<C-k>", vim.lsp.buf.signature_help, { buffer = event.buf })
+                vim.keymap.set("n", "<C-s>", vim.lsp.buf.signature_help, { buffer = event.buf })
 
-                -- NOTE: Highlight references of the word under the cursor when
-                -- it rests there for a little while.
                 local client = vim.lsp.get_client_by_id(event.data.client_id)
-                if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
+                if not client then return end
+
+                if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
                     local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
                     vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
                         buffer = event.buf,
                         group = highlight_augroup,
                         callback = vim.lsp.buf.document_highlight,
                     })
-
                     vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
                         buffer = event.buf,
                         group = highlight_augroup,
                         callback = vim.lsp.buf.clear_references,
                     })
-
                     vim.api.nvim_create_autocmd("LspDetach", {
                         group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
                         callback = function(event2)
@@ -91,6 +89,11 @@ return {
                         end,
                     })
                 end
+
+                -- if client:supports_method('textDocument/completion') then
+                --     vim.lsp.completion.enable(true, client.id, event.buf, { autotrigger = true })
+                --     vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get, { buffer = event.buf })
+                -- end
             end,
         })
     end
