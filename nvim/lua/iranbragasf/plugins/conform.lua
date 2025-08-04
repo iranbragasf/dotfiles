@@ -1,5 +1,5 @@
 local keymap_lhs = "<M-f>"
-local keymap_desc = "Format code"
+local keymap_desc = "Format Document"
 
 return {
     "stevearc/conform.nvim",
