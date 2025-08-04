@@ -1,3 +1,5 @@
+vim.g.format_on_save = true
+
 vim.opt.colorcolumn = "80"
 vim.opt.path:append({ "**" })
 vim.opt.wildignore:append({ "**/.git/**", "**/node_modules/**" })
