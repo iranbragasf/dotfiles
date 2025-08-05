@@ -1,0 +1,27 @@
+return {
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+        require("lint").linters_by_ft = {
+            javascript = { "eslint_d" },
+            typescript = { "eslint_d" },
+        }
+
+        vim.api.nvim_create_autocmd(
+            { "BufWritePost", "InsertLeave", "TextChanged" },
+            {
+                group = vim.api.nvim_create_augroup(
+                    "nvim-lint",
+                    { clear = true }
+                ),
+                pattern = "*",
+                callback = function()
+                    if vim.g.enable_linting then
+                        require("lint").try_lint()
+                    end
+                end,
+                desc = "Trigger Linting",
+            }
+        )
+    end,
+}

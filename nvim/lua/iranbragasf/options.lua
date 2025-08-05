@@ -1,4 +1,5 @@
 vim.g.format_on_save = true
+vim.g.enable_linting = true
 
 vim.opt.colorcolumn = "80"
 vim.opt.path:append({ "**" })

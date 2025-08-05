@@ -3,7 +3,7 @@ local keymap_desc = "Format Document"
 
 return {
     "stevearc/conform.nvim",
-    event = { "BufWritePre" },
+    event = "BufWritePre",
     cmd = { "ConformInfo", "Format" },
     keys = {
         {
