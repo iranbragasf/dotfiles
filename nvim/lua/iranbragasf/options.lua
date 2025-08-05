@@ -53,5 +53,7 @@ vim.opt.listchars = {
     nbsp = "␣",
     eol = "↵",
 }
+vim.opt.foldmethod = "expr"
+vim.opt.foldlevel = 99
 vim.opt.winborder = "none"
 vim.cmd("colorscheme habamax")
