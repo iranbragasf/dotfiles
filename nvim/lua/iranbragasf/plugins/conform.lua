@@ -1,16 +1,17 @@
-local keymap_lhs = "<M-f>"
-local keymap_desc = "Format Document"
+local lhs = "<M-f>"
+local desc = "Format Document"
 
 return {
     "stevearc/conform.nvim",
+    enabled = not vim.g.enable_builtin_formatting,
     event = "BufWritePre",
     cmd = { "ConformInfo", "Format" },
     keys = {
         {
-            keymap_lhs,
+            lhs,
             nil,
             mode = { "n", "v" },
-            desc = keymap_desc,
+            desc = desc,
         },
     },
     config = function()
@@ -37,8 +38,8 @@ return {
             end,
         })
 
-        vim.keymap.set({ "n", "v" }, keymap_lhs, function()
-            require("conform").format({ async = true }, function(err)
+        vim.keymap.set({ "n", "v" }, lhs, function()
+            conform.format(nil, function(err)
                 if not err then
                     local mode = vim.api.nvim_get_mode().mode
                     if vim.startswith(string.lower(mode), "v") then
@@ -55,7 +56,7 @@ return {
                     end
                 end
             end)
-        end, { desc = "Format code" })
+        end, { noremap = true, desc = desc })
 
         vim.api.nvim_create_user_command("Format", function(args)
             local range = nil
@@ -72,6 +73,6 @@ return {
                 }
             end
             conform.format({ range = range })
-        end, { nargs = 0, range = true, desc = keymap_desc })
+        end, { nargs = 0, range = true, desc = desc })
     end,
 }

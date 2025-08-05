@@ -1,5 +1,8 @@
 vim.g.format_on_save = true
 vim.g.enable_linting = true
+vim.g.enable_inlay_hints = true
+vim.g.enable_builtin_autocompletion = false
+vim.g.enable_builtin_formatting = false
 
 vim.opt.colorcolumn = "80"
 vim.opt.path:append({ "**" })

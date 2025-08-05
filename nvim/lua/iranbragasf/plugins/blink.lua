@@ -1,5 +1,6 @@
 return {
     "saghen/blink.cmp",
+    enabled = not vim.g.enable_builtin_autocompletion,
     event = "VimEnter",
     version = "1.*",
     dependencies = {
@@ -10,6 +11,13 @@ return {
     --- @module 'blink.cmp'
     --- @type blink.cmp.Config
     opts = {
+        completion = {
+            accept = {
+                auto_brackets = {
+                    enabled = false,
+                },
+            },
+        },
         keymap = {
             ["<C-s>"] = { "show_signature", "hide_signature", "fallback" },
             ["<C-k>"] = false,
