@@ -1,3 +1,4 @@
+vim.g.editorconfig = true
 vim.g.format_on_save = true
 vim.g.enable_linting = true
 vim.g.enable_inlay_hints = true
@@ -58,4 +59,3 @@ vim.opt.listchars = {
 vim.opt.foldmethod = "expr"
 vim.opt.foldlevel = 99
 vim.opt.winborder = "none"
-vim.cmd("colorscheme habamax")
