@@ -219,7 +219,7 @@ return {
                     local default_format_opts = {
                         bufnr = event.buf,
                         id = client.id,
-                        timeout_ms = 500,
+                        timeout_ms = 1000,
                     }
                     local desc = "Format Document"
 

@@ -6,6 +6,8 @@ vim.g.enable_builtin_formatting = false
 
 vim.opt.colorcolumn = "80"
 vim.opt.path:append({ "**" })
+-- TODO: create a list of globally ignored directories
+-- (e.g. vim.g.ignored_dirs = { ".git", "node_modules", "dist" })
 vim.opt.wildignore:append({ "**/.git/**", "**/node_modules/**" })
 vim.opt.wildignorecase = true
 vim.opt.updatetime = 250

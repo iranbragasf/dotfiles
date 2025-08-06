@@ -6,7 +6,7 @@ return {
             options = {
                 cursorline = true,
                 transparency = false,
-                highlight_inactive_windows = true,
+                highlight_inactive_windows = false,
             },
         })
         vim.cmd("colorscheme onedark")

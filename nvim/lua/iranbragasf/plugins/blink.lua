@@ -37,19 +37,19 @@ return {
                     module = "lazydev.integrations.blink",
                     score_offset = 100,
                     enabled = function()
-                        return vim.opt_local.filetype:get() == "lua"
+                        return vim.bo.filetype == "lua"
                     end,
                 },
                 conventional_commits = {
                     module = "blink-cmp-conventional-commits",
                     enabled = function()
-                        return vim.opt_local.filetype:get() == "gitcommit"
+                        return vim.bo.filetype == "gitcommit"
                     end,
                 },
                 sshconfig = {
                     module = "blink-cmp-sshconfig",
                     enabled = function()
-                        return vim.opt_local.filetype:get() == "sshconfig"
+                        return vim.bo.filetype == "sshconfig"
                     end,
                 },
             },

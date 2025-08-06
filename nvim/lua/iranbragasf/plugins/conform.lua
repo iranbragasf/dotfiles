@@ -30,7 +30,7 @@ return {
                 markdown = { "prettierd" },
             },
             default_format_opts = {
-                timeout_ms = 500,
+                timeout_ms = 1000,
                 lsp_format = "fallback",
             },
             format_on_save = function()

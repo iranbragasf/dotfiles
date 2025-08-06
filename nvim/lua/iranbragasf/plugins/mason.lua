@@ -16,9 +16,9 @@ return {
                     "prettierd",
                     "jsonls",
                 },
-                auto_update = true,
-            }
+                auto_update = false,
+            },
         },
     },
-    opts = {}
+    opts = {},
 }

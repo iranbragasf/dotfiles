@@ -16,7 +16,7 @@ return {
                 ),
                 pattern = "*",
                 callback = function()
-                    if vim.g.enable_linting then
+                    if vim.g.enable_linting and vim.bo.modifiable then
                         require("lint").try_lint()
                     end
                 end,
