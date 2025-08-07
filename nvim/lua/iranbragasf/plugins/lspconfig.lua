@@ -1,3 +1,5 @@
+local create_augroup = require("iranbragasf.utils").create_augroup
+
 return {
     "neovim/nvim-lspconfig",
     dependencies = { "b0o/schemastore.nvim" },
@@ -64,7 +66,7 @@ return {
         })
 
         vim.api.nvim_create_autocmd("LspAttach", {
-            group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
+            group = create_augroup("lsp-attach"),
             callback = function(event)
                 vim.keymap.set(
                     "n",
@@ -132,10 +134,8 @@ return {
                         event.buf
                     )
                 then
-                    local highlight_augroup = vim.api.nvim_create_augroup(
-                        "lsp-highlight",
-                        { clear = false }
-                    )
+                    local highlight_augroup =
+                        create_augroup("lsp-highlight", { clear = false })
                     vim.api.nvim_create_autocmd(
                         { "CursorHold", "CursorHoldI" },
                         {
@@ -153,10 +153,7 @@ return {
                         }
                     )
                     vim.api.nvim_create_autocmd("LspDetach", {
-                        group = vim.api.nvim_create_augroup(
-                            "lsp-detach",
-                            { clear = true }
-                        ),
+                        group = create_augroup("lsp-detach"),
                         callback = function(event2)
                             vim.lsp.buf.clear_references()
                             vim.api.nvim_clear_autocmds({
@@ -224,7 +221,7 @@ return {
                     local desc = "Format Document"
 
                     vim.api.nvim_create_autocmd("BufWritePre", {
-                        group = vim.api.nvim_create_augroup(
+                        group = create_augroup(
                             "lsp-formatting",
                             { clear = false }
                         ),

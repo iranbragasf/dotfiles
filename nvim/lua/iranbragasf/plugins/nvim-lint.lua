@@ -1,3 +1,5 @@
+local create_augroup = require("iranbragasf.utils").create_augroup
+
 return {
     "mfussenegger/nvim-lint",
     event = { "BufReadPre", "BufNewFile" },
@@ -10,10 +12,7 @@ return {
         vim.api.nvim_create_autocmd(
             { "BufWritePost", "InsertLeave", "TextChanged" },
             {
-                group = vim.api.nvim_create_augroup(
-                    "nvim-lint",
-                    { clear = true }
-                ),
+                group = create_augroup("nvim-lint"),
                 pattern = "*",
                 callback = function()
                     if vim.g.enable_linting and vim.bo.modifiable then

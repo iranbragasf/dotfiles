@@ -1,3 +1,7 @@
+local create_augroup = require("iranbragasf.utils").create_augroup
+
+--- @param command_args table<string>
+--- @return table<string>
 local append_command_args_with_ignore_patterns = function(command_args)
     local extended_command_args = vim.deepcopy(command_args)
     for _, pattern in pairs(vim.g.ignore_patterns) do
@@ -126,7 +130,7 @@ return {
 
             -- NOTE: overrides keymaps defined in `lspconfig` module.
             vim.api.nvim_create_autocmd("LspAttach", {
-                group = "lsp-attach",
+                group = create_augroup("lsp-attach"),
                 callback = function(event)
                     vim.keymap.set(
                         "n",
