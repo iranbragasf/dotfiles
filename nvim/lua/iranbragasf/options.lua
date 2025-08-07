@@ -4,12 +4,11 @@ vim.g.enable_linting = true
 vim.g.enable_inlay_hints = true
 vim.g.enable_builtin_autocompletion = false
 vim.g.enable_builtin_formatting = false
+vim.g.ignore_patterns = { "**/.git/**", "**/node_modules/**", "**/dist/**" }
 
 vim.opt.colorcolumn = "80"
 vim.opt.path:append({ "**" })
--- TODO: create a list of globally ignored directories
--- (e.g. vim.g.ignored_dirs = { ".git", "node_modules", "dist" })
-vim.opt.wildignore:append({ "**/.git/**", "**/node_modules/**" })
+vim.opt.wildignore:append(vim.g.ignore_patterns)
 vim.opt.wildignorecase = true
 vim.opt.updatetime = 250
 vim.opt.timeoutlen = 300
