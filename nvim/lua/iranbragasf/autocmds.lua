@@ -6,6 +6,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function()
         vim.hl.on_yank()
     end,
+    desc = "Highlight yanked text",
 })
 
 -- TOOD: keep the splits' size proportion rather than equaly split the screen (`wincmd =`)
@@ -17,6 +18,7 @@ vim.api.nvim_create_autocmd("VimResized", {
         vim.cmd("tabdo wincmd =")
         vim.cmd("tabnext " .. current_tab)
     end,
+    desc = "Preserve split proportions on window resize",
 })
 
 local filetype_detect_augroup = create_augroup("filetype-detect")
@@ -26,6 +28,7 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     callback = function()
         vim.opt_local.filetype = "jsonc"
     end,
+    desc = "Set filetype to jsonc for tsconfig and eslintrc",
 })
 
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
@@ -34,6 +37,7 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     callback = function()
         vim.opt_local.filetype = "sh"
     end,
+    desc = "Set filetype to sh for .env files",
 })
 
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
@@ -42,6 +46,7 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     callback = function()
         vim.opt_local.filetype = "gitconfig"
     end,
+    desc = "Set filetype to gitconfig for git config files",
 })
 
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
@@ -50,4 +55,5 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     callback = function()
         vim.opt_local.filetype = "sshconfig"
     end,
+    desc = "Set filetype to sshconfig for ssh config files",
 })
