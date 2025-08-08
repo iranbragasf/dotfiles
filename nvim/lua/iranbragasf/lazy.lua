@@ -22,6 +22,13 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "lazy",
+    callback = function()
+        vim.opt_local.cursorline = true
+    end,
+})
+
 require("lazy").setup({
     spec = {
         { import = "iranbragasf.plugins" },

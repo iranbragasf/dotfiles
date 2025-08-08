@@ -13,9 +13,10 @@ return {
     opts = {
         completion = {
             accept = {
-                auto_brackets = {
-                    enabled = false,
-                },
+                auto_brackets = { enabled = false },
+            },
+            list = {
+                selection = { auto_insert = false },
             },
         },
         keymap = {
