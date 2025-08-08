@@ -8,6 +8,7 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
+export DOTFILES_DIR="$HOME/personal/dotfiles"
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 export EDITOR="nvim"
 export MANPAGER="nvim +Man!"
@@ -79,6 +80,7 @@ install_flatpaks() {
 install_packages() {
     sudo apt install -y \
         ubuntu-restricted-extras \
+        build-essential \
         curl \
         tlp \
         tldr \
@@ -224,6 +226,7 @@ install_fonts() {
 }
 
 set_up_gnome() {
+    # TODO: set up terminal background to the hex color `#282c34`.
     gsettings set org.gnome.shell.extensions.dash-to-dock click-action "minimize-or-previews"
     gsettings set org.gnome.mutter center-new-windows true
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'

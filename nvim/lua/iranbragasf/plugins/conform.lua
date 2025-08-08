@@ -1,5 +1,5 @@
-local lhs = "<M-f>"
-local desc = "Format Document"
+local lhs = "<C-l>"
+local desc = "Format document"
 
 return {
     "stevearc/conform.nvim",
@@ -27,7 +27,6 @@ return {
                 json = { "prettierd" },
                 jsonc = { "prettierd" },
                 yaml = { "prettierd" },
-                markdown = { "prettierd" },
             },
             default_format_opts = {
                 timeout_ms = 1000,

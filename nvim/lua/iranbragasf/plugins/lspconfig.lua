@@ -234,7 +234,7 @@ return {
                         desc = desc,
                     })
 
-                    vim.keymap.set({ "n", "v" }, "<M-f>", function()
+                    vim.keymap.set({ "n", "v" }, "<C-l>", function()
                         vim.lsp.buf.format(default_format_opts)
                         local mode = vim.api.nvim_get_mode().mode
                         -- NOTE: leave visual mode after range format.
