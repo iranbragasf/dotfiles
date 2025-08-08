@@ -1,12 +1,12 @@
 return {
-    'L3MON4D3/LuaSnip',
-    version = '2.*',
+    "L3MON4D3/LuaSnip",
+    version = "2.*",
     build = "make install_jsregexp",
     dependencies = {
         {
-            'rafamadriz/friendly-snippets',
+            "rafamadriz/friendly-snippets",
             config = function()
-                require('luasnip.loaders.from_vscode').lazy_load()
+                require("luasnip.loaders.from_vscode").lazy_load()
             end,
         },
     },
@@ -21,11 +21,24 @@ return {
         ls.setup()
 
         vim.keymap.set("i", "<C-j>", function()
-            return ls.expand_or_jumpable() and
-                "<Plug>luasnip-expand-or-jump" or
-                "<Tab>"
-        end, { expr = true, silent = true })
-        vim.keymap.set("s", "<C-j>", function() ls.jump(1) end, { noremap = true })
-        vim.keymap.set({ "i", "s" }, "<C-k>", function() ls.jump(-1) end, { noremap = true })
-    end
+            return ls.expand_or_jumpable() and "<Plug>luasnip-expand-or-jump"
+                or "<Tab>"
+        end, {
+            expr = true,
+            silent = true,
+            desc = "Expand or jump to the next placeholder in the current snippet",
+        })
+        vim.keymap.set("s", "<C-j>", function()
+            ls.jump(1)
+        end, {
+            noremap = true,
+            desc = "Jump to the next placeholder in the current snippet",
+        })
+        vim.keymap.set({ "i", "s" }, "<C-k>", function()
+            ls.jump(-1)
+        end, {
+            noremap = true,
+            desc = "Jump to the previous placeholder in the current snippet",
+        })
+    end,
 }
