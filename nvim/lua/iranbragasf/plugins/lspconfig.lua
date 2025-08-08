@@ -1,55 +1,70 @@
 local create_augroup = require("iranbragasf.utils").create_augroup
 
+---@param first_or_last "first" | "last"
+local jump_to_first_or_last_diagnostic = function(first_or_last)
+    if first_or_last ~= "first" and first_or_last ~= "last" then
+        error(
+            ("Invalid argument: '%s'. Expected 'first' or 'last'."):format(
+                tostring(first_or_last)
+            )
+        )
+    end
+    local diagnostics = vim.diagnostic.get(0)
+    if #diagnostics == 0 then
+        vim.notify("No more valid diagnostics to move to", vim.log.levels.WARN)
+        return
+    end
+    table.sort(diagnostics, function(a, b)
+        if a.lnum == b.lnum then
+            return a.col < b.col
+        end
+        return a.lnum < b.lnum
+    end)
+    if first_or_last == "first" then
+        local first = diagnostics[1]
+        vim.api.nvim_win_set_cursor(0, { first.lnum + 1, first.col })
+    elseif first_or_last == "last" then
+        local last = diagnostics[#diagnostics]
+        vim.api.nvim_win_set_cursor(0, { last.lnum + 1, last.col })
+    end
+end
+
 return {
     "neovim/nvim-lspconfig",
     dependencies = { "b0o/schemastore.nvim" },
     config = function()
         vim.keymap.set("n", "[g", function()
             vim.diagnostic.jump({ count = -1 })
-        end, { noremap = true })
+        end, {
+            noremap = true,
+            desc = "Jump to the previous diagnostic in the current buffer",
+        })
         vim.keymap.set("n", "]g", function()
             vim.diagnostic.jump({ count = 1 })
-        end, { noremap = true })
+        end, {
+            noremap = true,
+            desc = "Jump to the next diagnostic in the current buffer",
+        })
+
         vim.keymap.set("n", "[G", function()
-            local diagnostics = vim.diagnostic.get(0)
-            if #diagnostics == 0 then
-                vim.notify(
-                    "No more valid diagnostics to move to",
-                    vim.log.levels.WARN
-                )
-                return
-            end
-            table.sort(diagnostics, function(a, b)
-                if a.lnum == b.lnum then
-                    return a.col < b.col
-                end
-                return a.lnum < b.lnum
-            end)
-            local first = diagnostics[1]
-            vim.api.nvim_win_set_cursor(0, { first.lnum + 1, first.col })
-        end)
+            jump_to_first_or_last_diagnostic("first")
+        end, {
+            noremap = true,
+            desc = "Jump to the first diagnostic in the current buffer",
+        })
         vim.keymap.set("n", "]G", function()
-            local diagnostics = vim.diagnostic.get(0)
-            if #diagnostics == 0 then
-                vim.notify(
-                    "No more valid diagnostics to move to",
-                    vim.log.levels.WARN
-                )
-                return
-            end
-            table.sort(diagnostics, function(a, b)
-                if a.lnum == b.lnum then
-                    return a.col < b.col
-                end
-                return a.lnum < b.lnum
-            end)
-            local last = diagnostics[#diagnostics]
-            vim.api.nvim_win_set_cursor(0, { last.lnum + 1, last.col })
-        end)
-        vim.keymap.set("n", "gl", vim.diagnostic.open_float, { noremap = true })
+            jump_to_first_or_last_diagnostic("last")
+        end, {
+            noremap = true,
+            desc = "Jump to the last diagnostic in the current buffer",
+        })
+        vim.keymap.set("n", "gl", vim.diagnostic.open_float, {
+            noremap = true,
+            desc = "Show diagnostics in a float window",
+        })
         vim.keymap.set("n", "<Leader>m", function()
             vim.diagnostic.setqflist({ title = "Workspace Diagnostics" })
-        end, { noremap = true })
+        end, { noremap = true, desc = "List all workspace diagnostics" })
 
         vim.diagnostic.config({
             virtual_text = true,
@@ -72,55 +87,55 @@ return {
                     "n",
                     "<Leader>rn",
                     vim.lsp.buf.rename,
-                    { buffer = event.buf }
+                    { buffer = event.buf, desc = "Rename symbol" }
                 )
                 vim.keymap.set(
                     { "n", "x" },
                     "<Leader>ac",
                     vim.lsp.buf.code_action,
-                    { buffer = event.buf }
+                    { buffer = event.buf, desc = "Code action" }
                 )
                 vim.keymap.set(
                     "n",
                     "gr",
                     vim.lsp.buf.references,
-                    { buffer = event.buf }
+                    { buffer = event.buf, desc = "List references" }
                 )
                 vim.keymap.set(
                     "n",
                     "gi",
                     vim.lsp.buf.implementation,
-                    { buffer = event.buf }
+                    { buffer = event.buf, desc = "Go to implementation" }
                 )
                 vim.keymap.set(
                     "n",
                     "gd",
                     vim.lsp.buf.definition,
-                    { buffer = event.buf }
+                    { buffer = event.buf, desc = "Go to definition" }
                 )
                 vim.keymap.set(
                     "n",
                     "gD",
                     vim.lsp.buf.declaration,
-                    { buffer = event.buf }
+                    { buffer = event.buf, desc = "Go to declaration" }
                 )
                 vim.keymap.set(
                     "n",
                     "<Leader>o",
                     vim.lsp.buf.document_symbol,
-                    { buffer = event.buf }
+                    { buffer = event.buf, desc = "List document symbols" }
                 )
                 vim.keymap.set(
                     "n",
                     "gy",
                     vim.lsp.buf.type_definition,
-                    { buffer = event.buf }
+                    { buffer = event.buf, desc = "Go to type definition" }
                 )
                 vim.keymap.set(
                     "n",
                     "<C-s>",
                     vim.lsp.buf.signature_help,
-                    { buffer = event.buf }
+                    { buffer = event.buf, desc = "Show signature help" }
                 )
 
                 local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -157,7 +172,7 @@ return {
                         callback = function(event2)
                             vim.lsp.buf.clear_references()
                             vim.api.nvim_clear_autocmds({
-                                group = "lsp-highlight",
+                                group = highlight_augroup,
                                 buffer = event2.buf,
                             })
                         end,
@@ -165,21 +180,20 @@ return {
                 end
 
                 if
-                    client:supports_method(
+                    vim.g.enable_inlay_hints
+                    and client:supports_method(
                         vim.lsp.protocol.Methods.textDocument_inlayHint,
                         event.buf
                     )
                 then
-                    vim.lsp.inlay_hint.enable(
-                        vim.g.enable_inlay_hints,
-                        { bufnr = event.buf }
-                    )
+                    vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
                 end
 
                 if
                     vim.g.enable_builtin_autocompletion
                     and client:supports_method(
-                        vim.lsp.protocol.Methods.textDocument_completion
+                        vim.lsp.protocol.Methods.textDocument_completion,
+                        event.buf
                     )
                 then
                     -- NOTE: optionally trigger autocompletion on EVERY keypress. May be slow!
@@ -196,21 +210,17 @@ return {
                         event.buf,
                         { autotrigger = true }
                     )
-                    vim.keymap.set(
-                        "i",
-                        "<C-Space>",
-                        vim.lsp.completion.get,
-                        { buffer = event.buf }
-                    )
+                    vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get, {
+                        buffer = event.buf,
+                        desc = "Triggers LSP completion in the current buffer",
+                    })
                 end
 
                 if
                     vim.g.enable_builtin_formatting
-                    and not client:supports_method(
-                        vim.lsp.protocol.Methods.textDocument_willSaveWaitUntil
-                    )
                     and client:supports_method(
-                        vim.lsp.protocol.Methods.textDocument_formatting
+                        vim.lsp.protocol.Methods.textDocument_formatting,
+                        event.buf
                     )
                 then
                     local default_format_opts = {
@@ -218,21 +228,20 @@ return {
                         id = client.id,
                         timeout_ms = 1000,
                     }
-                    local desc = "Format Document"
 
-                    vim.api.nvim_create_autocmd("BufWritePre", {
-                        group = create_augroup(
-                            "lsp-formatting",
-                            { clear = false }
-                        ),
-                        buffer = event.buf,
-                        callback = function()
-                            if vim.g.format_on_save then
+                    if vim.g.format_on_save then
+                        vim.api.nvim_create_autocmd("BufWritePre", {
+                            group = create_augroup(
+                                "lsp-formatting",
+                                { clear = false }
+                            ),
+                            buffer = event.buf,
+                            callback = function()
                                 vim.lsp.buf.format(default_format_opts)
-                            end
-                        end,
-                        desc = desc,
-                    })
+                            end,
+                            desc = "Format document on save",
+                        })
+                    end
 
                     vim.keymap.set({ "n", "v" }, "<C-l>", function()
                         vim.lsp.buf.format(default_format_opts)
@@ -252,7 +261,7 @@ return {
                         end
                     end, {
                         noremap = true,
-                        desc = desc,
+                        desc = "Format document",
                     })
 
                     vim.api.nvim_create_user_command("Format", function(args)
@@ -273,10 +282,11 @@ return {
                     end, {
                         nargs = 0,
                         range = true,
-                        desc = desc,
+                        desc = "Format document",
                     })
                 end
             end,
+            desc = "Configure LSP behavior when a client attaches",
         })
     end,
 }
