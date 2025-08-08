@@ -85,50 +85,55 @@ return {
 
             telescope.load_extension("fzf")
 
-            vim.keymap.set("n", "<C-p>", builtin.find_files, { noremap = true })
+            vim.keymap.set(
+                "n",
+                "<C-p>",
+                builtin.find_files,
+                { noremap = true, desc = "Find files" }
+            )
             vim.keymap.set(
                 "n",
                 "<Leader>f",
                 builtin.live_grep,
-                { noremap = true }
+                { noremap = true, desc = "Search text in project" }
             )
             vim.keymap.set(
                 "n",
                 "<Leader>b",
                 builtin.buffers,
-                { noremap = true }
+                { noremap = true, desc = "List open buffers" }
             )
             vim.keymap.set(
                 "n",
                 "<Leader>h",
                 builtin.help_tags,
-                { noremap = true }
+                { noremap = true, desc = "Search help tags" }
             )
             vim.keymap.set("n", "<Leader>rc", function()
                 builtin.find_files({
                     prompt_title = "Dotfiles",
                     cwd = "$HOME/personal/dotfiles",
                 })
-            end, { noremap = true })
+            end, { noremap = true, desc = "Find dotfiles" })
             vim.keymap.set(
                 "n",
                 "<Leader>m",
                 builtin.diagnostics,
-                { noremap = true }
+                { noremap = true, desc = "List all workspace diagnostics" }
             )
 
             vim.api.nvim_create_user_command(
                 "Command",
                 builtin.commands,
-                { nargs = 0 }
+                { nargs = 0, desc = "List commands" }
             )
             vim.api.nvim_create_user_command(
                 "Keymap",
                 builtin.keymaps,
-                { nargs = 0 }
+                { nargs = 0, desc = "List keymaps" }
             )
 
-            -- NOTE: overrides keymaps defined in `lspconfig` module.
+            -- NOTE: override keymaps defined in `lspconfig` module.
             vim.api.nvim_create_autocmd("LspAttach", {
                 group = create_augroup("lsp-attach", { clear = false }),
                 callback = function(event)
@@ -136,31 +141,31 @@ return {
                         "n",
                         "gr",
                         builtin.lsp_references,
-                        { buffer = event.buf }
+                        { buffer = event.buf, desc = "List references" }
                     )
                     vim.keymap.set(
                         "n",
                         "gi",
                         builtin.lsp_implementations,
-                        { buffer = event.buf }
+                        { buffer = event.buf, desc = "Go to implementation" }
                     )
                     vim.keymap.set(
                         "n",
                         "gd",
                         builtin.lsp_definitions,
-                        { buffer = event.buf }
+                        { buffer = event.buf, desc = "Go to definition" }
                     )
                     vim.keymap.set(
                         "n",
                         "<Leader>o",
                         builtin.lsp_document_symbols,
-                        { buffer = event.buf }
+                        { buffer = event.buf, desc = "List document symbols" }
                     )
                     vim.keymap.set(
                         "n",
                         "gy",
                         builtin.lsp_type_definitions,
-                        { buffer = event.buf }
+                        { buffer = event.buf, desc = "Go to type definition" }
                     )
                 end,
             })

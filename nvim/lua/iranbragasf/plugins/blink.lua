@@ -4,7 +4,7 @@ return {
     event = "VimEnter",
     version = "1.*",
     dependencies = {
-        "L3MON4D3/LuaSnip",
+        "L3MON4D3/LuaSnip", -- NOTE: load LuaSnip's config.
         "disrupted/blink-cmp-conventional-commits",
         "bydlw98/blink-cmp-sshconfig",
     },

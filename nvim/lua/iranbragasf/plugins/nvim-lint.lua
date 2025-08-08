@@ -12,14 +12,14 @@ return {
         vim.api.nvim_create_autocmd(
             { "BufWritePost", "InsertLeave", "TextChanged" },
             {
-                group = create_augroup("nvim-lint"),
+                group = create_augroup("lint"),
                 pattern = "*",
                 callback = function()
                     if vim.g.enable_linting and vim.bo.modifiable then
                         require("lint").try_lint()
                     end
                 end,
-                desc = "Trigger Linting",
+                desc = "Trigger linting",
             }
         )
     end,

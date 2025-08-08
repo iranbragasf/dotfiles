@@ -5,9 +5,9 @@ return {
         {
             "<Leader>u",
             ":UndotreeToggle<CR>",
-            desc = "Toggle undotree panel",
             noremap = true,
             silent = true,
+            desc = "Toggle undotree panel",
         },
     },
     init = function()
