@@ -1,7 +1,6 @@
 Host github.com
     AddKeysToAgent yes
     IdentityFile ~/.ssh/github
-    IdentityFile ~/.ssh/github_mblabs
 
 Host bitbucket.org
     AddKeysToAgent yes
