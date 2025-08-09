@@ -57,6 +57,8 @@ return {
                     layout_config = {
                         prompt_position = "top",
                     },
+                    prompt_prefix = " ",
+                    selection_caret = " ",
                     vimgrep_arguments = vimgrep_args_with_ignore_patterns,
                     mappings = {
                         i = {
@@ -122,15 +124,19 @@ return {
                 { noremap = true, desc = "List all workspace diagnostics" }
             )
 
-            vim.api.nvim_create_user_command(
-                "Command",
-                builtin.commands,
-                { nargs = 0, desc = "List commands" }
-            )
+            vim.api.nvim_create_user_command("Command", builtin.commands, {
+                nargs = 0,
+                desc = "List available user commands and run them on <CR>",
+            })
             vim.api.nvim_create_user_command(
                 "Keymap",
                 builtin.keymaps,
-                { nargs = 0, desc = "List keymaps" }
+                { nargs = 0, desc = "List all keymaps" }
+            )
+            vim.api.nvim_create_user_command(
+                "Highlight",
+                builtin.highlights,
+                { nargs = 0, desc = "Lists all available highlights" }
             )
 
             -- NOTE: override keymaps defined in `lspconfig` module.
