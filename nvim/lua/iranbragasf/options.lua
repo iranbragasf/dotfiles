@@ -6,6 +6,8 @@ vim.g.enable_builtin_autocompletion = false
 vim.g.enable_builtin_formatting = false
 vim.g.ignore_patterns = { "**/.git/**", "**/node_modules/**", "**/dist/**" }
 
+vim.cmd("colorscheme default")
+
 -- NOTE: schedule the setting after `UiEnter` because it can increase
 -- startup-time.
 vim.schedule(function()
@@ -56,4 +58,15 @@ vim.opt.listchars = {
 vim.opt.foldmethod = "expr"
 vim.opt.foldlevel = 99
 vim.opt.winborder = "none"
-vim.cmd("colorscheme default")
+
+vim.filetype.add({
+    filename = {
+        [".eslintrc.json"] = "jsonc",
+    },
+    pattern = {
+        [".*/ssh/config"] = "sshconfig",
+        [".*/git/config.*"] = "gitconfig",
+        [".env.*"] = "sh",
+        ["tsconfig*.json"] = "jsonc",
+    },
+})
