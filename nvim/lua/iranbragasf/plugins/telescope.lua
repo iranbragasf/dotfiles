@@ -141,7 +141,7 @@ return {
 
             -- NOTE: override keymaps defined in `lspconfig` module.
             vim.api.nvim_create_autocmd("LspAttach", {
-                group = create_augroup("lsp-attach", { clear = false }),
+                group = create_augroup("lsp_attach", { clear = false }),
                 callback = function(event)
                     vim.keymap.set(
                         "n",

@@ -81,7 +81,7 @@ return {
         })
 
         vim.api.nvim_create_autocmd("LspAttach", {
-            group = create_augroup("lsp-attach"),
+            group = create_augroup("lsp_attach"),
             callback = function(event)
                 vim.keymap.set(
                     "n",
@@ -150,7 +150,7 @@ return {
                     )
                 then
                     local highlight_augroup =
-                        create_augroup("lsp-highlight", { clear = false })
+                        create_augroup("lsp_highlight", { clear = false })
                     vim.api.nvim_create_autocmd(
                         { "CursorHold", "CursorHoldI" },
                         {
@@ -168,7 +168,7 @@ return {
                         }
                     )
                     vim.api.nvim_create_autocmd("LspDetach", {
-                        group = create_augroup("lsp-detach"),
+                        group = create_augroup("lsp_detach"),
                         callback = function(event2)
                             vim.lsp.buf.clear_references()
                             vim.api.nvim_clear_autocmds({
@@ -232,7 +232,7 @@ return {
                     if vim.g.format_on_save then
                         vim.api.nvim_create_autocmd("BufWritePre", {
                             group = create_augroup(
-                                "lsp-formatting",
+                                "lsp_formatting",
                                 { clear = false }
                             ),
                             buffer = event.buf,

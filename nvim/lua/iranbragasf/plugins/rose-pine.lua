@@ -8,6 +8,7 @@ return {
                 bold = false,
                 italic = false,
             },
+            -- TODO: make these highlight groups dynamic per colorscheme.
             highlight_groups = {
                 TelescopeBorder = { fg = "overlay", bg = "overlay" },
                 TelescopeNormal = { fg = "subtle", bg = "overlay" },
@@ -19,7 +20,15 @@ return {
                 TelescopePreviewTitle = { fg = "base", bg = "iris" },
                 TelescopePromptNormal = { fg = "text", bg = "surface" },
                 TelescopePromptBorder = { fg = "surface", bg = "surface" },
-                IblScope = { inherit = false },
+                IblIndent = { fg = "#313438" },
+                IblWhitespace = { fg = "#313438" },
+                IblScope = { fg = "#666870" },
+                TreesitterContext = { link = "Normal" },
+                TreesitterContextLineNumber = { link = "LineNr" },
+                TreesitterContextBottom = {
+                    sp = "#313438",
+                    underline = true,
+                },
             },
         })
         vim.cmd("colorscheme rose-pine")

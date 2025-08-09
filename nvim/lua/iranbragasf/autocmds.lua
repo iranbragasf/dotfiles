@@ -2,7 +2,7 @@ local create_augroup = require("iranbragasf.utils").create_augroup
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     pattern = "*",
-    group = create_augroup("highlight-yank"),
+    group = create_augroup("highlight_yank"),
     callback = function()
         vim.hl.on_yank()
     end,
@@ -12,7 +12,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- TOOD: keep the splits' size proportion rather than equaly split the screen (`wincmd =`)
 vim.api.nvim_create_autocmd("VimResized", {
     pattern = "*",
-    group = create_augroup("resize-splits"),
+    group = create_augroup("resize_splits"),
     callback = function()
         local current_tab = vim.fn.tabpagenr()
         vim.cmd("tabdo wincmd =")
@@ -21,7 +21,7 @@ vim.api.nvim_create_autocmd("VimResized", {
     desc = "Preserve split proportions on window resize",
 })
 
-local filetype_detect_augroup = create_augroup("filetype-detect")
+local filetype_detect_augroup = create_augroup("filetype_detect")
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     group = filetype_detect_augroup,
     pattern = { "tsconfig*.json", ".eslintrc.json" },
