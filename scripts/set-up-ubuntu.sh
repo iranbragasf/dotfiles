@@ -44,6 +44,8 @@ enable_trim() {
 }
 
 reduce_swappiness() {
+    # TODO: Find a way to persist the swappiness value, because, this way, it
+    # is reset after reboot.
     sudo sysctl --write vm.swappiness=10
 }
 
@@ -242,7 +244,7 @@ set_up_gnome() {
     gsettings set org.gnome.desktop.interface show-battery-percentage true
     gsettings set org.gnome.shell.extensions.ding show-home false
     gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
-    gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 4112
+    gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 4200
     gsettings set org.gnome.shell.extensions.dash-to-dock show-mounts false
     gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font Mono 13'
     gsettings set org.gnome.shell favorite-apps "['google-chrome.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Software.desktop', 'yelp.desktop']"
