@@ -9,7 +9,7 @@ main() {
         exit 1
     fi
 
-    local IGNORE_LIST=(".git" "scripts" "README.md" "tlp" "ssh" "copyq")
+    local IGNORE_LIST=(".git" "scripts" "README.md" "ssh" "copyq")
 
     for dir in "$DOTFILES_DIR"/*/; do
         local dirname=$(basename "$dir")
@@ -25,10 +25,6 @@ main() {
 
         ln -sv "$dir" "$linkpath"
     done
-
-    if [[ ! -L "/etc/tlp.d/01-mytlp.conf" && ! -e "/etc/tlp.d/01-mytlp.conf" ]]; then
-        sudo ln -sv "$DOTFILES_DIR/tlp/01-mytlp.conf" '/etc/tlp.d/01-mytlp.conf'
-    fi
 
     if [[ ! -L "$HOME/.ssh/config" && ! -e "$HOME/.ssh/config" ]]; then
         ln -sv "$DOTFILES_DIR/ssh/config" "$HOME/.ssh/config"

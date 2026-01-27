@@ -3,12 +3,11 @@
 set -eou pipefail
 
 set_up_xdg_base_directory() {
-cat << 'EOF' >> ~/.bashrc
+cat << EOF >> ~/.bashrc
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
-export DOTFILES_DIR="$HOME/personal/dotfiles"
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 export EDITOR="nvim"
 export MANPAGER="nvim +Man!"
@@ -23,6 +22,10 @@ EOF
     export XDG_CACHE_HOME="$HOME/.cache"
     export XDG_DATA_HOME="$HOME/.local/share"
     export XDG_STATE_HOME="$HOME/.local/state"
+}
+
+set_performance_power_mode() {
+    powerprofilesctl set performance
 }
 
 update_system() {
@@ -44,24 +47,12 @@ enable_trim() {
 }
 
 reduce_swappiness() {
-    # TODO: Find a way to persist the swappiness value, because, this way, it
-    # is reset after reboot.
-    sudo sysctl --write vm.swappiness=10
+    echo "vm.swappiness=10" | sudo tee /etc/sysctl.d/99-swappiness.conf
 }
 
 enable_firewall() {
     sudo ufw enable
 }
-
-# TODO: configure `apt` to download packages in parallel. Should `nala` be
-# considered?
-# https://www.reddit.com/r/Ubuntu/comments/178mh36/apt_vs_nala/?show=original
-# set_up_parallel_download() {
-# }
-
-# TODO: auto set Google DNS for every new wifi and ethernet connection.
-# set_up_google_dns() {
-# }
 
 set_up_flatpak() {
     sudo apt install -y flatpak
@@ -76,7 +67,8 @@ install_flatpaks() {
         io.dbeaver.DBeaverCommunity \
         md.obsidian.Obsidian \
         org.nickvision.tubeconverter \
-        com.github.johnfactotum.Foliate
+        com.github.johnfactotum.Foliate \
+        com.obsproject.Studio
 }
 
 install_packages() {
@@ -84,19 +76,19 @@ install_packages() {
         ubuntu-restricted-extras \
         build-essential \
         curl \
-        tlp \
-        tldr \
         xclip \
         transmission \
         flameshot \
-        obs-studio \
         gparted \
         gnome-software \
+        gnome-software-common \
         gnome-software-plugin-flatpak \
+        gnome-software-plugin-snap \
         timeshift \
         btop \
         uuid \
-        ripgrep
+        ripgrep \
+        neovim
 
     # Install Google Chorome
     cd /tmp
@@ -167,31 +159,48 @@ install_packages() {
     mkdir -vp ~/.local/share/bash-completion/completions/
     mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
 
-    # Install neovim
-    cd /tmp
-    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-    sudo rm -rf /opt/nvim
-    sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-    cd -
-
     # Install copyq
     # sudo add-apt-repository -y ppa:hluk/copyq
     # sudo apt update
     # sudo apt install -y copyq
+
+    # Install VS Code
+    cd /tmp
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg &&
+    sudo install -D -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/microsoft.gpg
+    cat <<EOF | sudo tee /etc/apt/sources.list.d/vscode.sources > /dev/null
+Types: deb
+URIs: https://packages.microsoft.com/repos/code
+Suites: stable
+Components: main
+Architectures: amd64,arm64,armhf
+Signed-By: /usr/share/keyrings/microsoft.gpg
+EOF
+    sudo apt update
+    sudo apt install -y apt-transport-https code
+    cd -
+
+    # Install pipx
+    sudo apt install -y pipx
+    pipx ensurepath
+
+    # Install tldr
+    pipx install tldr
+    tldr --print-completion bash > ~/.local/share/bash-completion/completions/tldr
 
     set_up_flatpak
     install_flatpaks
 }
 
 set_up_github_ssh() {
-    local SSH_KEY="$HOME/.ssh/github"
+    local SSH_KEY_PATH="$HOME/.ssh/github"
     local EMAIL="iranbrgasf@gmail.com"
     local TITLE=$(hostnamectl hostname)
-    ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY" -N ""
+    ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY_PATH" -N ""
     eval "$(ssh-agent -s)"
-    ssh-add "$SSH_KEY"
-    gh auth login --git-protocol ssh --skip-ssh-key --web --scopes admin:public_key
-    gh ssh-key add "$SSH_KEY.pub" --title "$TITLE"
+    ssh-add "$SSH_KEY_PATH"
+    gh auth login --git-protocol ssh --skip-ssh-key --web --scopes admin:public_key &> /dev/null
+    gh ssh-key add "$SSH_KEY_PATH.pub" --title "$TITLE"
 }
 
 set_up_dotfiles() {
@@ -201,8 +210,8 @@ set_up_dotfiles() {
     git clone git@github.com:iranbragasf/dotfiles.git
     git clone git@github.com:iranbragasf/obsidian-vault.git
     cd ./dotfiles
-    chmod +x ./scripts/symlink-dotfiles.sh
-    ./scripts/symlink-dotfiles.sh
+    chmod +x ./scripts/link-dotfiles.sh
+    ./scripts/link-dotfiles.sh
     cd "$current_dir"
 }
 
@@ -244,7 +253,7 @@ set_up_gnome() {
     gsettings set org.gnome.desktop.interface show-battery-percentage true
     gsettings set org.gnome.shell.extensions.ding show-home false
     gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
-    gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 4200
+    gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 4112
     gsettings set org.gnome.shell.extensions.dash-to-dock show-mounts false
     gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font Mono 13'
     gsettings set org.gnome.shell favorite-apps "['google-chrome.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Software.desktop', 'yelp.desktop']"
@@ -278,16 +287,21 @@ create_screenshots_dir() {
     mkdir -vp ~/Pictures/Screenshots/
 }
 
+create_recordings_dir() {
+    mkdir -vp ~/Videos/Recordings/
+}
+
 # NOTE: for some reason Gnome freezes when pressing media keys.
 # See: https://tinyurl.com/73amac83
 disable_scroll_lock_mod3() {
     local keymap_layout_path="/usr/share/X11/xkb/symbols/br"
-    sudo cp -v "$keymap_layout_file_path" "$keymap_layout_file_path.bak"
+    sudo cp -v "$keymap_layout_path" "$keymap_layout_path.bak"
     sudo sed -i '/^[[:space:]]*modifier_map Mod3[[:space:]]\+{ Scroll_Lock };/s/^/\/\/ /' "$keymap_layout_path"
 }
 
 cleanup() {
     sudo apt autoremove -y --purge
+    flatpak remove --unused
 }
 
 reboot_system() {
@@ -296,13 +310,12 @@ reboot_system() {
 
 main() {
     set_up_xdg_base_directory
+    set_performance_power_mode
     update_system
     # disable_ubuntu_report
     enable_trim
     reduce_swappiness
     enable_firewall
-    # set_up_parallel_download
-    # set_up_google_dns
     install_packages
     set_up_github_ssh
     set_up_dotfiles
