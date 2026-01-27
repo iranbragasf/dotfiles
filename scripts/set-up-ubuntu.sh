@@ -3,7 +3,7 @@
 set -eou pipefail
 
 set_up_xdg_base_directory() {
-    cat <<EOF >>~/.bashrc
+    cat <<'EOF' >>~/.bashrc
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
