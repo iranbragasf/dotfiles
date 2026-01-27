@@ -3,12 +3,11 @@
 set -eou pipefail
 
 set_up_xdg_base_directory() {
-cat << EOF >> ~/.bashrc
+    cat <<EOF >>~/.bashrc
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 export EDITOR="nvim"
 export MANPAGER="nvim +Man!"
 export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
@@ -105,8 +104,8 @@ install_packages() {
     sudo chmod a+r /etc/apt/keyrings/docker.asc
     echo \
         "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-        $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
-        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" |
+        sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
     sudo apt update
     sudo apt install -y \
         docker-ce \
@@ -114,7 +113,7 @@ install_packages() {
         containerd.io \
         docker-buildx-plugin \
         docker-compose-plugin
-    if ! getent group docker > /dev/null; then
+    if ! getent group docker >/dev/null; then
         sudo groupadd docker
     fi
     sudo usermod -aG docker $USER
@@ -126,38 +125,33 @@ install_packages() {
     sudo apt install -y spotify-client
 
     # Install Ngrok
-    curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
-        | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
-        && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" \
-        | sudo tee /etc/apt/sources.list.d/ngrok.list \
-        && sudo apt update \
-        && sudo apt install -y ngrok
+    curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc |
+        sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null &&
+        echo "deb https://ngrok-agent.s3.amazonaws.com buster main" |
+        sudo tee /etc/apt/sources.list.d/ngrok.list &&
+        sudo apt update &&
+        sudo apt install -y ngrok
 
     # Install fastfetch
     sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch
     sudo apt install -y fastfetch
 
     # Install GitHub CLI
-    (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
-        && sudo mkdir -p -m 755 /etc/apt/keyrings \
-        && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-        && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-        && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-        && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-        && sudo apt update \
-        && sudo apt install -y gh
+    sudo mkdir -p -m 755 /etc/apt/keyrings &&
+        out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg &&
+        cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null &&
+        sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg &&
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null &&
+        sudo apt update &&
+        sudo apt install -y gh
 
     # Install mise
     sudo install -dm 755 /etc/apt/keyrings
-    wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null
-    echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
+    curl -fSs https://mise.jdx.dev/gpg-key.pub | sudo tee /etc/apt/keyrings/mise-archive-keyring.asc 1>/dev/null
+    echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.asc] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
     sudo apt update
     sudo apt install -y mise
-    echo 'eval "$(mise activate bash)"' >> ~/.bashrc
-    eval "$(mise activate bash)"
-    mise use -g usage
-    mkdir -vp ~/.local/share/bash-completion/completions/
-    mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
+    echo 'eval "$(mise activate bash)"' >>~/.bashrc
 
     # Install copyq
     # sudo add-apt-repository -y ppa:hluk/copyq
@@ -166,9 +160,9 @@ install_packages() {
 
     # Install VS Code
     cd /tmp
-    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg &&
-    sudo install -D -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/microsoft.gpg
-    cat <<EOF | sudo tee /etc/apt/sources.list.d/vscode.sources > /dev/null
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >microsoft.gpg &&
+        sudo install -D -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/microsoft.gpg
+    cat <<EOF | sudo tee /etc/apt/sources.list.d/vscode.sources >/dev/null
 Types: deb
 URIs: https://packages.microsoft.com/repos/code
 Suites: stable
@@ -186,7 +180,7 @@ EOF
 
     # Install tldr
     pipx install tldr
-    tldr --print-completion bash > ~/.local/share/bash-completion/completions/tldr
+    tldr --print-completion bash >~/.local/share/bash-completion/completions/tldr
 
     set_up_flatpak
     install_flatpaks
@@ -199,7 +193,7 @@ set_up_github_ssh() {
     ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY_PATH" -N ""
     eval "$(ssh-agent -s)"
     ssh-add "$SSH_KEY_PATH"
-    gh auth login --git-protocol ssh --skip-ssh-key --web --scopes admin:public_key &> /dev/null
+    gh auth login --git-protocol ssh --skip-ssh-key --web --scopes admin:public_key &>/dev/null
     gh ssh-key add "$SSH_KEY_PATH.pub" --title "$TITLE"
 }
 
@@ -213,6 +207,13 @@ set_up_dotfiles() {
     chmod +x ./scripts/link-dotfiles.sh
     ./scripts/link-dotfiles.sh
     cd "$current_dir"
+}
+
+set_up_mise() {
+    eval "$(mise activate bash)"
+    mise install
+    mkdir -vp ~/.local/share/bash-completion/completions/
+    mise completion bash --include-bash-completion-lib >~/.local/share/bash-completion/completions/mise
 }
 
 install_fonts() {
@@ -319,6 +320,7 @@ main() {
     install_packages
     set_up_github_ssh
     set_up_dotfiles
+    set_up_mise
     install_fonts
     set_up_gnome
     create_screenshots_dir

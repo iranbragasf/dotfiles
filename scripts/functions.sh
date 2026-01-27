@@ -3,9 +3,11 @@ upgrade() {
     sudo apt upgrade
     flatpak update
     pipx upgrade-all
+    mise upgrade
 }
 
 autoremove() {
-    sudo apt autoremove -y
+    sudo apt autoremove -y --purge
     flatpak remove --unused
+    mise prune
 }

@@ -1,0 +1,5 @@
+[tools]
+node = "lts"
+shellcheck = "latest"
+shfmt = "latest"
+usage = "latest"
