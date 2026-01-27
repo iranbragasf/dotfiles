@@ -337,8 +337,8 @@ main() {
     set_up_github_ssh
     set_up_dotfiles
     set_up_mise
-    install_node_deps
-    install_python_deps
+    # Must be tested
+    # install_python_deps
     install_fonts
     set_up_gnome
     create_screenshots_dir
