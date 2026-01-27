@@ -217,8 +217,8 @@ set_up_dotfiles() {
 }
 
 set_up_mise() {
-    eval "$(mise activate bash)"
     mise install
+    eval "$(mise activate bash)"
     mkdir -vp ~/.local/share/bash-completion/completions/
     mise completion bash --include-bash-completion-lib >~/.local/share/bash-completion/completions/mise
 }
