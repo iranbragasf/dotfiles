@@ -8,6 +8,7 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 export EDITOR="nvim"
 export MANPAGER="nvim +Man!"
 export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
@@ -86,8 +87,7 @@ install_packages() {
         timeshift \
         btop \
         uuid \
-        ripgrep \
-        neovim
+        ripgrep
 
     # Install Google Chorome
     cd /tmp
@@ -174,14 +174,6 @@ EOF
     sudo apt install -y apt-transport-https code
     cd -
 
-    # Install pipx
-    sudo apt install -y pipx
-    pipx ensurepath
-
-    # Install tldr
-    pipx install tldr
-    tldr --print-completion bash >~/.local/share/bash-completion/completions/tldr
-
     # Install AnyDesk
     sudo install -m 0755 -d /etc/apt/keyrings
     sudo curl -fsSL https://keys.anydesk.com/repos/DEB-GPG-KEY -o /etc/apt/keyrings/keys.anydesk.com.asc
@@ -189,6 +181,13 @@ EOF
     echo "deb [signed-by=/etc/apt/keyrings/keys.anydesk.com.asc] https://deb.anydesk.com all main" | sudo tee /etc/apt/sources.list.d/anydesk-stable.list >/dev/null
     sudo apt update
     sudo apt install -y apt-transport-https anydesk
+
+    # Install Neovim
+    cd /tmp
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    sudo rm -rf /opt/nvim-linux-x86_64
+    sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+    cd -
 
     set_up_flatpak
     install_flatpaks
@@ -222,6 +221,15 @@ set_up_mise() {
     mise install
     mkdir -vp ~/.local/share/bash-completion/completions/
     mise completion bash --include-bash-completion-lib >~/.local/share/bash-completion/completions/mise
+}
+
+install_node_deps() {
+    npm install -g eslint
+}
+
+install_python_deps() {
+    pipx install tldr
+    tldr --print-completion bash >~/.local/share/bash-completion/completions/tldr
 }
 
 install_fonts() {
@@ -329,6 +337,8 @@ main() {
     set_up_github_ssh
     set_up_dotfiles
     set_up_mise
+    install_node_deps
+    install_python_deps
     install_fonts
     set_up_gnome
     create_screenshots_dir

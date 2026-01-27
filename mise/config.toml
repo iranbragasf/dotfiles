@@ -1,5 +1,8 @@
 [tools]
 node = "lts"
+pipx = "latest"
+prettier = "latest"
 shellcheck = "latest"
 shfmt = "latest"
+stylua = "latest"
 usage = "latest"
