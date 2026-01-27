@@ -200,7 +200,7 @@ set_up_github_ssh() {
     ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY_PATH" -N ""
     eval "$(ssh-agent -s)"
     ssh-add "$SSH_KEY_PATH"
-    gh auth login --git-protocol ssh --skip-ssh-key --web --scopes admin:public_key &>/dev/null
+    gh auth login --git-protocol ssh --skip-ssh-key --web --scopes admin:public_key
     gh ssh-key add "$SSH_KEY_PATH.pub" --title "$TITLE"
 }
 
