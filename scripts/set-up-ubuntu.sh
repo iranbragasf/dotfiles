@@ -33,15 +33,7 @@ update_system() {
     sudo apt upgrade -y
 }
 
-# TODO: fix the error: "ERRO metrics from this machine have already been
-# reported and can be found in:
-# /home/iranbraga/.cache/ubuntu-report/ubuntu.24.04"
-disable_ubuntu_report() {
-    ubuntu-report send no
-    sudo apt purge -y ubuntu-report
-}
-
-enable_trim() {
+enable_ssd_trim() {
     sudo systemctl start fstrim.timer
     sudo systemctl enable fstrim.timer
 }
@@ -81,13 +73,13 @@ install_packages() {
         flameshot \
         gparted \
         gnome-software \
-        gnome-software-common \
         gnome-software-plugin-flatpak \
         gnome-software-plugin-snap \
         timeshift \
         btop \
         uuid \
-        ripgrep
+        ripgrep \
+        jq
 
     # Install Google Chorome
     cd /tmp
@@ -125,25 +117,25 @@ install_packages() {
     sudo apt install -y spotify-client
 
     # Install Ngrok
-    curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc |
-        sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null &&
-        echo "deb https://ngrok-agent.s3.amazonaws.com buster main" |
-        sudo tee /etc/apt/sources.list.d/ngrok.list &&
-        sudo apt update &&
-        sudo apt install -y ngrok
+    curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+    echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+    sudo apt update
+    sudo apt install -y ngrok
 
     # Install fastfetch
     sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch
+    sudo apt update
     sudo apt install -y fastfetch
 
     # Install GitHub CLI
-    sudo mkdir -p -m 755 /etc/apt/keyrings &&
-        out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg &&
-        cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null &&
-        sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg &&
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null &&
-        sudo apt update &&
-        sudo apt install -y gh
+    sudo mkdir -p -m 755 /etc/apt/keyrings
+    out=$(mktemp)
+    wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg
+    cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
+    sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+    sudo apt update
+    sudo apt install -y gh
 
     # Install mise
     sudo install -dm 755 /etc/apt/keyrings
@@ -160,8 +152,8 @@ install_packages() {
 
     # Install VS Code
     cd /tmp
-    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >microsoft.gpg &&
-        sudo install -D -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/microsoft.gpg
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >microsoft.gpg
+    sudo install -D -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/microsoft.gpg
     cat <<EOF | sudo tee /etc/apt/sources.list.d/vscode.sources >/dev/null
 Types: deb
 URIs: https://packages.microsoft.com/repos/code
@@ -188,6 +180,11 @@ EOF
     sudo rm -rf /opt/nvim-linux-x86_64
     sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
     cd -
+
+    # Install FortiClient VPN
+    wget -qO forticlient_vpn_amd64.deb https://links.fortinet.com/forticlient/deb/vpnagent
+    sudo apt install -y ./forticlient_vpn_amd64.deb
+    rm -f ./forticlient_vpn_amd64.deb
 
     set_up_flatpak
     install_flatpaks
@@ -216,19 +213,17 @@ set_up_dotfiles() {
     cd "$current_dir"
 }
 
-set_up_mise() {
+install_mise_tools() {
     mise install
-    eval "$(mise activate bash)"
+    eval "$(mise activate bash --shims)"
     mkdir -vp ~/.local/share/bash-completion/completions/
     mise completion bash --include-bash-completion-lib >~/.local/share/bash-completion/completions/mise
+    pipx ensurepath
+    eval "$(register-python-argcomplete pipx)" >>~/.bashrc
 }
 
-install_node_deps() {
-    npm install -g eslint
-}
-
-install_python_deps() {
-    pipx install tldr
+install_python_packages() {
+    pipx install tldr awscli-local[ver1]
     tldr --print-completion bash >~/.local/share/bash-completion/completions/tldr
 }
 
@@ -254,7 +249,6 @@ install_fonts() {
 }
 
 set_up_gnome() {
-    # TODO: set up terminal background to the hex color `#282c34`.
     gsettings set org.gnome.shell.extensions.dash-to-dock click-action "minimize-or-previews"
     gsettings set org.gnome.mutter center-new-windows true
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
@@ -329,16 +323,14 @@ main() {
     set_up_xdg_base_directory
     set_performance_power_mode
     update_system
-    # disable_ubuntu_report
-    enable_trim
+    enable_ssd_trim
     reduce_swappiness
     enable_firewall
     install_packages
     set_up_github_ssh
     set_up_dotfiles
-    set_up_mise
-    # Must be tested
-    # install_python_deps
+    install_mise_tools
+    install_python_packages
     install_fonts
     set_up_gnome
     create_screenshots_dir

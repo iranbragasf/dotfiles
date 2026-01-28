@@ -1,5 +1,7 @@
 [tools]
+aws-cli = { version = "latest", symlink_bins = "true" }
 node = "lts"
+"npm:eslint" = "latest"
 pipx = "latest"
 prettier = "latest"
 shellcheck = "latest"
