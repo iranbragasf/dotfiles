@@ -9,7 +9,7 @@ main() {
         exit 1
     fi
 
-    local IGNORE_LIST=(".git" "scripts" "README.md" "ssh" "copyq")
+    local IGNORE_LIST=(".git" "bin" "README.md" "ssh" "copyq")
 
     for dir in "$DOTFILES_DIR"/*/; do
         local dirname=$(basename "$dir")

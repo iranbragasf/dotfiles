@@ -5,6 +5,6 @@ To set up these dotfiles, clone this repo and symlink the directories.
 ```bash
 git clone git@github.com:iranbragasf/dotfiles.git
 cd dotfiles
-chmod +x ./scripts/link-dotfiles.sh
-./scripts/link-dotfiles.sh
+chmod +x ./bin/link-dotfiles.sh
+./bin/link-dotfiles.sh
 ```
