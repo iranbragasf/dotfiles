@@ -65,7 +65,6 @@ install_flatpaks() {
         com.obsproject.Studio
 }
 
-
 install_mise_tools() {
     tools=(
         aws-cli
@@ -78,9 +77,9 @@ install_mise_tools() {
         stylua
         usage
     )
-    for tool in ${tools[@]}; do
-        mise use -g ${tool}
-    end
+    for tool in "${tools[@]}"; do
+        mise use -g "${tool}"
+    done
     mkdir -vp ~/.local/share/bash-completion/completions/
     mise completion bash --include-bash-completion-lib >~/.local/share/bash-completion/completions/mise
     pipx ensurepath
@@ -117,7 +116,7 @@ install_packages() {
     sudo apt install -y ./google-chrome-stable_current_amd64.deb
     xdg-settings set default-web-browser google-chrome.desktop
     # Configure the default browser to handle `whatsapp:` links
-    xdg-mime default $(xdg-settings get default-web-browser) 'x-scheme-handler/whatsapp'
+    xdg-mime default "$(xdg-settings get default-web-browser)" 'x-scheme-handler/whatsapp'
     cd -
 
     # Install Docker
@@ -138,7 +137,7 @@ install_packages() {
     if ! getent group docker >/dev/null; then
         sudo groupadd docker
     fi
-    sudo usermod -aG docker $USER
+    sudo usermod -aG docker "$USER"
 
     # Install Spotify
     curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
