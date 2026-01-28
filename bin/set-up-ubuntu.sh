@@ -24,6 +24,7 @@ EOF
     export XDG_DATA_HOME="$HOME/.local/share"
     export XDG_STATE_HOME="$HOME/.local/state"
     export DOTFILES_DIR="$HOME/personal/dotfiles"
+    export PATH="$PATH:$HOME/.local/bin" # Add the pipx bin directory to PATH
 }
 
 set_performance_power_mode() {
@@ -80,16 +81,16 @@ install_mise_tools() {
     for tool in "${tools[@]}"; do
         mise use -g "${tool}"
     done
-    eval "$(mise activate bash --shims)"
-    mkdir -vp ~/.local/share/bash-completion/completions/
-    mise completion bash --include-bash-completion-lib >~/.local/share/bash-completion/completions/mise
+    eval "$(mise activate bash --shims)" # Adds the activated tools to $PATH
+    mkdir -vp ~/"$XDG_DATA_HOME"/bash-completion/completions/
+    mise completion bash --include-bash-completion-lib >~/"$XDG_DATA_HOME"/bash-completion/completions/mise
     pipx ensurepath
     echo 'eval "$(register-python-argcomplete pipx)"' >>~/.bashrc
 }
 
 install_python_packages() {
     pipx install argcomplete tldr awscli-local[ver1]
-    tldr --print-completion bash >~/.local/share/bash-completion/completions/tldr
+    tldr --print-completion bash >~/"$XDG_DATA_HOME"/bash-completion/completions/tldr
 }
 
 install_packages() {
