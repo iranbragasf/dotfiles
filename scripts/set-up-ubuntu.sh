@@ -8,6 +8,7 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
+export DOTFILES_DIR="$HOME/personal/dotfiles"
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 export EDITOR="nvim"
 export MANPAGER="nvim +Man!"
@@ -22,6 +23,7 @@ EOF
     export XDG_CACHE_HOME="$HOME/.cache"
     export XDG_DATA_HOME="$HOME/.local/share"
     export XDG_STATE_HOME="$HOME/.local/state"
+    export DOTFILES_DIR="$HOME/personal/dotfiles"
 }
 
 set_performance_power_mode() {
@@ -63,6 +65,33 @@ install_flatpaks() {
         com.obsproject.Studio
 }
 
+
+install_mise_tools() {
+    tools=(
+        aws-cli
+        node@lts
+        npm:eslint
+        pipx
+        prettier
+        shellcheck
+        shfmt
+        stylua
+        usage
+    )
+    for tool in ${tools[@]}; do
+        mise use -g ${tool}
+    end
+    mkdir -vp ~/.local/share/bash-completion/completions/
+    mise completion bash --include-bash-completion-lib >~/.local/share/bash-completion/completions/mise
+    pipx ensurepath
+    echo 'eval "$(register-python-argcomplete pipx)"' >>~/.bashrc
+}
+
+install_python_packages() {
+    pipx install argcomplete tldr awscli-local[ver1]
+    tldr --print-completion bash >~/.local/share/bash-completion/completions/tldr
+}
+
 install_packages() {
     sudo apt install -y \
         ubuntu-restricted-extras \
@@ -79,7 +108,8 @@ install_packages() {
         btop \
         uuid \
         ripgrep \
-        jq
+        jq \
+        python3-venv
 
     # Install Google Chorome
     cd /tmp
@@ -144,6 +174,7 @@ install_packages() {
     sudo apt update
     sudo apt install -y mise
     echo 'eval "$(mise activate bash)"' >>~/.bashrc
+    install_mise_tools
 
     # Install copyq
     # sudo add-apt-repository -y ppa:hluk/copyq
@@ -186,6 +217,7 @@ EOF
     sudo apt install -y ./forticlient_vpn_amd64.deb
     rm -f ./forticlient_vpn_amd64.deb
 
+    install_python_packages
     set_up_flatpak
     install_flatpaks
 }
@@ -213,20 +245,6 @@ set_up_dotfiles() {
     cd "$current_dir"
 }
 
-install_mise_tools() {
-    mise install
-    eval "$(mise activate bash --shims)"
-    mkdir -vp ~/.local/share/bash-completion/completions/
-    mise completion bash --include-bash-completion-lib >~/.local/share/bash-completion/completions/mise
-    pipx ensurepath
-    eval "$(register-python-argcomplete pipx)" >>~/.bashrc
-}
-
-install_python_packages() {
-    pipx install tldr awscli-local[ver1]
-    tldr --print-completion bash >~/.local/share/bash-completion/completions/tldr
-}
-
 install_fonts() {
     cd /tmp
 
@@ -248,26 +266,35 @@ install_fonts() {
     cd -
 }
 
+copy_wallpapers() {
+    mkdir -vp "$XDG_DATA_HOME/backgrounds"
+    cp -v "$DOTFILES_DIR/wallpapers/"* "$XDG_DATA_HOME/backgrounds/"
+}
+
 set_up_gnome() {
     gsettings set org.gnome.shell.extensions.dash-to-dock click-action "minimize-or-previews"
-    gsettings set org.gnome.mutter center-new-windows true
+    gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
+    gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+    gsettings set org.gnome.shell.extensions.dash-to-dock show-mounts false
+    gsettings set org.gnome.shell.extensions.ding show-home false
+    gsettings set org.gnome.shell.extensions.ding start-corner "top-left"
+    gsettings set org.gnome.shell favorite-apps "['google-chrome.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Software.desktop', 'yelp.desktop']"
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
     gsettings set org.gnome.desktop.interface gtk-theme 'Yaru-dark'
     gsettings set org.gnome.desktop.interface icon-theme 'Yaru-dark'
-    gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
-    gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+    gsettings set org.gnome.desktop.interface show-battery-percentage true
+    gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font Mono 13'
     gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
+    gsettings set org.gnome.desktop.peripherals.mouse accel-profile "flat"
     gsettings set org.gnome.desktop.session idle-delay 0
+    gsettings set org.gnome.desktop.background picture-uri "file://$XDG_DATA_HOME/backgrounds/mblabs.png"
+    gsettings set org.gnome.desktop.background picture-uri-dark "file://$XDG_DATA_HOME/backgrounds/mblabs.png"
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type 'nothing'
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
     gsettings set org.gnome.settings-daemon.plugins.power idle-dim false
-    gsettings set org.gnome.desktop.interface show-battery-percentage true
-    gsettings set org.gnome.shell.extensions.ding show-home false
     gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
     gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 4112
-    gsettings set org.gnome.shell.extensions.dash-to-dock show-mounts false
-    gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font Mono 13'
-    gsettings set org.gnome.shell favorite-apps "['google-chrome.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Software.desktop', 'yelp.desktop']"
+    gsettings set org.gnome.mutter center-new-windows true
 
     gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/']"
 
@@ -329,9 +356,8 @@ main() {
     install_packages
     set_up_github_ssh
     set_up_dotfiles
-    install_mise_tools
-    install_python_packages
     install_fonts
+    copy_wallpapers
     set_up_gnome
     create_screenshots_dir
     disable_scroll_lock_mod3
