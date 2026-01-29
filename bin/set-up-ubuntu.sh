@@ -49,6 +49,13 @@ enable_firewall() {
     sudo ufw enable
 }
 
+create_default_dirs() {
+    mkdir -vp "$XDG_DATA_HOME"/bash-completion/completions
+    mkdir -vp ~/Pictures/Screenshots
+    mkdir -vp ~/Videos/Recordings
+    mkdir -vp ~/personal
+}
+
 set_up_flatpak() {
     sudo apt install -y flatpak
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -82,15 +89,14 @@ install_mise_tools() {
         mise use -g "${tool}"
     done
     eval "$(mise activate bash --shims)" # Adds the activated tools to $PATH
-    mkdir -vp ~/"$XDG_DATA_HOME"/bash-completion/completions/
-    mise completion bash --include-bash-completion-lib >~/"$XDG_DATA_HOME"/bash-completion/completions/mise
+    mise completion bash --include-bash-completion-lib >"$XDG_DATA_HOME"/bash-completion/completions/mise
     pipx ensurepath
     echo 'eval "$(register-python-argcomplete pipx)"' >>~/.bashrc
 }
 
 install_python_packages() {
     pipx install argcomplete tldr awscli-local[ver1]
-    tldr --print-completion bash >~/"$XDG_DATA_HOME"/bash-completion/completions/tldr
+    tldr --print-completion bash >"$XDG_DATA_HOME"/bash-completion/completions/tldr
 }
 
 install_packages() {
@@ -237,7 +243,6 @@ set_up_github_ssh() {
 
 set_up_dotfiles() {
     local current_dir=$(pwd)
-    mkdir -vp ~/personal
     cd ~/personal
     git clone git@github.com:iranbragasf/dotfiles.git
     git clone git@github.com:iranbragasf/obsidian-vault.git
@@ -323,14 +328,6 @@ set_up_gnome() {
     # TODO: <Super><A-r>	Record the screen
 }
 
-create_screenshots_dir() {
-    mkdir -vp ~/Pictures/Screenshots/
-}
-
-create_recordings_dir() {
-    mkdir -vp ~/Videos/Recordings/
-}
-
 # NOTE: for some reason Gnome freezes when pressing media keys.
 # See: https://tinyurl.com/73amac83
 disable_scroll_lock_mod3() {
@@ -355,13 +352,13 @@ main() {
     enable_ssd_trim
     reduce_swappiness
     enable_firewall
+    create_default_dirs
     install_packages
     set_up_github_ssh
     set_up_dotfiles
     install_fonts
     copy_wallpapers
     set_up_gnome
-    create_screenshots_dir
     disable_scroll_lock_mod3
     cleanup
     reboot_system
