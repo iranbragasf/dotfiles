@@ -214,9 +214,10 @@ EOF
     cd -
 
     # Install FortiClient VPN
+    cd /tmp
     wget -qO forticlient_vpn_amd64.deb https://links.fortinet.com/forticlient/deb/vpnagent
     sudo apt install -y ./forticlient_vpn_amd64.deb
-    rm -f ./forticlient_vpn_amd64.deb
+    cd -
 
     install_python_packages
     set_up_flatpak

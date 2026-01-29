@@ -7,3 +7,5 @@
     rebase = false
 [includeif "gitdir:~/personal/mblabs/"]
     path = ~/.config/git/config-mblabs
+[includeif "gitdir:~/personal/mblabs/bullla"]
+    path = ~/.config/git/config-bullla
