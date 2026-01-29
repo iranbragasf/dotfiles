@@ -16,6 +16,7 @@ export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
 
 alias vim="nvim"
 alias htop="btop"
+alias cp="cp -vi"
 EOF
     # TODO: why simply `source ~/.bashrc` after writing the variables into it
     # doesn't work?
