@@ -96,7 +96,7 @@ install_mise_tools() {
 }
 
 install_python_packages() {
-    pipx install argcomplete tldr awscli-local[ver1]
+    pipx install argcomplete tldr awscli-local
     tldr --print-completion bash >"$XDG_DATA_HOME"/bash-completion/completions/tldr
 }
 
@@ -292,6 +292,7 @@ set_up_gnome() {
     gsettings set org.gnome.desktop.interface icon-theme 'Yaru-dark'
     gsettings set org.gnome.desktop.interface show-battery-percentage true
     gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font Mono 13'
+    gsettings set org.gnome.desktop.interface clock-show-weekday true
     gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
     gsettings set org.gnome.desktop.peripherals.mouse accel-profile "flat"
     gsettings set org.gnome.desktop.session idle-delay 0
@@ -337,6 +338,12 @@ disable_scroll_lock_mod3() {
     sudo sed -i '/^[[:space:]]*modifier_map Mod3[[:space:]]\+{ Scroll_Lock };/s/^/\/\/ /' "$keymap_layout_path"
 }
 
+# NOTE: in case of dual boot setup with Windows.
+# See: https://itsfoss.com/wrong-time-dual-boot
+set_local_rtc() {
+    sudo timedatectl set-local-rtc 1
+}
+
 cleanup() {
     sudo apt autoremove -y --purge
     flatpak remove --unused
@@ -361,6 +368,7 @@ main() {
     copy_wallpapers
     set_up_gnome
     disable_scroll_lock_mod3
+    # set_local_rtc
     cleanup
     reboot_system
 }
