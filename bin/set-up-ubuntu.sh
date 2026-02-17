@@ -224,6 +224,8 @@ EOF
     cd /tmp
     wget -qO forticlient_vpn_amd64.deb https://links.fortinet.com/forticlient/deb/vpnagent
     sudo apt install -y ./forticlient_vpn_amd64.deb
+    sudo apt-mark hold forticlient
+    # To allow updates: sudo apt-mark unhold forticlient
     cd -
 
     install_python_packages
@@ -293,6 +295,7 @@ set_up_gnome() {
     gsettings set org.gnome.desktop.interface show-battery-percentage true
     gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font Mono 13'
     gsettings set org.gnome.desktop.interface clock-show-weekday true
+    gsettings set org.gnome.desktop.interface clock-format "12h"
     gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
     gsettings set org.gnome.desktop.peripherals.mouse accel-profile "flat"
     gsettings set org.gnome.desktop.session idle-delay 0
@@ -304,6 +307,8 @@ set_up_gnome() {
     gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
     gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 4112
     gsettings set org.gnome.mutter center-new-windows true
+    gsettings set org.gnome.nautilus.preferences default-folder-viewer "list-view"
+    gsettings set org.gtk.gtk4.Settings.FileChooser show-hidden true
 
     gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/']"
 
