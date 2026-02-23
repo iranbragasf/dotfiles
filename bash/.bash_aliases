@@ -1,11 +1,12 @@
 alias vim="nvim"
 alias htop="btop"
 alias cp="cp -ivr"
-alias rm='rm -vr'
-alias ls='ls -AhFv --color=auto --group-directories-first'
-alias ll='ls -lahFv --color=auto --group-directories-first'
-alias grep='grep --color=auto'
-alias ln='ln -v'
+alias rm="rm -r"
+alias ls="ls -AhFv --color=auto --group-directories-first"
+alias ll="ls -lahFv --color=auto --group-directories-first"
+alias grep="grep --color=auto"
+alias ln="ln -v"
+alias mkdir="mkdir -vp"
 
 upgrade() {
     sudo apt update && sudo apt -y upgrade
