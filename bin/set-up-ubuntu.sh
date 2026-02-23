@@ -64,7 +64,6 @@ install_flatpaks() {
         com.discordapp.Discord \
         com.slack.Slack \
         io.dbeaver.DBeaverCommunity \
-        md.obsidian.Obsidian \
         org.nickvision.tubeconverter \
         com.github.johnfactotum.Foliate \
         com.obsproject.Studio
@@ -244,7 +243,7 @@ set_up_dotfiles() {
     local current_dir=$(pwd)
     cd ~/personal
     git clone git@github.com:iranbragasf/dotfiles.git
-    git clone git@github.com:iranbragasf/obsidian-vault.git
+    git clone git@github.com:iranbragasf/notes.git
     cd ./dotfiles
     chmod +x ./bin/link-dotfiles.sh
     ./bin/link-dotfiles.sh
