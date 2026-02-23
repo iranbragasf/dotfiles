@@ -9,7 +9,7 @@ main() {
         exit 1
     fi
 
-    local IGNORE_LIST=(".git" "bin" "README.md" "ssh" "copyq")
+    local IGNORE_LIST=(".git" "bin" "README.md" "ssh" "copyq" "bash")
 
     for dir in "$DOTFILES_DIR"/*/; do
         local dirname=$(basename "$dir")
@@ -28,6 +28,10 @@ main() {
 
     if [[ ! -L "$HOME/.ssh/config" && ! -e "$HOME/.ssh/config" ]]; then
         ln -sv "$DOTFILES_DIR/ssh/config" "$HOME/.ssh/config"
+    fi
+
+    if [[ ! -L "$HOME" && ! -e "$HOME" ]]; then
+        ln -sv "$DOTFILES_DIR/bash/.bash_aliases" "$HOME/.bash_aliases"
     fi
 }
 
