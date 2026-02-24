@@ -9,20 +9,21 @@ alias ln="ln -v"
 alias mkdir="mkdir -vp"
 
 upgrade() {
-    sudo apt update && sudo apt -y upgrade
+    sudo apt update && sudo apt upgrade
     flatpak update
     mise upgrade
     pipx upgrade-all
 }
 
 autoremove() {
-    sudo apt autoremove -y --purge
+    sudo apt autoremove --purge
     flatpak remove --unused
     mise prune
 }
 
 backup_notes() {
     git pull
-    git commit -am "notes backup: $(date --rfc-3339 s)"
+    git add .
+    git commit -m "notes backup: $(date --rfc-3339 s)"
     git push
 }

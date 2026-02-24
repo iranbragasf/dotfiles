@@ -72,6 +72,7 @@ install_flatpaks() {
 install_mise_tools() {
     tools=(
         aws-cli
+        awscli-local
         node@lts
         npm:eslint
         pipx
@@ -91,7 +92,7 @@ install_mise_tools() {
 }
 
 install_python_packages() {
-    pipx install argcomplete tldr awscli-local
+    pipx install argcomplete tldr
     tldr --print-completion bash >"$XDG_DATA_HOME"/bash-completion/completions/tldr
 }
 
