@@ -308,6 +308,7 @@ set_up_gnome() {
     gsettings set org.gnome.shell.extensions.tiling-assistant tile-top-half "['<Super>KP_8', '<Super>Up']"
     gsettings set org.gnome.shell.extensions.tiling-assistant tile-maximize "['<Super>KP_5']"
     gsettings set org.gnome.shell.extensions.tiling-assistant tile-bottom-half "['<Super>KP_2', '<Super>Down']"
+    gsettings set org.gnome.shell.extensions.tiling-assistant restore-window "[]"
 
     gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/']"
 
