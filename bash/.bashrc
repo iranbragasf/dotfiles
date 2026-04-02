@@ -20,6 +20,8 @@ alias mkdir="mkdir -vp"
 alias free="free -h"
 alias mv="mv -iv"
 alias du="du -h"
+alias calogin="NPM_CONFIG_USERCONFIG=./.npmrc aws codeartifact login --tool npm --repository bankeiro-backend --domain bankeiro --domain-owner 367063506873 --region us-west-2"
+alias arlogin="npx google-artifactregistry-auth -yes; gcloud artifacts print-settings npm --project=gc-pr-infra-cicd --repository=bullla-npm-registry --location=southamerica-east1 --scope=@bullla >> ./.npmrc"
 
 upgrade() {
     sudo apt update && sudo apt upgrade
@@ -40,5 +42,11 @@ backup_notes() {
     git add .
     git commit -m "notes backup: $(date --rfc-3339 s)"
     git push
-    cd -
+    cd - >/dev/null
+}
+
+edit_notes() {
+    cd "$HOME/personal/notes"
+    code .
+    cd - >/dev/null
 }
