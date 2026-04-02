@@ -187,12 +187,6 @@ EOF
     sudo apt-mark hold forticlient
 
     # Install DataGrip
-    wget -qO jetbrains-toolbox.tar.gz https://www.jetbrains.com/toolbox-app/download/download-thanks.html?platform=linux
-    tar -xvf ./jetbrains-toolbox.tar.gz
-    cd ./jetbrains-toolbox
-    ./bin/jetbrains-toolbox &>/dev/null &
-    cd -
-
     local datagrip_download_url=$(curl -sS "https://data.services.jetbrains.com/products/releases?code=DB&latest=true" | jq -r ".DG[0].downloads.linux.link")
     wget -qO datagrip.tar.gz "$datagrip_download_url"
     mkdir -v datagrip
@@ -213,6 +207,9 @@ set_up_ssh_keys() {
     export BW_SESSION=$(bw login --raw)
     bw get item 'GitHub (desk-ubuntu24)' --pretty | jq '.sshKey.privateKey' >>~/.ssh/github
     bw lock
+    chmod 600 ~/.ssh/github
+    eval "$(ssh-agent -s)"
+    ssd-add ~/.ssh/github
 }
 
 set_up_dotfiles() {
