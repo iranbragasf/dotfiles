@@ -9,8 +9,7 @@ export XDG_STATE_HOME="$HOME/.local/state"
 export DOTFILES_DIR="$HOME/personal/dotfiles"
 
 cd_into_installation_dir() {
-    local installation_dir='/tmp'
-    cd $installation_dir
+    cd /tmp
 }
 
 update_system() {
@@ -20,11 +19,6 @@ update_system() {
 
 set_performance_power_mode() {
     powerprofilesctl set performance
-}
-
-enable_ssd_trim() {
-    sudo systemctl start fstrim.timer
-    sudo systemctl enable fstrim.timer
 }
 
 reduce_swappiness() {
@@ -38,7 +32,7 @@ enable_firewall() {
 create_default_dirs() {
     mkdir -vp "$XDG_DATA_HOME/bash-completion/completions"
     mkdir -vp ~/Pictures/Screenshots
-    mkdir -vp ~/Videos/Recordings
+    mkdir -vp ~/Videos/Screencasts
     mkdir -vp ~/personal
     sudo install -vdm 755 /etc/apt/keyrings
 }
@@ -85,7 +79,8 @@ install_flatpaks() {
         com.slack.Slack \
         org.nickvision.tubeconverter \
         com.github.johnfactotum.Foliate \
-        com.obsproject.Studio
+        com.obsproject.Studio \
+        com.mattjakeman.ExtensionManager
 }
 
 install_packages() {
@@ -102,7 +97,6 @@ install_packages() {
         timeshift \
         btop \
         uuid \
-        ripgrep \
         jq
 
     # Install Google Chorome
@@ -110,7 +104,6 @@ install_packages() {
     sudo apt install -y ./google-chrome-stable_current_amd64.deb
     xdg-settings set default-web-browser google-chrome.desktop
     xdg-mime default google-chrome.desktop x-scheme-handler/whatsapp
-    xdg-mime default org.gnome.Software.desktop x-scheme-handler/flatpak+https
 
     # Install Docker
     sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
@@ -192,14 +185,23 @@ EOF
     wget -qO forticlient_vpn_amd64.deb https://links.fortinet.com/forticlient/deb/vpnagent
     sudo apt install -y ./forticlient_vpn_amd64.deb
     sudo apt-mark hold forticlient
-    # To allow updates: sudo apt-mark unhold forticlient
 
     # Install DataGrip
     wget -qO jetbrains-toolbox.tar.gz https://www.jetbrains.com/toolbox-app/download/download-thanks.html?platform=linux
     tar -xvf ./jetbrains-toolbox.tar.gz
     cd ./jetbrains-toolbox
-    ./bin/jetbrains-toolbox &>/dev/null
+    ./bin/jetbrains-toolbox &>/dev/null &
     cd -
+
+    local datagrip_download_url=$(curl -sS "https://data.services.jetbrains.com/products/releases?code=DB&latest=true" | jq -r ".DG[0].downloads.linux.link")
+    wget -qO datagrip.tar.gz "$datagrip_download_url"
+    mkdir -v datagrip
+    tar -xvf ./datagrip.tar.gz --strip-components=1 -C ./datagrip
+    cd datagrip
+    ./bin/datagrip
+    cd -
+
+    # TODO: install Copyous: https://extensions.gnome.org/extension/8834/copyous
 
     install_python_packages
     install_node_packages
@@ -225,6 +227,7 @@ set_up_dotfiles() {
 
 set_up_bash() {
     cat <<'EOF' >>~/.bashrc
+export DOTFILES_DIR="$HOME/personal/dotfiles"
 if [ -f "$DOTFILES_DIR/bash/.bashrc" ]; then
     . "$DOTFILES_DIR/bash/.bashrc" 
 fi
@@ -274,7 +277,12 @@ set_up_gnome() {
     gsettings set org.gnome.settings-daemon.plugins.power idle-dim false
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
     gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type 'nothing'
-    gsettings set org.gnome.shell favorite-apps "['google-chrome.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Software.desktop', 'yelp.desktop']"
+    gsettings set org.gnome.shell favorite-apps "[ \
+        'google-chrome.desktop', \
+        'org.gnome.Nautilus.desktop', \
+        'org.gnome.Software.desktop', \
+        'yelp.desktop' \
+    ]"
     gsettings set org.gnome.shell.extensions.dash-to-dock click-action "minimize-or-previews"
     gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
     gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
@@ -286,8 +294,16 @@ set_up_gnome() {
     gsettings set org.gnome.shell.extensions.tiling-assistant tile-maximize "['<Super>KP_5']"
     gsettings set org.gnome.shell.extensions.tiling-assistant tile-top-half "['<Super>KP_8', '<Super>Up']"
     gsettings set org.gtk.gtk4.Settings.FileChooser show-hidden true
+    local profile_id=$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")
+    gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:"$profile_id"/ audible-bell false
+    gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:"$profile_id"/ cursor-blink-mode "off"
 
-    gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/']"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "[ \
+        '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', \
+        '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', \
+        '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', \
+        '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/' \
+    ]"
 
     gsettings set org.gnome.shell.keybindings show-screenshot-ui '[]'
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name 'Screenshot entire screen to clipboard'
@@ -302,6 +318,8 @@ set_up_gnome() {
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/ command 'flameshot gui'
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/ binding '<Super><Shift>s'
 
+    # TODO: Alt + PrtScn to capture only the currently active window to the clipboard.
+
     # TODO: <Super>.	    Open emoji picker
     # TODO: <Super><A-r>	Record the screen
 }
@@ -314,7 +332,7 @@ disable_scroll_lock_mod3() {
     sudo sed -i '/^[[:space:]]*modifier_map Mod3[[:space:]]\+{ Scroll_Lock };/s/^/\/\/ /' "$keymap_layout_path"
 }
 
-# NOTE: in case of Windows dual boot.
+# NOTE: time is displayed wrong in Windows-Linux dual boot.
 # See: https://itsfoss.com/wrong-time-dual-boot
 set_local_rtc() {
     sudo timedatectl set-local-rtc 1
@@ -333,7 +351,6 @@ main() {
     cd_into_installation_dir
     update_system
     set_performance_power_mode
-    enable_ssd_trim
     reduce_swappiness
     enable_firewall
     create_default_dirs
